@@ -177,3 +177,32 @@ any blockchain work, as CLAUDE.md requires. Open questions for the user are in t
 session report. No weights were re-tuned.
 
 Tests: `pytest -q` (see commit).
+
+## 2026-10-05 — User decisions after the checkpoint; protocol amendment 1; new pharma file
+
+User decisions (verbatim: "recommend strengthening first", "fidelity and evidence support be
+made separable"):
+1. Strengthen the test before any blockchain work → ω sensitivity brought forward.
+2. Make F and E separable → **protocol amendment 1 (v1.1)**: strategies *misattributing*
+   (lowers F only) and *overclaiming* (lowers E only) added. Committed before any v1.1 run.
+   v1.0 summaries/tables archived in `results/summaries/v1.0/`, `tables/v1.0/`.
+   v1.1 results are post hoc relative to v1.0 and must be presented as such.
+3. A new pharma file, `pharma-data.csv`, was supplied together with a pasted assessment
+   recommending it and a five-agent design (Demand, Pricing, Distribution, Market, Product).
+
+### Audit of `pharma-data.csv` (details: `docs/dataset_audit.md` §4)
+- 254,082 monthly sales lines, 18 columns, no missing values; copied read-only to
+  `data/raw/pharma_sales/` (hash recorded; not in git).
+- **Source, licence and citation unknown** (one web search found nothing).
+- **Strong signs of synthetic or masked data:** Faker-style company names, invented product
+  names, one constant price per product across four years, sales reps assigned uniformly at
+  random, and near-zero association between product class, channel, distributor, country and
+  sales rep (Cramér's V ≤ 0.011). Channel, sub-channel, product class and sales rep explain
+  ≈ 0% of quantity; distributor explains 12%.
+- Consequence: the pasted five-agent design is not supported (Pricing has a constant; Market
+  and Product agents would have no signal; there is no outcome from which to judge a
+  distributor). The file does not satisfy Golden Rule 1 as it stands.
+- **Nothing was built on it. Waiting for the user** (CLAUDE.md §10: variable absent /
+  ambiguity): source URL and licence; and whether to (a) use it explicitly labelled as a
+  synthetic benchmark with a constructed demand-allocation reference, (b) use the source
+  study's real but tiny Tables 2–11, or (c) find another real dataset.

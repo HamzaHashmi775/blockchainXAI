@@ -37,8 +37,21 @@
     }
   ],
   "candidates_not_adopted": {
-    "note": "Other published tables (2-11) of the pharma source study (figshare, CC BY 4.0), downloaded only to characterise what real pharma data exists. NOT part of the primary dataset unless the user approves (docs/dataset_audit.md, Gap P-1).",
-    "path": "data/raw/pharma_paper_tables_candidate/",
-    "records": "data/metadata/pharma_paper_tables_candidate.json"
+    "pharma_paper_tables": {
+      "note": "Other published tables (2-11) of the pharma source study (figshare, CC BY 4.0), downloaded only to characterise what real pharma data exists. NOT part of the primary dataset unless the user approves (docs/dataset_audit.md, Gap P-1).",
+      "path": "data/raw/pharma_paper_tables_candidate/",
+      "records": "data/metadata/pharma_paper_tables_candidate.json"
+    },
+    "pharma_sales_csv": {
+      "path": "data/raw/pharma_sales/pharma-data.csv",
+      "copied_from": "C:/Users/Ahsan/Desktop/archive (1)/pharma-data.csv",
+      "copy_date": "2026-10-05",
+      "size_bytes": 45450412,
+      "sha256": "1f9aeaaa48842241378ebdc1482651ec55df8b05b07eccfe2919356905d7d412",
+      "source_url": null,
+      "license": null,
+      "citation": null,
+      "note": "Supplied by the user. Provenance, licence and citation UNKNOWN. Audit (docs/dataset_audit.md section 4) finds strong signs that it is synthetic or heavily masked. Not adopted; not in git (size)."
+    }
   }
 }

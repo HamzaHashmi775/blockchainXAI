@@ -5,3 +5,4 @@ __pycache__/
 results/raw/*
 results/processed/*
 !results/**/.gitkeep
+data/raw/pharma_sales/pharma-data.csv

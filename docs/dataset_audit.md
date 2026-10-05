@@ -235,3 +235,98 @@ before use.
      (reorders CLAUDE.md phases; the Critical Checkpoint would be evaluated on energy).
    - Simulating supplier attributes for the 24 criteria is **not** offered as an option: it
      would make the pharma case study synthetic, contrary to Golden Rule 1.
+
+---
+
+## 4. Candidate pharma dataset supplied by the user: `pharma-data.csv` (audited 2026-10-05)
+
+Copied unchanged from `C:\Users\Ahsan\Desktop\archive (1)\pharma-data.csv` to
+`data/raw/pharma_sales/pharma-data.csv` (read-only; SHA-256
+`1f9aeaaa48842241378ebdc1482651ec55df8b05b07eccfe2919356905d7d412`, identical to the
+source; 45,450,412 bytes; kept out of git because of its size).
+
+**Provenance, licence and citation are unknown.** One web search for the file name and its
+column names did not identify a source. The folder name suggests a Kaggle archive download.
+Until the user supplies the source URL, licence and author, this file cannot be cited and
+Phase 1 step 2 (metadata) is incomplete for it.
+
+### 4.1 Structure
+
+254,082 rows × 18 columns. No missing values, no blank strings.
+
+| Column | dtype | Type | Distinct | Notes |
+|---|---|---|---|---|
+| `Distributor` | text | categorical | 29 | trailing whitespace in 253,005 rows (same 29 after stripping) |
+| `Customer Name` | text | categorical | 751 | trailing whitespace in 41,261 rows |
+| `City` | text | categorical | 749 | one city per customer; effectively the same variable as customer |
+| `Country` | text | categorical | 2 | Germany 213,598; Poland 40,484 |
+| `Latitude`, `Longitude` | float | numeric | 655 / 709 | city coordinates |
+| `Channel` | text | categorical | 2 | Pharmacy / Hospital |
+| `Sub-channel` | text | categorical | 4 | nested: Hospital→Government/Private, Pharmacy→Institution/Retail |
+| `Product Name` | text | categorical | 240 | |
+| `Product Class` | text | categorical | 6 | one class per product |
+| `Quantity` | float | numeric | 1,735 | min −7,200, median 20, max 117,600; 2,633 negative, 27 zero, 36 non-integer |
+| `Price` | int | numeric | 210 | 22 – 794; **exactly one price per product** in all years, countries, distributors |
+| `Sales` | float | numeric | 20,546 | equals `Quantity × Price` in 100% of rows (no independent information) |
+| `Month`, `Year` | text / int | time | 12 / 4 | 2017–2020, all 48 months present |
+| `Name of Sales Rep` | text | categorical | 13 | |
+| `Manager`, `Sales Team` | text | categorical | 4 / 4 | determined by the sales rep |
+
+- **Unit of observation:** one monthly sales line: distributor × customer × product × month
+  (99% of such combinations have exactly one row). Transaction-like, but there is no order
+  id, date within the month, or delivery record.
+- **Duplicates:** 4 exact duplicate rows.
+- **Outliers (not removed):** quantities are heavily right-skewed (99th percentile 1,600;
+  maximum 117,600); the five largest lines all belong to one distributor in August 2019.
+  Negative quantities (1.0%) look like returns/credit notes, concentrated in three distributors.
+- **Coverage is uneven:** 2018 has 94,434 rows against 51–56 thousand in other years. All
+  40,484 Polish rows, all 200 Polish customers and 13 of the 29 distributors exist **only in
+  2018**. Three distributors account for 77% of rows; 14 distributors appear in one year only.
+
+### 4.2 Is it real data? — evidence that it is synthetic or heavily masked
+
+1. **Generated names.** Distributors and customers are surname combinations in the style of
+   the Faker library ("Gottlieb-Cruickshank", "Zieme, Doyle and Kunze", "Kozey-Emmerich").
+   Product names are invented compounds ("Topipizole", "Choriotrisin").
+2. **Fields are statistically independent of each other.** With 254,082 rows, Cramér's V is
+   0.005–0.011 (all p > 0.1) for product class × distributor, product class × channel,
+   product class × country, sales rep × distributor/class/country. Real markets do not
+   behave this way (hospital and pharmacy product mixes differ; reps have territories).
+3. **Sales reps are assigned uniformly at random:** each of 13 reps has 19.4–19.7 thousand
+   rows and every one of the 751 customers is served by all 13 reps.
+4. **Prices carry no behaviour:** one constant price per product for four years in two
+   countries; Spearman correlation between price and quantity is −0.001.
+5. Share of variance of log(quantity) explained by each field alone (positive rows):
+   distributor 11.9%, customer/city 4.4%, country 4.1%, year 1.5%, month 0.1%, product name
+   0.1%, **channel, sub-channel, product class, sales rep and sales team ≈ 0.0%**.
+
+Quantities themselves look plausible (round pack sizes, returns, country differences), so
+the file may be real volumes with all labels randomised, or fully generated. **Either way it
+must not be described as real-world observational pharma data** unless its source says so,
+and CLAUDE.md Golden Rule 1 ("real data is the primary evidence") is not met by it as it
+stands.
+
+### 4.3 Gaps against the mechanism
+
+| Need | Available? |
+|---|---|
+| Supplier/distributor quality, delivery time, risk, compliance | **Absent** |
+| Cost | Only list price per product (constant); no purchase cost, margin or logistics cost |
+| Decision/outcome label | **Absent** — no "chosen" or "optimal" option, no service outcome |
+| Demand | `Quantity` per distributor × customer × product × month (usable) |
+| Geography | Coordinates of customers; **no distributor location**, so no distance can be computed |
+| Predictive structure for five distinct agents | Weak: only distributor, customer/country and year relate to quantity. A channel-based or product-class-based agent would have **no signal** (item 5 above) |
+
+### 4.4 Consequences for the design proposed with the file
+
+The proposal (Demand, Pricing, Distribution, Market, Product agents choosing a
+distributor/product/channel combination) is not supported as stated:
+- A **Pricing** agent has a constant per product and `Sales` is a product of two other columns.
+- **Market** (channel) and **Product** (class) agents would explain none of the outcome, so
+  their SHAP explanations would be attributions of noise.
+- "Which distributor should be selected" has no ground truth: nothing in the file says a
+  distributor performed well or badly, and product/channel/distributor are independent.
+- Any reference decision would have to be built almost entirely from assumptions, on top of
+  data that is itself probably synthetic.
+
+Nothing has been built on this file. Options are in the research log (2026-10-05 entry).
