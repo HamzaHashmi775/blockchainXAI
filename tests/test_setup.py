@@ -84,3 +84,10 @@ def test_missing_config_key_rejected(tmp_path):
     bad.write_text("name: x\nseeds: [1]\n")
     with pytest.raises(ValueError):
         load_config(bad)
+
+
+def test_stdlib_statistics_is_not_shadowed():
+    import statistics
+
+    assert hasattr(statistics, "mean")
+    assert not (ROOT / "statistics" / "__init__.py").exists()

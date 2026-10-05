@@ -56,3 +56,9 @@ Tests: `pytest -q` → 28 passed.
 
 Next step: Phase 2 (literature matrix, research gap, protocol). The protocol cannot be
 frozen until Q1/Q2 are answered.
+
+### 2026-10-05 — fix after first commit
+- `statistics/__init__.py` made the project folder shadow Python's standard-library
+  `statistics` module. Removed the `__init__.py` (folder kept, see `statistics/README.md`);
+  importable analysis code will live in `evaluation/`. Regression test added.
+- Tests: `pytest -q` → 29 passed.
