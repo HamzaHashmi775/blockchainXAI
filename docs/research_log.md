@@ -114,3 +114,66 @@ Asked the user about Gap P-1. Answers:
   reports score F = 0, E = 0. Fidelity/evidence in results therefore mostly reflect *how
   often* agents falsify, not graded explanation quality.
 - Tests: `pytest -q` → 74 passed.
+
+## 2026-10-05 — Energy main experiment, ablation, robustness; CRITICAL CHECKPOINT
+
+Runs (10 paired seeds each, protocol v1.0, no parameter changed after freezing):
+`energy_baseline`, `energy_ablation`, `energy_proposed`, `energy_adversarial`.
+Raw results in `results/raw/` (git-ignored; regenerate with `run_experiment.py`), summaries
+in `results/summaries/energy_main.json`, `energy_adversarial.json`, tables in `tables/`.
+Two seeds of the proposed run were re-executed and matched the saved files exactly.
+
+### Main result (proposed vs baseline; mean over seeds; Holm-adjusted p for F, E, M)
+| | Baseline | Ablation | Proposed | Δ (prop − base) | p (Holm) |
+|---|---|---|---|---|---|
+| Fidelity | 0.908 | 0.964 | 0.965 | +0.057 (+6.3%) | 0.0015 |
+| Evidence support | 0.908 | 0.964 | 0.965 | +0.057 (+6.3%) | 0.0015 |
+| Manipulation score | 0.070 | 0.035 | 0.034 | −0.036 (−51%) | 0.0015 |
+| Collective accuracy | 0.745 | 0.749 | 0.752 | +0.007 | 0.041 (unadjusted, secondary) |
+
+Pre-declared decision rule: F, E, M each "improved" → **continue = True**.
+
+### What these results do and do not show (must accompany any use of the numbers)
+1. **Fidelity and evidence support are the same number.** A truthful report scores F = 1 and
+   E = 1; a falsified one scores F = 0 and E = 0; no strategy produces anything in between.
+   Both metrics equal "1 − share of falsified reports". H1 and H2 are therefore **one**
+   finding, not two independent ones.
+2. **Honesty was already the best response in the baseline.** In the unilateral-deviation
+   table, honest gives the highest mean payoff for every agent in all 10 seeds in *all three*
+   systems. The decision-quality reward alone outweighs the private gain from steering the
+   vote at ω = 0.5. The experiment did not put the incentive up against a manipulation that
+   actually pays.
+3. **The measured gain is mostly faster/cleaner learning.** With ε = 0.1 exploration, 3.3% of
+   reports are manipulative by chance. Ablation/proposed sit at that floor (3.5–3.6%
+   manipulative; F ≈ 0.965 is essentially the ceiling). The baseline is at 9.2% because its
+   payoff gap between honest and manipulative is smaller (≈ 0.09 vs ≈ 0.24), so the bandits
+   separate the strategies less reliably. The effect is real under the protocol but small in
+   absolute terms and bounded by the behavioural model.
+4. **Reputation adds nothing measurable in the main experiment:** proposed ≈ ablation on
+   every metric. The improvement comes from the explanation-aware utility.
+5. Collective accuracy and collective utility are essentially unchanged.
+
+### Robustness (Phase 7 on energy; ran in the same batch)
+- Malicious share: collective accuracy at 40% is 0.729 (proposed) vs 0.675 (baseline);
+  fidelity of non-malicious agents stays 0.965 vs 0.87–0.90.
+- **H4 primary test is not significant:** mean accuracy degradation over 10–40%, proposed −
+  baseline = −0.017, 95% CI [−0.037, +0.002], paired t, p = 0.070. No per-share comparison
+  survives Holm correction. **H4 is not supported at α = 0.05** (direction as hypothesised).
+- Collusion (2 colluders + 3 honest): in the baseline, colluders raise their private utility
+  (+0.092) and cut collective accuracy by 3.0 points; in the proposed system their
+  reputation falls to 0.012, their private gain disappears (−0.007) and accuracy is
+  unchanged (−0.7 points, p = 0.47). This is the one place reputation shows an effect. It
+  was compared against the baseline only, not against the ablation.
+
+### Hypothesis status (energy only)
+- H1/H2: supported by the pre-declared test, as a single finding, with caveats 1–3.
+- H3: supported by the pre-declared test (manipulation score −51%), same caveats.
+- H4: **not supported** (p = 0.070).
+- H5: not yet tested (blockchain not built). H6: untestable (no pharma study).
+
+### Checkpoint decision
+By the pre-declared rule the mechanism passes. Reported to the user with caveats 1–4 before
+any blockchain work, as CLAUDE.md requires. Open questions for the user are in the
+session report. No weights were re-tuned.
+
+Tests: `pytest -q` (see commit).

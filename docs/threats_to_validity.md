@@ -38,6 +38,15 @@ Started 2026-10-05 (Phase 2). Updated as phases complete.
 - **Five agents make malicious shares coarse.** 10% and 30% are realised as time-averaged
   expectations, not as fixed head-counts.
 
+- **Fidelity and evidence support are degenerate in the current strategy set** (found in
+  the energy runs): truthful reports score 1/1 and falsified reports 0/0, so both metrics
+  reduce to the share of non-falsified reports. They are not independent outcomes, and no
+  graded explanation quality is exercised.
+- **Baseline already favours honesty.** At ω = 0.5 the decision-quality reward makes honest
+  the best unilateral response even without the explanation-aware terms; the measured
+  benefit is a wider payoff gap that ε-greedy learners resolve more reliably, capped by the
+  3.3% exploration floor.
+
 ## External validity
 
 - **Energy data provenance.** The network is a modified IEEE European LV test feeder

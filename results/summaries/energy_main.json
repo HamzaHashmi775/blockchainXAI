@@ -1,0 +1,705 @@
+{
+  "checkpoint": {
+    "continue": true,
+    "verdicts": {
+      "evidence_support": "improved",
+      "fidelity": "improved",
+      "manipulation": "improved"
+    }
+  },
+  "comparisons": {
+    "ablation_vs_baseline": {
+      "collective_accuracy": {
+        "ci_high": 0.010744449589073134,
+        "ci_low": -0.0027444495890731275,
+        "ci_method": "t-interval",
+        "effect_size": 0.4242640687119285,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.7445999999999999,
+        "mean_difference": 0.0040000000000000036,
+        "mean_treatment": 0.7485999999999999,
+        "n": 10,
+        "p_value": 0.21257989232273622,
+        "relative_improvement": 0.005372011818426006,
+        "shapiro_p": 0.16257125660567262,
+        "statistic": 1.3416407864998736,
+        "test": "paired t-test"
+      },
+      "collective_utility": {
+        "ci_high": 0.0005268890045808312,
+        "ci_low": -0.003238691498889855,
+        "ci_method": "t-interval",
+        "effect_size": -0.5151680172936012,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.6252022376103572,
+        "mean_difference": -0.0013559012471545118,
+        "mean_treatment": 0.6238463363632026,
+        "n": 10,
+        "p_value": 0.13773089146214412,
+        "relative_improvement": -0.00216874023409942,
+        "shapiro_p": 0.12857409398065334,
+        "statistic": -1.6291043123207924,
+        "test": "paired t-test"
+      },
+      "consistency": {
+        "ci_high": 0.06705058206077569,
+        "ci_low": 0.026176084605890985,
+        "ci_method": "t-interval",
+        "effect_size": 1.6315880065371993,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.5752293333333334,
+        "mean_difference": 0.04661333333333334,
+        "mean_treatment": 0.6218426666666667,
+        "n": 10,
+        "p_value": 0.0005954638680881959,
+        "relative_improvement": 0.08103434688078022,
+        "shapiro_p": 0.9501408318003093,
+        "statistic": 5.159534303671244,
+        "test": "paired t-test"
+      },
+      "decision_quality": {
+        "ci_high": 0.024095261288876357,
+        "ci_low": 0.005264738711123675,
+        "ci_method": "t-interval",
+        "effect_size": 1.1153635632031045,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.68396,
+        "mean_difference": 0.014680000000000016,
+        "mean_treatment": 0.69864,
+        "n": 10,
+        "p_value": 0.00644331626189982,
+        "relative_improvement": 0.021463243464530126,
+        "shapiro_p": 0.10314483394567947,
+        "statistic": 3.527089278882979,
+        "test": "paired t-test"
+      },
+      "evidence_support": {
+        "ci_high": 0.08216917339119076,
+        "ci_low": 0.031430826608809206,
+        "ci_method": "t-interval",
+        "effect_size": 1.6016395817312261,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.90768,
+        "mean_difference": 0.05679999999999998,
+        "mean_treatment": 0.96448,
+        "n": 10,
+        "p_holm": 0.0014524940580269527,
+        "p_value": 0.0006765955763090011,
+        "relative_improvement": 0.06257711968975846,
+        "shapiro_p": 0.3910108600071353,
+        "statistic": 5.0648290689500834,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "fidelity": {
+        "ci_high": 0.08216917339119076,
+        "ci_low": 0.031430826608809206,
+        "ci_method": "t-interval",
+        "effect_size": 1.6016395817312261,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.90768,
+        "mean_difference": 0.05679999999999998,
+        "mean_treatment": 0.96448,
+        "n": 10,
+        "p_holm": 0.0014524940580269527,
+        "p_value": 0.0006765955763090011,
+        "relative_improvement": 0.06257711968975846,
+        "shapiro_p": 0.3910108600071353,
+        "statistic": 5.0648290689500834,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "manipulation": {
+        "ci_high": -0.020222569086794873,
+        "ci_low": -0.050192369932750364,
+        "ci_method": "t-interval",
+        "effect_size": -1.6807523403323756,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.07008368146431639,
+        "mean_difference": -0.03520746950977262,
+        "mean_treatment": 0.03487621195454378,
+        "n": 10,
+        "p_holm": 0.0014524940580269527,
+        "p_value": 0.00048416468600898425,
+        "relative_improvement": -0.502363300188486,
+        "shapiro_p": 0.6447885324348213,
+        "statistic": -5.315005578108793,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "manipulation_success": {
+        "ci_high": -0.004898510475533739,
+        "ci_low": -0.037501489524466254,
+        "ci_method": "t-interval",
+        "effect_size": -0.930317832846912,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.046200000000000005,
+        "mean_difference": -0.021199999999999997,
+        "mean_treatment": 0.025,
+        "n": 10,
+        "p_value": 0.016435268823607567,
+        "relative_improvement": -0.4588744588744589,
+        "shapiro_p": 0.3293734457488152,
+        "statistic": -2.9419232996680496,
+        "test": "paired t-test"
+      }
+    },
+    "proposed_vs_baseline": {
+      "collective_accuracy": {
+        "ci_high": 0.014443026911991603,
+        "ci_low": 0.0003569730880084096,
+        "ci_method": "t-interval",
+        "effect_size": 0.7516144933607828,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.7445999999999999,
+        "mean_difference": 0.007400000000000006,
+        "mean_treatment": 0.752,
+        "n": 10,
+        "p_value": 0.04144356505899872,
+        "relative_improvement": 0.0099382218640882,
+        "shapiro_p": 0.43501026998416686,
+        "statistic": 2.376813721413578,
+        "test": "paired t-test"
+      },
+      "collective_utility": {
+        "ci_high": 0.0014863217276099168,
+        "ci_low": -0.002386175847258286,
+        "ci_method": "t-interval",
+        "effect_size": -0.16622782749670847,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.6252022376103572,
+        "mean_difference": -0.0004499270598241845,
+        "mean_treatment": 0.624752310550533,
+        "n": 10,
+        "p_value": 0.61182960269803,
+        "relative_improvement": -0.0007196504311050929,
+        "shapiro_p": 0.20949223498108804,
+        "statistic": -0.5256585453911642,
+        "test": "paired t-test"
+      },
+      "consistency": {
+        "ci_high": 0.06839096511747991,
+        "ci_low": 0.030665034882520117,
+        "ci_method": "t-interval",
+        "effect_size": 1.8782941397735342,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.5752293333333334,
+        "mean_difference": 0.049528000000000016,
+        "mean_treatment": 0.6247573333333334,
+        "n": 10,
+        "p_value": 0.00021809745106225438,
+        "relative_improvement": 0.0861013114769298,
+        "shapiro_p": 0.5210145946811046,
+        "statistic": 5.93968759743103,
+        "test": "paired t-test"
+      },
+      "decision_quality": {
+        "ci_high": 0.023148513784586912,
+        "ci_low": 0.005011486215413096,
+        "ci_method": "t-interval",
+        "effect_size": 1.1106809203053745,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.68396,
+        "mean_difference": 0.014080000000000004,
+        "mean_treatment": 0.69804,
+        "n": 10,
+        "p_value": 0.006594932511160403,
+        "relative_improvement": 0.020585999181238643,
+        "shapiro_p": 0.5228187504727995,
+        "statistic": 3.512281461856942,
+        "test": "paired t-test"
+      },
+      "evidence_support": {
+        "ci_high": 0.082198900824754,
+        "ci_low": 0.03220109917524597,
+        "ci_method": "t-interval",
+        "effect_size": 1.636808566439226,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.90768,
+        "mean_difference": 0.05719999999999999,
+        "mean_treatment": 0.96488,
+        "n": 10,
+        "p_holm": 0.0015229213177098523,
+        "p_value": 0.0005824282094299174,
+        "relative_improvement": 0.06301780363123559,
+        "shapiro_p": 0.3423140577093521,
+        "statistic": 5.176043163622995,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "fidelity": {
+        "ci_high": 0.082198900824754,
+        "ci_low": 0.03220109917524597,
+        "ci_method": "t-interval",
+        "effect_size": 1.636808566439226,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.90768,
+        "mean_difference": 0.05719999999999999,
+        "mean_treatment": 0.96488,
+        "n": 10,
+        "p_holm": 0.0015229213177098523,
+        "p_value": 0.0005824282094299174,
+        "relative_improvement": 0.06301780363123559,
+        "shapiro_p": 0.3423140577093521,
+        "statistic": 5.176043163622995,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "manipulation": {
+        "ci_high": -0.020442326768824133,
+        "ci_low": -0.051097340383696684,
+        "ci_method": "t-interval",
+        "effect_size": -1.6694298554664417,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.07008368146431639,
+        "mean_difference": -0.03576983357626041,
+        "mean_treatment": 0.034313847888055984,
+        "n": 10,
+        "p_holm": 0.0015229213177098523,
+        "p_value": 0.0005076404392366174,
+        "relative_improvement": -0.51038748006514,
+        "shapiro_p": 0.7422059579728287,
+        "statistic": -5.2792007371596545,
+        "test": "paired t-test",
+        "verdict": "improved"
+      },
+      "manipulation_success": {
+        "ci_high": -0.011439867869822314,
+        "ci_low": -0.03976013213017769,
+        "ci_method": "t-interval",
+        "effect_size": -1.2932885529945415,
+        "effect_size_name": "cohen_dz",
+        "mean_control": 0.046200000000000005,
+        "mean_difference": -0.0256,
+        "mean_treatment": 0.0206,
+        "n": 10,
+        "p_value": 0.0027181034010823543,
+        "relative_improvement": -0.5541125541125541,
+        "shapiro_p": 0.08594539112468585,
+        "statistic": -4.089737499286128,
+        "test": "paired t-test"
+      }
+    }
+  },
+  "descriptive": {
+    "collective_accuracy": {
+      "ablation": {
+        "ci_high": 0.7590495446993181,
+        "ci_low": 0.7381504553006818,
+        "mean": 0.7485999999999999,
+        "n": 10,
+        "sd": 0.014607456239119054
+      },
+      "baseline": {
+        "ci_high": 0.7584063676934825,
+        "ci_low": 0.7307936323065174,
+        "mean": 0.7445999999999999,
+        "n": 10,
+        "sd": 0.019299971214716605
+      },
+      "proposed": {
+        "ci_high": 0.7665748788403915,
+        "ci_low": 0.7374251211596085,
+        "mean": 0.752,
+        "n": 10,
+        "sd": 0.02037427571991485
+      }
+    },
+    "collective_utility": {
+      "ablation": {
+        "ci_high": 0.6259202965084091,
+        "ci_low": 0.6217723762179962,
+        "mean": 0.6238463363632026,
+        "n": 10,
+        "sd": 0.0028991963702262088
+      },
+      "baseline": {
+        "ci_high": 0.6282336793322969,
+        "ci_low": 0.6221707958884175,
+        "mean": 0.6252022376103572,
+        "n": 10,
+        "sd": 0.004237663321117075
+      },
+      "proposed": {
+        "ci_high": 0.6267890117369382,
+        "ci_low": 0.6227156093641278,
+        "mean": 0.624752310550533,
+        "n": 10,
+        "sd": 0.0028471119372806457
+      }
+    },
+    "consistency": {
+      "ablation": {
+        "ci_high": 0.6286409555780987,
+        "ci_low": 0.6150443777552346,
+        "mean": 0.6218426666666667,
+        "n": 10,
+        "sd": 0.00950335259880865
+      },
+      "baseline": {
+        "ci_high": 0.5949865336754002,
+        "ci_low": 0.5554721329912665,
+        "mean": 0.5752293333333334,
+        "n": 10,
+        "sd": 0.027618661645907285
+      },
+      "proposed": {
+        "ci_high": 0.632550811036754,
+        "ci_low": 0.6169638556299127,
+        "mean": 0.6247573333333334,
+        "n": 10,
+        "sd": 0.010894530601959723
+      }
+    },
+    "decision_quality": {
+      "ablation": {
+        "ci_high": 0.7073434240940116,
+        "ci_low": 0.6899365759059884,
+        "mean": 0.69864,
+        "n": 10,
+        "sd": 0.012166547944626223
+      },
+      "baseline": {
+        "ci_high": 0.6945171212176399,
+        "ci_low": 0.6734028787823602,
+        "mean": 0.68396,
+        "n": 10,
+        "sd": 0.014757837842237529
+      },
+      "proposed": {
+        "ci_high": 0.7076156459234452,
+        "ci_low": 0.6884643540765548,
+        "mean": 0.69804,
+        "n": 10,
+        "sd": 0.013385829987133563
+      }
+    },
+    "evidence_support": {
+      "ablation": {
+        "ci_high": 0.9673881015526036,
+        "ci_low": 0.9615718984473964,
+        "mean": 0.96448,
+        "n": 10,
+        "sd": 0.004065245653367377
+      },
+      "baseline": {
+        "ci_high": 0.9331268002555687,
+        "ci_low": 0.8822331997444314,
+        "mean": 0.90768,
+        "n": 10,
+        "sd": 0.03557217389414871
+      },
+      "proposed": {
+        "ci_high": 0.9682865813623361,
+        "ci_low": 0.9614734186376638,
+        "mean": 0.96488,
+        "n": 10,
+        "sd": 0.004762072378002406
+      }
+    },
+    "fidelity": {
+      "ablation": {
+        "ci_high": 0.9673881015526036,
+        "ci_low": 0.9615718984473964,
+        "mean": 0.96448,
+        "n": 10,
+        "sd": 0.004065245653367377
+      },
+      "baseline": {
+        "ci_high": 0.9331268002555687,
+        "ci_low": 0.8822331997444314,
+        "mean": 0.90768,
+        "n": 10,
+        "sd": 0.03557217389414871
+      },
+      "proposed": {
+        "ci_high": 0.9682865813623361,
+        "ci_low": 0.9614734186376638,
+        "mean": 0.96488,
+        "n": 10,
+        "sd": 0.004762072378002406
+      }
+    },
+    "manipulation": {
+      "ablation": {
+        "ci_high": 0.037654488097328194,
+        "ci_low": 0.03209793581175937,
+        "mean": 0.03487621195454378,
+        "n": 10,
+        "sd": 0.0038837622445464194
+      },
+      "baseline": {
+        "ci_high": 0.08466655613491815,
+        "ci_low": 0.05550080679371462,
+        "mean": 0.07008368146431639,
+        "n": 10,
+        "sd": 0.020385453119816217
+      },
+      "proposed": {
+        "ci_high": 0.03700130724903535,
+        "ci_low": 0.03162638852707662,
+        "mean": 0.034313847888055984,
+        "n": 10,
+        "sd": 0.003756809137576946
+      }
+    },
+    "manipulation_success": {
+      "ablation": {
+        "ci_high": 0.031335835164289845,
+        "ci_low": 0.018664164835710158,
+        "mean": 0.025,
+        "n": 10,
+        "sd": 0.008856886837057616
+      },
+      "baseline": {
+        "ci_high": 0.05815975580921914,
+        "ci_low": 0.03424024419078087,
+        "mean": 0.046200000000000005,
+        "n": 10,
+        "sd": 0.01671858579877829
+      },
+      "proposed": {
+        "ci_high": 0.028524369511721857,
+        "ci_low": 0.012675630488278144,
+        "mean": 0.0206,
+        "n": 10,
+        "sd": 0.011077504733066517
+      }
+    }
+  },
+  "domain": "energy",
+  "model_val_accuracy": {
+    "consumer": {
+      "ci_high": 0.7125233236515658,
+      "ci_low": 0.7085481049198628,
+      "mean": 0.7105357142857143,
+      "n": 10,
+      "sd": 0.0027784863041960695
+    },
+    "grid": {
+      "ci_high": 0.7503027893522081,
+      "ci_low": 0.7486257820763635,
+      "mean": 0.7494642857142858,
+      "n": 10,
+      "sd": 0.001172147260931895
+    },
+    "market": {
+      "ci_high": 0.7509330131031666,
+      "ci_low": 0.7489479392777858,
+      "mean": 0.7499404761904762,
+      "n": 10,
+      "sd": 0.0013874709315116686
+    },
+    "producer": {
+      "ci_high": 0.7591008232784263,
+      "ci_low": 0.7553039386263355,
+      "mean": 0.7572023809523809,
+      "n": 10,
+      "sd": 0.002653839377519468
+    },
+    "storage": {
+      "ci_high": 0.801570632545258,
+      "ci_low": 0.7992627007880754,
+      "mean": 0.8004166666666667,
+      "n": 10,
+      "sd": 0.0016131330654109344
+    }
+  },
+  "n_seeds": 10,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "strategy_share": {
+    "ablation": {
+      "honest": {
+        "ci_high": 0.9077785542777183,
+        "ci_low": 0.8615014457222819,
+        "mean": 0.8846400000000001,
+        "n": 10,
+        "sd": 0.03234546851312147
+      },
+      "manipulative": {
+        "ci_high": 0.03842810155260357,
+        "ci_low": 0.03261189844739643,
+        "mean": 0.03552,
+        "n": 10,
+        "sd": 0.0040652456533673605
+      },
+      "strategic": {
+        "ci_high": 0.1030496099993451,
+        "ci_low": 0.0566303900006549,
+        "mean": 0.07984,
+        "n": 10,
+        "sd": 0.032444797562766345
+      }
+    },
+    "baseline": {
+      "honest": {
+        "ci_high": 0.8666577529851202,
+        "ci_low": 0.77918224701488,
+        "mean": 0.8229200000000001,
+        "n": 10,
+        "sd": 0.0611411627120206
+      },
+      "manipulative": {
+        "ci_high": 0.11776680025556868,
+        "ci_low": 0.06687319974443132,
+        "mean": 0.09232,
+        "n": 10,
+        "sd": 0.03557217389414872
+      },
+      "strategic": {
+        "ci_high": 0.11653099671976841,
+        "ci_low": 0.052989003280231574,
+        "mean": 0.08475999999999999,
+        "n": 10,
+        "sd": 0.04441279095035573
+      }
+    },
+    "proposed": {
+      "honest": {
+        "ci_high": 0.9135222698303399,
+        "ci_low": 0.8726377301696601,
+        "mean": 0.89308,
+        "n": 10,
+        "sd": 0.02857632275542504
+      },
+      "manipulative": {
+        "ci_high": 0.03852658136233615,
+        "ci_low": 0.031713418637663846,
+        "mean": 0.03512,
+        "n": 10,
+        "sd": 0.00476207237800239
+      },
+      "strategic": {
+        "ci_high": 0.09247776090778881,
+        "ci_low": 0.05112223909221117,
+        "mean": 0.07179999999999999,
+        "n": 10,
+        "sd": 0.028905516582287346
+      }
+    }
+  },
+  "unilateral_deviation": {
+    "ablation": {
+      "consumer": {
+        "best_response": "honest",
+        "honest": 0.5200941183076454,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.2922235901098901,
+        "strategic": 0.39980080813974045
+      },
+      "grid": {
+        "best_response": "honest",
+        "honest": 0.5781505654886506,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.3283698424548458,
+        "strategic": 0.4540758831450443
+      },
+      "market": {
+        "best_response": "honest",
+        "honest": 0.5398821428571429,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.2929,
+        "strategic": 0.41933171428571425
+      },
+      "producer": {
+        "best_response": "honest",
+        "honest": 0.538525,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.30027499999999996,
+        "strategic": 0.4353549523809524
+      },
+      "storage": {
+        "best_response": "honest",
+        "honest": 0.6687571428571429,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.3965,
+        "strategic": 0.6157250952380953
+      }
+    },
+    "baseline": {
+      "consumer": {
+        "best_response": "honest",
+        "honest": 0.5200941183076454,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.40613430439560433,
+        "strategic": 0.4119614271873595
+      },
+      "grid": {
+        "best_response": "honest",
+        "honest": 0.5781505654886506,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.46405912816913153,
+        "strategic": 0.46527974028790153
+      },
+      "market": {
+        "best_response": "honest",
+        "honest": 0.5398821428571429,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.4418857142857143,
+        "strategic": 0.43997142857142857
+      },
+      "producer": {
+        "best_response": "honest",
+        "honest": 0.538525,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.4526928571428571,
+        "strategic": 0.44984999999999997
+      },
+      "storage": {
+        "best_response": "honest",
+        "honest": 0.6687571428571429,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.6263250000000001,
+        "strategic": 0.6193321428571429
+      }
+    },
+    "proposed": {
+      "consumer": {
+        "best_response": "honest",
+        "honest": 0.5178332931572672,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.28089829128859295,
+        "strategic": 0.39366564790553404
+      },
+      "grid": {
+        "best_response": "honest",
+        "honest": 0.5763755332834425,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.31851535204258796,
+        "strategic": 0.4469943912268202
+      },
+      "market": {
+        "best_response": "honest",
+        "honest": 0.5417892857142858,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.2849499999999999,
+        "strategic": 0.41410038095238094
+      },
+      "producer": {
+        "best_response": "honest",
+        "honest": 0.5406821428571427,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.288125,
+        "strategic": 0.42785419047619044
+      },
+      "storage": {
+        "best_response": "honest",
+        "honest": 0.6682142857142856,
+        "honest_is_best_in_n_seeds": 10,
+        "manipulative": 0.37635,
+        "strategic": 0.6152502857142856
+      }
+    }
+  }
+}
