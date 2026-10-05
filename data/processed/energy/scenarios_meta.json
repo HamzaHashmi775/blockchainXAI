@@ -1,0 +1,56 @@
+{
+  "constructed_reference": {
+    "actions": [
+      "idle",
+      "charge",
+      "discharge"
+    ],
+    "column": "reference_action",
+    "method": "daily perfect-foresight LP (protocol section 3)",
+    "simulated_battery_parameters": {
+      "c_rate": 0.5,
+      "capacity": 0.1078,
+      "idle_band": 0.05,
+      "power": 0.0539,
+      "round_trip_efficiency": 0.9,
+      "soc_max": 0.9,
+      "soc_min": 0.1,
+      "soc_start": 0.5
+    }
+  },
+  "derived_columns": [
+    "hour_of_day",
+    "day",
+    "load_mw",
+    "pv_mw",
+    "net_demand_mw",
+    "thermal_total",
+    "price_rank_day",
+    "sell_rank_day",
+    "spread",
+    "ev_home",
+    "price_day_median",
+    "sell_day_median"
+  ],
+  "real_columns": [
+    "Hour",
+    "PG_max",
+    "Price",
+    "Price_SG",
+    "Gas_Price",
+    "Temperature",
+    "TL_Flex_Availability"
+  ],
+  "reference_action_shares": {
+    "charge": 0.19029680365296803,
+    "discharge": 0.16986301369863013,
+    "idle": 0.6398401826484018
+  },
+  "source": "data/raw/energy/Case_Study_OptiREC.xlsx",
+  "split_counts": {
+    "test": 1680,
+    "train": 5400,
+    "val": 1680
+  },
+  "unit": "one hour of the community"
+}

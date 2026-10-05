@@ -1,5 +1,5 @@
-# STUB (Phase 0). Agent/scenario/metric parameters are added once the research
-# protocol (docs/research_protocol.md) is frozen in Phase 2.
+# STUB. The pharma case study is deferred (docs/research_log.md, GATE 1 decision);
+# parameters are added when its protocol section is frozen by amendment.
 name: pharma_adversarial
 experiment: pharma_adversarial
 domain: pharma

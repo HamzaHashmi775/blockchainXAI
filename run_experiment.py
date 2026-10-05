@@ -15,6 +15,7 @@ from pathlib import Path
 
 import yaml
 
+import experiments.energy  # noqa: F401  (registers the energy experiments)
 from experiments import REGISTRY
 from utils.seed import seed_everything
 

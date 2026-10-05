@@ -50,7 +50,9 @@ def test_config_loads_and_is_paired(path):
     # paired comparison: every config of a domain uses the same seeds
     reference = load_config(ROOT / "configs" / f"{cfg['domain']}_baseline.yaml")
     assert cfg["seeds"] == reference["seeds"]
-    assert set(cfg["incentive_weights"]) == {"alpha", "beta", "gamma", "delta", "lambda"}
+    systems = cfg["systems"].values() if "systems" in cfg else [cfg]
+    for system in systems:
+        assert set(system["incentive_weights"]) == {"alpha", "beta", "gamma", "delta", "lambda"}
     for rel in cfg["dataset_files"]:
         assert (ROOT / rel).is_file()
 

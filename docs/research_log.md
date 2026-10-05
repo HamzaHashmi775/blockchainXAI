@@ -62,3 +62,55 @@ frozen until Q1/Q2 are answered.
   `statistics` module. Removed the `__init__.py` (folder kept, see `statistics/README.md`);
   importable analysis code will live in `evaluation/`. Regression test added.
 - Tests: `pytest -q` → 29 passed.
+
+## 2026-10-05 — GATE 1 decision (user)
+
+Asked the user about Gap P-1. Answers:
+- **Q1 → "Energy first, pharma later."** The energy case study is run first; pharma is
+  deferred. This is a **deviation from the CLAUDE.md phase order**: Phases 3–8 (pharma) are
+  postponed and the Phase 4–8 machinery (game, XAI, metrics, manipulation, incentive, reward,
+  reputation, checkpoint) is developed on the energy data. The Critical Checkpoint (Phase 6)
+  will be evaluated on energy.
+- **Q2 → "4 criteria + reliability."** If/when the source study's Tables 2–11 are used for
+  pharma, the five agents are Cost (product price), Quality (product quality), Service (CRM),
+  Record/Risk (past record documentation) and a fifth agent on the Z-number reliability
+  labels. No Logistics or Compliance agent (no supplier-level data). Whether to adopt those
+  tables is still to be confirmed when pharma is taken up.
+- GATE 1 satisfied: audit complete, gaps documented, user informed and decided.
+
+## 2026-10-05 — Phase 2 (literature, gap, protocol) completed
+
+- `docs/literature_matrix.csv`: 26 sources, each verified to exist via Crossref or the arXiv
+  API (verification channel recorded per row). Rows read only at abstract/metadata level are
+  marked; Tian (2025, Sci. Rep.) is metadata-only and must be read before being cited.
+- `docs/research_gap.md`: gap is defensible only as "to our knowledge, among works reviewed".
+  Closest prior work: MEA (faithfulness as a reward; no strategic agents) and DART
+  (blockchain reputation/incentives for LLM agents; no explanation fidelity). The review is
+  not systematic.
+- `docs/research_protocol.md` v1.0 **frozen** for the energy case study; pharma section
+  deferred. `docs/threats_to_validity.md` started.
+- Energy companion article (García-Muñoz, Farriol & Eichman 2025, SEGAN,
+  doi:10.1016/j.segan.2025.101755) is paywalled; only the repository abstract was read. It
+  states the network is a modified IEEE European LV test feeder. Units, column definitions
+  and whether profiles are metered remain unverified.
+- Design decisions recorded in the protocol: the decision is the community's hourly storage
+  action; its ground truth is a constructed reference (daily perfect-foresight LP under
+  simulated battery parameters A1–A5); 10%/30% malicious shares are realised in expectation
+  because five agents cannot realise them exactly.
+- GATE 2 met.
+
+## 2026-10-05 — Energy pipeline implemented (Steps 25–28 and 13–16 on energy)
+
+- `environments/energy/preprocess.py` (features, reference LP, weekly blocked split;
+  output `data/processed/energy/`), `agents/energy_agents.py` (five random-forest agents and
+  private objectives), `xai/shap_explainer.py` (TreeSHAP), `evaluation/metrics.py`
+  (fidelity, evidence, consistency, collective decision, contribution),
+  `game/strategies.py`, `incentives/mechanism.py` (five attack scores, utility, reward),
+  `reputation/reputation.py`, `experiments/energy.py` (runner, adversarial, collusion,
+  unilateral-deviation table). Energy configs carry the frozen protocol values.
+- Validation-split accuracy of the agents' models (seed 0): 0.71–0.80 against a majority
+  share of about 0.64 — the single-view models are modest predictors of the reference.
+- By construction and confirmed by test: truthful reports score F = 1, E = 1; falsified
+  reports score F = 0, E = 0. Fidelity/evidence in results therefore mostly reflect *how
+  often* agents falsify, not graded explanation quality.
+- Tests: `pytest -q` → 74 passed.
