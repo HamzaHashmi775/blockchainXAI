@@ -240,10 +240,10 @@ before use.
 
 ## 4. Candidate pharma dataset supplied by the user: `pharma-data.csv` (audited 2026-10-05)
 
-Copied unchanged from `C:\Users\Ahsan\Desktop\archive (1)\pharma-data.csv` to
-`data/raw/pharma_sales/pharma-data.csv` (read-only; SHA-256
-`1f9aeaaa48842241378ebdc1482651ec55df8b05b07eccfe2919356905d7d412`, identical to the
-source; 45,450,412 bytes; kept out of git because of its size).
+Audited from a byte-identical copy of `C:\Users\Ahsan\Desktop\archive (1)\pharma-data.csv`
+(SHA-256 `1f9aeaaa48842241378ebdc1482651ec55df8b05b07eccfe2919356905d7d412`; 45,450,412
+bytes). The project copy was removed afterwards because drive C: ran out of space; the
+original stays where the user put it and is not in `data/raw/` or git.
 
 **Provenance, licence and citation are unknown.** One web search for the file name and its
 column names did not identify a source. The folder name suggests a Kaggle archive download.

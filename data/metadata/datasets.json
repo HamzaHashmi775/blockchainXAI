@@ -43,9 +43,9 @@
       "records": "data/metadata/pharma_paper_tables_candidate.json"
     },
     "pharma_sales_csv": {
-      "path": "data/raw/pharma_sales/pharma-data.csv",
-      "copied_from": "C:/Users/Ahsan/Desktop/archive (1)/pharma-data.csv",
-      "copy_date": "2026-10-05",
+      "path": "C:/Users/Ahsan/Desktop/archive (1)/pharma-data.csv",
+      "audit_date": "2026-10-05",
+      "storage_note": "Project copy under data/raw/pharma_sales/ removed on 2026-10-05 (drive C: out of space); the original at the path above has the same SHA-256.",
       "size_bytes": 45450412,
       "sha256": "1f9aeaaa48842241378ebdc1482651ec55df8b05b07eccfe2919356905d7d412",
       "source_url": null,
