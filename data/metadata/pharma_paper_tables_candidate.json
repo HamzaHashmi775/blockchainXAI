@@ -1,0 +1,112 @@
+[
+  {
+    "figshare_id": 6971477,
+    "doi": "10.1371/journal.pone.0201604.t002",
+    "title": "Questionnaire.",
+    "file": "Table 2.xls",
+    "size": 22016,
+    "sha256": "5ebfd198fc07a992ddabb343206755e79265eb8d63fac83893b33cfbe79b7b2f",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Questionnaire_/6971477"
+  },
+  {
+    "figshare_id": 6971480,
+    "doi": "10.1371/journal.pone.0201604.t003",
+    "title": "Linguistic variable for importance weight of each criterion.",
+    "file": "Table 3.xls",
+    "size": 5632,
+    "sha256": "857c157a18d9c9543886b2a26299c432fafdd4ffbf002c1d9ec348fd4bcafb5b",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Linguistic_variable_for_importance_weight_of_each_criterion_/6971480"
+  },
+  {
+    "figshare_id": 6971483,
+    "doi": "10.1371/journal.pone.0201604.t004",
+    "title": "Linguistic variable for the ratings of all alternatives.",
+    "file": "Table 4.xls",
+    "size": 5632,
+    "sha256": "f634de3b86187c36d8ed87a5814b9c051788e206d440441841dccb86d8db3759",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Linguistic_variable_for_the_ratings_of_all_alternatives_/6971483"
+  },
+  {
+    "figshare_id": 6971486,
+    "doi": "10.1371/journal.pone.0201604.t005",
+    "title": "Linguistic variables for the expert\u2019s reliability.",
+    "file": "Table 5.xls",
+    "size": 5632,
+    "sha256": "4f3f26394653dd163f07f0e3ee5667f61fb3b140d714ff4761c4ef1e09f27e6a",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Linguistic_variables_for_the_expert_s_reliability_/6971486"
+  },
+  {
+    "figshare_id": 6971489,
+    "doi": "10.1371/journal.pone.0201604.t006",
+    "title": "Importance of the criteria and the DM reliability.",
+    "file": "Table 6.xls",
+    "size": 5632,
+    "sha256": "666553cb5d6142031ec9454661c7837b2fc068c490975468a36ad262591e5391",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Importance_of_the_criteria_and_the_DM_reliability_/6971489"
+  },
+  {
+    "figshare_id": 6971492,
+    "doi": "10.1371/journal.pone.0201604.t007",
+    "title": "Rating of four suppliers by <i>DM</i><sub><i>1</i></sub> for all criteria.",
+    "file": "Table 7.xls",
+    "size": 5632,
+    "sha256": "9a99b3493f567959a399c09caa2615a1d578151b55dd722bf861f37f29de5bb4",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Rating_of_four_suppliers_by_i_DM_i_sub_i_1_i_sub_for_all_criteria_/6971492"
+  },
+  {
+    "figshare_id": 6971495,
+    "doi": "10.1371/journal.pone.0201604.t008",
+    "title": "Rating of four suppliers by <i>DM</i><sub><i>2</i></sub> for all criteria.",
+    "file": "Table 8.xls",
+    "size": 5632,
+    "sha256": "f7e5b59551a82d7617ce539b793d0b0a9075bc3f620241a0d96b99f1b7796958",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Rating_of_four_suppliers_by_i_DM_i_sub_i_2_i_sub_for_all_criteria_/6971495"
+  },
+  {
+    "figshare_id": 6971498,
+    "doi": "10.1371/journal.pone.0201604.t009",
+    "title": "Suppliers ranking based on Z-TOPSIS.",
+    "file": "Table 9.xls",
+    "size": 5632,
+    "sha256": "c8fc8abbbeebc7e7c74cfb8ee720e0b88ce80280e6a4e2bbed654f0855eace8c",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Suppliers_ranking_based_on_Z-TOPSIS_/6971498"
+  },
+  {
+    "figshare_id": 6971501,
+    "doi": "10.1371/journal.pone.0201604.t010",
+    "title": "Criteria weights according to different cases.",
+    "file": "Table 10.xls",
+    "size": 5632,
+    "sha256": "33a9a6e75ebf4df027049d00c75a6001b7ec5107e2f3da0cb4a0d973ec880850",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Criteria_weights_according_to_different_cases_/6971501"
+  },
+  {
+    "figshare_id": 6971504,
+    "doi": "10.1371/journal.pone.0201604.t011",
+    "title": "Sensitivity analysis results.",
+    "file": "Table 11.xls",
+    "size": 5632,
+    "sha256": "8a8e6ea2ef4c7df880acdfe6232e818798ed67de78d080cee610f2dd102ab448",
+    "md5_matches_figshare": true,
+    "license": "CC BY 4.0",
+    "url": "https://plos.figshare.com/articles/dataset/Sensitivity_analysis_results_/6971504"
+  }
+]

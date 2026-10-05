@@ -1,0 +1,44 @@
+{
+  "download_date": "2026-10-05",
+  "datasets": [
+    {
+      "key": "pharma",
+      "path": "data/raw/pharma/Table 1.xls",
+      "title": "Supplier selection criteria in pharmaceutical companies.",
+      "source_url": "https://figshare.com/articles/dataset/Supplier_selection_criteria_in_pharmaceutical_companies_/6971474",
+      "download_url": "https://ndownloader.figshare.com/files/12787448",
+      "doi": "10.1371/journal.pone.0201604.t001",
+      "version": 1,
+      "size_bytes": 9728,
+      "sha256": "7f389937757bacdda8c72890980a8bc6eb465ac7c738531881b362e755eaa470",
+      "md5": "d010d97e8f5a0714c7eb0ade744fdd63",
+      "md5_matches_repository": true,
+      "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)",
+      "citation": "Forghani, Athena; Sadjadi, Seyed Jafar; Moghadam, Babak Farhang (2018). Supplier selection criteria in pharmaceutical companies.. PLOS ONE. Dataset. https://doi.org/10.1371/journal.pone.0201604.t001",
+      "source_study": "Forghani A, Sadjadi SJ, Farhang Moghadam B (2018). A supplier selection model in pharmaceutical supply chain using PCA, Z-TOPSIS and MILP: A case study. PLOS ONE. https://doi.org/10.1371/journal.pone.0201604",
+      "raw_api_record": "data/metadata/figshare_6971474_api.json"
+    },
+    {
+      "key": "energy",
+      "path": "data/raw/energy/Case_Study_OptiREC.xlsx",
+      "title": "Operational Data of an Energy Community Under P2P Trading and Flexibility Market Models",
+      "source_url": "https://data.mendeley.com/datasets/bvp4vrn9gc/1",
+      "download_url": "https://data.mendeley.com/public-files/datasets/bvp4vrn9gc/files/54df0d50-1ec2-4ed3-a9e8-841eedbb18da/file_downloaded",
+      "doi": "10.17632/bvp4vrn9gc.1",
+      "version": 1,
+      "published": "2025-05-02",
+      "size_bytes": 6535061,
+      "sha256": "b61c6049fca02d9e58ca280f3484ff7c9c83219ba08db6d6485e20d0817ed09a",
+      "sha256_matches_repository": true,
+      "license": "CC BY 4.0 (http://creativecommons.org/licenses/by/4.0)",
+      "citation": "Garcia-Munoz, Fernando (2025). Operational Data of an Energy Community Under P2P Trading and Flexibility Market Models. Mendeley Data, V1. https://doi.org/10.17632/bvp4vrn9gc.1",
+      "citation_note": "Assembled from the repository API record (contributor Fernando García-Muñoz, title, year, DOI); the repository page's own cite string was not retrieved.",
+      "raw_api_record": "data/metadata/mendeley_bvp4vrn9gc_api.json"
+    }
+  ],
+  "candidates_not_adopted": {
+    "note": "Other published tables (2-11) of the pharma source study (figshare, CC BY 4.0), downloaded only to characterise what real pharma data exists. NOT part of the primary dataset unless the user approves (docs/dataset_audit.md, Gap P-1).",
+    "path": "data/raw/pharma_paper_tables_candidate/",
+    "records": "data/metadata/pharma_paper_tables_candidate.json"
+  }
+}

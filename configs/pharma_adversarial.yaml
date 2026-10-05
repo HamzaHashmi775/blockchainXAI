@@ -1,0 +1,23 @@
+# STUB (Phase 0). Agent/scenario/metric parameters are added once the research
+# protocol (docs/research_protocol.md) is frozen in Phase 2.
+name: pharma_adversarial
+experiment: pharma_adversarial
+domain: pharma
+system: adversarial
+seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+dataset_files:
+  - "data/raw/pharma/Table 1.xls"
+components:
+  game: true
+  xai: true
+  explanation_aware_incentive: true
+  reputation: true
+  blockchain: false
+# U_i = alpha*D_i + beta*F_i + gamma*E_i + delta*C_i - lambda*M_i
+# Values are placeholders to be fixed in the protocol, not tuned results.
+incentive_weights: {alpha: null, beta: null, gamma: null, delta: null, lambda: null}
+reputation: {initial: 0.5, rho: 0.8}
+reward: {degenerate_value: 0.5}   # returned when U_max == U_min
+adversarial:
+  malicious_fractions: [0.0, 0.1, 0.2, 0.3, 0.4]
+  attacks: [false_attribution, confidence_inflation, unsupported_evidence, strategic_voting, collusion]
