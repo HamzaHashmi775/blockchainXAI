@@ -15,16 +15,14 @@ from environments.energy.preprocess import ACTIONS, build_scenarios
 from evaluation.metrics import (collective_decision, consistency, contributions,
                                 evidence_support, fidelity, tercile_thresholds)
 from experiments import register
-from game.strategies import (FALSIFIED, STRATEGIES, TRUTHFUL, choose_report, collusive_vote,
-                             falsified_explanation, truthful_evidence, truthful_explanation,
-                             unsupported_evidence)
+from game.strategies import (FALSIFIED, STRATEGIES, STYLES, build_report_content, choose_report,
+                             collusive_vote)
 from incentives.mechanism import (ATTACKS, manipulation_components, manipulation_score,
                                   reward, utility, validate_weights)
 from reputation.reputation import initial_reputation, update_reputation
 from xai.shap_explainer import shap_values
 
 N_AGENTS = len(AGENTS)
-STYLES = (TRUTHFUL, FALSIFIED)
 GAME_DEFAULTS = {"n_rounds": 1000, "eval_last": 500, "top_k": 2, "deviation_threshold": 0.25,
                  "inflation": 0.3, "epsilon": 0.1, "learning_rate": 0.1, "q_init": 0.5,
                  "omega": 0.5, "consistency_neighbours": 5}
@@ -66,11 +64,9 @@ def prepare(config, seed):
         val_accuracy[name] = float((agent.predict(val) == val["reference_action"]).mean())
         for t in range(T):
             for c in range(N_ACTIONS):
-                truthful = truthful_explanation(phi[t, :, c], k)
-                falsified = falsified_explanation(phi[t, :, c], k)
-                reports = {TRUTHFUL: (truthful, truthful_evidence(truthful, X[t], thresholds)),
-                           FALSIFIED: (falsified, unsupported_evidence(falsified, X[t], thresholds))}
-                for style, (explanation, claims) in reports.items():
+                for style in STYLES:
+                    explanation, claims = build_report_content(style, phi[t, :, c], X[t],
+                                                               thresholds, k)
                     quality[style]["F"][t, i, c] = fidelity(explanation, phi[t, :, c], k)
                     quality[style]["E"][t, i, c] = evidence_support(claims, X[t], thresholds)
                     explanations[style][t][i][c] = frozenset(explanation)
@@ -276,4 +272,40 @@ def run_adversarial(config, seed):
                 "without": summarise(prep, simulate(prep, system, seed, policy=honest), everything),
                 "with": summarise(prep, simulate(prep, system, seed, policy=honest,
                                                  colluders=pair), everything)}}
+    return out
+
+
+def _apply_parameter(prep, system, parameter, value):
+    """Return (prep, system) with one sensitivity parameter overridden."""
+    section, key = parameter.split(".")
+    system = json.loads(json.dumps(system))
+    if section == "game":
+        prep = {**prep, "game": {**prep["game"], key: value}}
+    elif section == "reputation":
+        system.setdefault("reputation", {})[key] = value
+    elif section == "incentive_weights":
+        if system["components"].get("explanation_aware_incentive"):
+            weights = system["incentive_weights"]
+            scale = (sum(weights.values()) - value) / (sum(weights.values()) - weights[key])
+            system["incentive_weights"] = {k: (value if k == key else w * scale)
+                                           for k, w in weights.items()}
+    else:
+        raise ValueError(f"unknown sensitivity parameter {parameter!r}")
+    return prep, system
+
+
+@register("energy_sensitivity")
+def run_sensitivity(config, seed):
+    """One-at-a-time sensitivity: rerun the systems with one parameter varied."""
+    base_prep = prepare(config, seed)
+    parameter = config["sensitivity"]["parameter"]
+    out = {"seed": seed, "parameter": parameter, "values": {}}
+    for value in config["sensitivity"]["values"]:
+        out["values"][str(value)] = {}
+        for name, base_system in config["systems"].items():
+            prep, system = _apply_parameter(base_prep, base_system, parameter, value)
+            out["values"][str(value)][name] = {
+                "metrics": summarise(prep, simulate(prep, system, seed)),
+                "unilateral_deviation_payoff": deviation_table(prep, system, seed),
+                "incentive_weights": system["incentive_weights"]}
     return out

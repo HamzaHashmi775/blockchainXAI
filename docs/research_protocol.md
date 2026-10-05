@@ -1,6 +1,6 @@
 # Research Protocol (Phase 2, Step 05)
 
-**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0). Any later
+**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0; amended to v1.1, see §12). Any later
 change is recorded in §12 as a dated amendment with its reason. The pharma case study is
 deferred by user decision (research log, GATE 1); its protocol section (§11) will be frozen
 by amendment before any pharma experiment is run.
@@ -236,4 +236,39 @@ Deferred. To be specified and frozen by amendment before any pharma experiment.
 
 ## 12. Amendments
 
-None.
+### Amendment 1 — 2026-10-05 (protocol v1.1): two partially-truthful strategies
+
+**Status of the evidence.** This amendment was written *after* the v1.0 energy results were
+seen, at the user's instruction following the Critical Checkpoint report. Results under
+v1.1 are therefore not a blind confirmation of v1.0. The v1.0 summaries and tables are
+kept unchanged in `results/summaries/v1.0/` and `tables/v1.0/` and must be reported next to
+the v1.1 results. The amendment text was committed before any v1.1 run.
+
+**Reason.** Under v1.0 every report was either fully truthful (F = 1, E = 1) or fully
+falsified (F = 0, E = 0), so fidelity and evidence support were the same number and H1 and
+H2 could not be told apart.
+
+**Change.** S_i gains two strategies; nothing else in §2–§9 changes (weights, seeds, rounds,
+tests and decision rules are as in v1.0).
+
+| Strategy | Vote and confidence | Explanation | Evidence |
+|---|---|---|---|
+| misattributing | as *strategic* | true top k−1 features, plus the least important feature with its sign flipped | true levels for the reported features |
+| overclaiming | as *strategic* | truthful | true except the last claim, which is false |
+
+Misattributing lowers F but not E; overclaiming lowers E (to 0.5 with k = 2) but not F.
+S_i = {honest, strategic, misattributing, overclaiming, manipulative}; ε-greedy exploration
+is uniform over the five, so the exploration floor is 2% per non-honest strategy.
+Malicious agents (§8) still play *manipulative*; collusion is unchanged.
+
+**Analysis.** The confirmatory family {F, E, M} with Holm correction is applied to the v1.1
+runs exactly as in §9.
+
+**Sensitivity runs brought forward (user decision).** The ω sensitivity of §7
+(0.25, 0.5, 0.75) is run now instead of in Phase 10, under v1.1, for baseline, ablation and
+proposed. ω = 0.9 is added as an **exploratory, not pre-declared** value to see whether a
+strongly self-interested agent still prefers honesty; it carries no confirmatory weight.
+
+**Limitation not addressed by this amendment.** In this game an explanation never
+influences the collective decision, so falsifying one brings an agent no benefit even in
+the baseline; explanation attacks are imposed interventions, not profitable deviations.

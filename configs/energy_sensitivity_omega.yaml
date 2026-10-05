@@ -1,0 +1,107 @@
+# Energy sensitivity analysis (protocol section 7, as amended). One parameter at a time.
+name: energy_sensitivity_omega
+experiment: energy_sensitivity
+system: sensitivity
+domain: energy
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+dataset_files:
+- data/raw/energy/Case_Study_OptiREC.xlsx
+reference:
+  c_rate: 0.5
+  round_trip_efficiency: 0.9
+  soc_min: 0.1
+  soc_max: 0.9
+  soc_start: 0.5
+  idle_band: 0.05
+model:
+  n_estimators: 100
+  max_depth: 6
+game:
+  n_rounds: 1000
+  eval_last: 500
+  top_k: 2
+  deviation_threshold: 0.25
+  inflation: 0.3
+  epsilon: 0.1
+  learning_rate: 0.1
+  q_init: 0.5
+  omega: 0.5
+  consistency_neighbours: 5
+systems:
+  baseline:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: false
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.75
+      beta: 0.0
+      gamma: 0.0
+      delta: 0.25
+      lambda: 0.0
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  ablation:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  proposed:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: true
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+sensitivity:
+  parameter: game.omega
+  values:
+  - 0.25
+  - 0.5
+  - 0.75
+  - 0.9
+  pre_declared_values:
+  - 0.25
+  - 0.5
+  - 0.75
+  exploratory_values:
+  - 0.9

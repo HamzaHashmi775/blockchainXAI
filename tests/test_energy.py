@@ -10,7 +10,9 @@ from agents.energy_agents import (AGENTS, FEATURE_VIEWS, normalise_utilities,
                                   preferred_actions, private_utilities, train_agents)
 from environments.energy.preprocess import (ACTIONS, DERIVED, REAL, assign_split,
                                             battery_parameters, build_scenarios, solve_day)
-from experiments.energy import _malicious_count, deviation_table, prepare, simulate, summarise
+from experiments.energy import (_apply_parameter, _malicious_count, deviation_table, prepare,
+                                simulate, summarise)
+from game.strategies import STRATEGIES
 from utils import datasets as ds
 from xai.shap_explainer import shap_values
 
@@ -184,6 +186,36 @@ def test_honest_reports_score_perfectly_and_falsified_zero(prep):
     assert prep["quality"]["falsified"]["E"].max() == 0.0
 
 
+def test_partial_styles_separate_fidelity_from_evidence(prep):
+    mis, over = prep["quality"]["misattributed"], prep["quality"]["overclaimed"]
+    assert mis["E"].min() == 1.0 and 0.0 < mis["F"].mean() < 1.0      # F degraded, E intact
+    assert mis["F"].max() <= 1.0 and mis["F"].std() > 0                # graded, not binary
+    assert over["F"].min() == 1.0 and (over["E"] == 0.5).all()         # E degraded, F intact
+
+
+def test_fixed_partial_strategies(small_config, prep):
+    log = simulate(prep, small_config, 3, policy=["misattributing"] * 5)
+    assert log["E"].min() == 1.0 and log["F"].mean() < 1.0
+    assert log["unsupported_evidence"].max() == 0.0 and log["false_attribution"].mean() > 0
+    log = simulate(prep, small_config, 3, policy=["overclaiming"] * 5)
+    assert log["F"].min() == 1.0 and (log["E"] == 0.5).all()
+
+
+def test_sensitivity_parameter_overrides(small_config, prep):
+    p2, s2 = _apply_parameter(prep, small_config, "game.omega", 0.9)
+    assert p2["game"]["omega"] == 0.9 and prep["game"]["omega"] == 0.5
+    _, s3 = _apply_parameter(prep, small_config, "reputation.rho", 0.5)
+    assert s3["reputation"]["rho"] == 0.5 and small_config["reputation"]["rho"] == 0.8
+    _, s4 = _apply_parameter(prep, small_config, "incentive_weights.beta", 0.4)
+    w = s4["incentive_weights"]
+    assert w["beta"] == 0.4 and sum(w.values()) == pytest.approx(1.0)
+    assert w["alpha"] / w["lambda"] == pytest.approx(0.30 / 0.20)
+    baseline = copy.deepcopy(small_config)
+    baseline["components"]["explanation_aware_incentive"] = False
+    _, s5 = _apply_parameter(prep, baseline, "incentive_weights.beta", 0.4)
+    assert s5["incentive_weights"] == baseline["incentive_weights"]     # baseline untouched
+
+
 def test_all_honest_simulation(small_config, prep):
     log = simulate(prep, small_config, 3, policy=["honest"] * 5)
     assert log["F"].min() == 1.0 and log["E"].min() == 1.0 and log["M"].max() == 0.0
@@ -233,5 +265,5 @@ def test_collusion_condition(small_config, prep):
 def test_deviation_table_shape(small_config, prep):
     table = deviation_table(prep, small_config, 3)
     assert set(table) == set(AGENTS)
-    assert all(set(row) == {"honest", "strategic", "manipulative"} for row in table.values())
+    assert all(set(row) == set(STRATEGIES) for row in table.values())
     assert all(0 <= v <= 1 for row in table.values() for v in row.values())

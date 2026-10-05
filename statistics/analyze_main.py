@@ -23,7 +23,7 @@ SYSTEMS = ("baseline", "ablation", "proposed")
 CONFIRMATORY = {"fidelity": True, "evidence_support": True, "manipulation": False}
 SECONDARY = {"collective_accuracy": True, "collective_utility": True, "decision_quality": True,
              "manipulation_success": False, "consistency": True}
-STRATEGIES = ("honest", "strategic", "manipulative")
+STRATEGIES = ("honest", "strategic", "misattributing", "overclaiming", "manipulative")
 
 
 def load(domain, system):
@@ -103,17 +103,18 @@ def to_markdown(res):
                 f"| {c.get('p_holm', float('nan')):.4f} | {c['effect_size_name']} = "
                 f"{c['effect_size']:.2f} | {c.get('verdict', '—')} |")
     lines += ["", "## Learned strategy shares (evaluation window)", "",
-              "| System | honest | strategic | manipulative |", "|---|---|---|---|"]
+              "| System | " + " | ".join(STRATEGIES) + " |", "|---|" + "---|" * len(STRATEGIES)]
     for system, shares in res["strategy_share"].items():
         lines.append(f"| {system} | " + " | ".join(
             f"{shares[st]['mean']:.3f} ± {shares[st]['sd']:.3f}" for st in STRATEGIES) + " |")
     lines += ["", "## Unilateral deviation from all-honest (mean payoff over seeds)", "",
-              "| System | Agent | honest | strategic | manipulative | best | honest best in seeds |",
-              "|---|---|---|---|---|---|---|"]
+              "| System | Agent | " + " | ".join(STRATEGIES) + " | best | honest best in seeds |",
+              "|---|---|" + "---|" * len(STRATEGIES) + "---|---|"]
     for system, agents in res["unilateral_deviation"].items():
         for agent, row in agents.items():
-            lines.append(f"| {system} | {agent} | {row['honest']:.3f} | {row['strategic']:.3f} | "
-                         f"{row['manipulative']:.3f} | {row['best_response']} | "
+            lines.append(f"| {system} | {agent} | "
+                         + " | ".join(f"{row[st]:.3f}" for st in STRATEGIES)
+                         + f" | {row['best_response']} | "
                          f"{row['honest_is_best_in_n_seeds']}/{res['n_seeds']} |")
     lines += ["", f"Checkpoint verdicts (proposed vs baseline): {res['checkpoint']['verdicts']}; "
               f"continue = {res['checkpoint']['continue']}", ""]

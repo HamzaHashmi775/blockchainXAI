@@ -5,8 +5,10 @@ import pytest
 from evaluation.metrics import (collective_decision, consistency, contributions,
                                 evidence_support, fidelity, jaccard, observed_level,
                                 tercile_thresholds)
-from game.strategies import (FALSIFIED, TRUTHFUL, choose_report, collusive_vote,
-                             falsified_explanation, truthful_evidence, truthful_explanation,
+from game.strategies import (FALSIFIED, MISATTRIBUTED, OVERCLAIMED, STYLES, TRUTHFUL,
+                             build_report_content, choose_report, collusive_vote,
+                             falsified_explanation, misattributed_explanation,
+                             overclaimed_evidence, truthful_evidence, truthful_explanation,
                              unsupported_evidence)
 from incentives.mechanism import (ATTACKS, collusion_flags, manipulation_components,
                                   manipulation_score, reward, utility, validate_weights)
@@ -123,6 +125,30 @@ def test_strategic_deviates_only_above_threshold():
     assert (vote, style) == (2, TRUTHFUL) and conf == pytest.approx(0.4)
     vote, conf, _ = choose_report("strategic", np.array([0.1, 0.1, 0.8]), 1, np.array([0, 1.0, 0]))
     assert vote == 1 and conf == pytest.approx(0.4)
+
+
+def test_partial_strategies_vote_like_strategic():
+    proba, util = np.array([0.2, 0.7, 0.1]), np.array([0.0, 0.5, 1.0])
+    base = choose_report("strategic", proba, 2, util)
+    assert choose_report("misattributing", proba, 2, util) == (base[0], base[1], MISATTRIBUTED)
+    assert choose_report("overclaiming", proba, 2, util) == (base[0], base[1], OVERCLAIMED)
+
+
+def test_misattributed_explanation_and_overclaimed_evidence():
+    expl = misattributed_explanation(PHI, 2)
+    assert expl == [(0, 1), (3, 0)]                 # true top feature + least important one
+    assert fidelity(expl, PHI, 2) == pytest.approx(0.5 / 0.8)
+    cuts = tercile_thresholds(np.arange(50, dtype=float).reshape(10, 5))
+    x = np.array([0.0, 1.0, 2.0, 3.0, 4.0])
+    truthful = truthful_explanation(PHI, 2)
+    claims = overclaimed_evidence(truthful, x, cuts)
+    assert evidence_support(claims, x, cuts) == 0.5
+    assert fidelity(truthful, PHI, 2) == 1.0
+    for style in STYLES:
+        explanation, evidence = build_report_content(style, PHI, x, cuts, 2)
+        assert len(explanation) == 2 and len(evidence) == 2
+    with pytest.raises(ValueError):
+        build_report_content("other", PHI, x, cuts, 2)
 
 
 def test_manipulative_report_and_unknown_strategy():
