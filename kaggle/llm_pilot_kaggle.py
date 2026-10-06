@@ -26,12 +26,17 @@ import subprocess
 import time
 import zipfile
 
+# Kaggle usually unpacks an uploaded zip, so accept either the zip or its unpacked folder.
 bundles = glob.glob("/kaggle/input/**/project_bundle.zip", recursive=True)
-assert bundles, "Attach the dataset that contains project_bundle.zip (Add Input)."
+unpacked = glob.glob("/kaggle/input/**/run_experiment.py", recursive=True)
+assert bundles or unpacked, "Attach the dataset made from project_bundle.zip (Add Input)."
 WORK = "/kaggle/working/project"
 shutil.rmtree(WORK, ignore_errors=True)
-with zipfile.ZipFile(bundles[0]) as archive:
-    archive.extractall(WORK)
+if unpacked:
+    shutil.copytree(os.path.dirname(unpacked[0]), WORK)
+else:
+    with zipfile.ZipFile(bundles[0]) as archive:
+        archive.extractall(WORK)
 os.chdir(WORK)
 print(sorted(os.listdir(WORK)))
 
