@@ -34,6 +34,26 @@
       "citation": "Garcia-Munoz, Fernando (2025). Operational Data of an Energy Community Under P2P Trading and Flexibility Market Models. Mendeley Data, V1. https://doi.org/10.17632/bvp4vrn9gc.1",
       "citation_note": "Assembled from the repository API record (contributor Fernando García-Muñoz, title, year, DOI); the repository page's own cite string was not retrieved.",
       "raw_api_record": "data/metadata/mendeley_bvp4vrn9gc_api.json"
+    },
+    {
+      "key": "pharma_scms",
+      "status": "Candidate primary pharma dataset; audited 2026-10-06 (docs/dataset_audit.md section 5). Adoption needs a protocol amendment and user approval of the agent mapping.",
+      "path": "data/raw/pharma_scms/SCMS_Delivery_History_Dataset_20150929.csv",
+      "title": "Supply Chain Shipment Pricing Data (SCMS Delivery History Dataset, extract dated 2015-09-29)",
+      "obtained_from": "https://www.kaggle.com/datasets/apoorvwatsky/supply-chain-shipment-pricing-data",
+      "obtained_how": "Downloaded by the user from Kaggle as 'archive (1).zip' (SHA-256 f541d31f250ad037c7804f876b893d97704887b99ca56baa8ea023eeaeeeef94) and extracted unchanged on 2026-10-06.",
+      "original_source_url": "https://data.usaid.gov/d/a3rc-nmf6",
+      "original_source_note": "Publisher USAID (PEPFAR Supply Chain Management System). The host data.usaid.gov did not resolve on 2026-10-06, so the file could not be compared with the publisher's copy. Catalogue mirror of the publisher record: https://data.amerigeoss.org/dataset/supply-chain-shipment-pricing-data",
+      "download_date": "2026-10-06",
+      "size_bytes": 3819612,
+      "sha256": "9cffdb4ab8c6135b0f999c91b3a5c6e88a3c3dfc28c7c85feb9e97f986e3578a",
+      "md5": "ea904c5757022c0376294c30c46892eb",
+      "sha256_matches_repository": null,
+      "encoding": "cp1252, CRLF line endings",
+      "license": "CC BY-ND 4.0 (https://creativecommons.org/licenses/by-nd/4.0/legalcode) as stated on the catalogue mirror of the USAID record; the licence shown on the Kaggle page was not read (login required).",
+      "license_note": "No-derivatives: the raw file may be redistributed unchanged with attribution; processed/derived copies of the data should not be redistributed.",
+      "citation": "USAID. Supply Chain Shipment Pricing Data (SCMS Delivery History Dataset). U.S. Agency for International Development, extract of 2015-09-29. https://data.usaid.gov/d/a3rc-nmf6 (retrieved 2026-10-06 via Kaggle).",
+      "citation_note": "Assembled from the catalogue record; the publisher's own cite string was not retrieved."
     }
   ],
   "candidates_not_adopted": {

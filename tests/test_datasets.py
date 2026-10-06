@@ -70,3 +70,38 @@ def test_energy_network_is_a_tree(energy):
     assert (adj == adj.T).all() and adj.sum() // 2 == 205
     lines = energy["Lines"]
     assert len({tuple(sorted(t)) for t in zip(lines["fbus"], lines["tbus"])}) == 205
+
+
+@pytest.fixture(scope="module")
+def scms():
+    return ds.load_pharma_scms()
+
+
+def test_scms_schema(scms):
+    assert scms.shape == ds.PHARMA_SCMS_SHAPE
+    assert list(scms.columns) == ds.PHARMA_SCMS_COLUMNS
+    assert scms["ID"].is_unique
+
+
+def test_scms_missing_values_are_text_codes(scms):
+    # Guards the audit: the only empty cells are insurance; other gaps are text codes.
+    empty = (scms == "").sum()
+    assert empty[empty > 0].to_dict() == {"Line Item Insurance (USD)": 287}
+    assert int((scms["PO Sent to Vendor Date"] == "N/A - From RDC").sum()) == 5404
+    assert int(np.isnan(np.array(
+        [float(v) if v.replace(".", "", 1).isdigit() else np.nan
+         for v in scms["Freight Cost (USD)"]])).sum()) == 4126
+
+
+def test_scms_has_no_quality_or_compliance_column(scms):
+    # Guards Gap S-1: nothing in the file measures product quality or regulatory compliance.
+    names = " ".join(scms.columns).lower()
+    assert not any(w in names for w in ("quality", "compliance", "inspection", "reject", "audit"))
+
+
+def test_scms_warehouse_lines_carry_no_vendor(scms):
+    # Guards Gap S-3: every "From RDC" line names the programme's warehouse as vendor.
+    from_rdc = scms["Fulfill Via"] == "From RDC"
+    assert int(from_rdc.sum()) == 5404
+    assert (scms.loc[from_rdc, "Vendor"] == "SCMS from RDC").all()
+    assert not (scms.loc[~from_rdc, "Vendor"] == "SCMS from RDC").any()

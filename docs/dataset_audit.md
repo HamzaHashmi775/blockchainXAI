@@ -330,3 +330,124 @@ distributor/product/channel combination) is not supported as stated:
   data that is itself probably synthetic.
 
 Nothing has been built on this file. Options are in the research log (2026-10-05 entry).
+
+## 5. Candidate primary pharma dataset: SCMS Delivery History (audited 2026-10-06)
+
+`data/raw/pharma_scms/SCMS_Delivery_History_Dataset_20150929.csv` (read-only; 3,819,612 bytes;
+SHA-256 `9cffdb4ab8c6135b0f999c91b3a5c6e88a3c3dfc28c7c85feb9e97f986e3578a`; cp1252, CRLF).
+
+**Provenance.** Published by USAID as "Supply Chain Shipment Pricing Data": purchase orders
+and shipments of antiretrovirals (ARV) and HIV laboratory commodities delivered by the PEPFAR
+Supply Chain Management System (SCMS) to supported countries. The user downloaded it from
+Kaggle (`apoorvwatsky/supply-chain-shipment-pricing-data`). The publisher's host
+`data.usaid.gov` did not resolve on 2026-10-06, so **the file was not compared with the
+publisher's copy**. An unofficial GitHub mirror with the same 10,324 × 33 table differs from
+it only in text encoding, line endings and two-digit versus four-digit years in two date
+columns. Licence as stated on a catalogue mirror of the USAID record: **CC BY-ND 4.0**
+(processed copies of the data should not be redistributed). Citation and URLs:
+`data/metadata/datasets.json`.
+
+**This is real operational procurement data, not a benchmark.** It is nevertheless one
+programme's deliveries of two product families (ARV 82.8%, HIV rapid tests 16.7%, 46 malaria
+lines); it must not be described as covering the pharmaceutical supply chain in general.
+
+### 5.1 Structure
+
+- **Unit of observation:** one line item of one shipment (transaction-level). 10,324 rows,
+  33 columns, `ID` unique. No fully duplicated rows; 4 rows are identical apart from `ID`.
+- **Period:** delivered 2006-05-02 to 2015-09-14 (65 lines in 2006, about 1,000–1,600 per year
+  from 2008). `Scheduled Delivery Date` runs to 2015-12-31.
+- Every cell is read as text; no cell has leading or trailing whitespace.
+
+| Column | Kind | Distinct | Notes |
+|---|---|---|---|
+| ID | identifier | 10,324 | |
+| Project Code, PQ #, PO / SO #, ASN/DN # | identifiers | 142 / 1,237 / 6,233 / 7,030 | `PQ #` = "Pre-PQ Process" on 2,476 lines |
+| Country | categorical | 43 | destination; "Côte d'Ivoire" needs cp1252 |
+| Managed By | categorical | 4 | "PMO - US" on 10,265 lines (near-constant) |
+| Fulfill Via | categorical | 2 | From RDC 5,404; Direct Drop 4,920 |
+| Vendor INCO Term | categorical | 8 | "N/A - From RDC" 5,404; EXW 2,778; DDP 1,443; FCA 397; CIP 275; others 27 |
+| Shipment Mode | categorical | 5 | Air 6,113; Truck 2,830; Air Charter 650; Ocean 371; "N/A" 360 |
+| PQ First Sent to Client Date | date (m/d/Y) | 765 | 7,643 dates; "Pre-PQ Process" 2,476; "Date Not Captured" 205 |
+| PO Sent to Vendor Date | date (m/d/Y) | 897 | 4,592 dates; "N/A - From RDC" 5,404; "Date Not Captured" 328 |
+| Scheduled Delivery Date | date (d-Mon-yy) | 2,006 | complete |
+| Delivered to Client Date | date (d-Mon-yy) | 2,093 | complete |
+| Delivery Recorded Date | date (d-Mon-yy) | 2,042 | complete; median 0 days after delivery |
+| Product Group | categorical | 5 | ARV 8,550; HRDT 1,728; ANTM 22; ACT 16; MRDT 8 |
+| Sub Classification | categorical | 6 | Adult 6,595; Pediatric 1,955; HIV test 1,567; HIV test - Ancillary 161; Malaria 30; ACT 16 |
+| Vendor | categorical | 73 | **"SCMS from RDC" on 5,404 lines** (Gap S-3) |
+| Item Description | categorical | 184 | |
+| Molecule/Test Type | categorical | 86 | |
+| Brand | categorical | 48 | "Generic" on 70.6% of lines |
+| Dosage | categorical | 54 | "N/A" on 1,736 lines (test kits) |
+| Dosage Form | categorical | 17 | |
+| Unit of Measure (Per Pack) | integer | 31 | 1–1,000 |
+| Line Item Quantity | integer | 5,065 | 1–619,999, median 3,000 |
+| Line Item Value | numeric (USD) | 8,741 | 0–5.95 M, median 30,471; 17 zeros |
+| Pack Price | numeric (USD) | 1,175 | 0–1,346, median 9.30; 18 zeros |
+| Unit Price | numeric (USD) | 183 | 0–238.65, median 0.16; 103 zeros (rounded to cents) |
+| Manufacturing Site | categorical | 88 | complete |
+| First Line Designation | categorical | 2 | Yes 7,030; No 3,294 |
+| Weight (Kilograms) | numeric + text | 4,688 | 6,372 numbers; 3,952 text (below) |
+| Freight Cost (USD) | numeric + text | 6,733 | 6,198 numbers; 4,126 text (below) |
+| Line Item Insurance (USD) | numeric | 6,722 | 287 empty; 54 zeros |
+
+Internal consistency: `Line Item Value` = quantity × pack price on 99.99% of lines;
+`Unit Price` = pack price ÷ units per pack to within two cents on all lines. Insurance is
+0.12–0.20% of line value (interquartile range), so it is a near-deterministic function of
+value.
+
+### 5.2 Missing values, duplicates, outliers
+
+- Truly empty cells exist only in `Line Item Insurance (USD)` (287, 2.8%). Everything else
+  that is missing is a **text code inside the column**:
+  - `Freight Cost (USD)`: 4,126 non-numeric (40.0%) = "Freight Included in Commodity Cost"
+    1,442; "Invoiced Separately" 239; "See ASN/DN-… (ID#:n)" 2,445, a pointer to the line that
+    carries the shipment's freight (2,340 of them point to a line with a number).
+  - `Weight (Kilograms)`: 3,952 non-numeric (38.3%) = "Weight Captured Separately" 1,507;
+    pointers 2,445 (2,319 resolvable). Freight and weight are therefore **per shipment, not
+    per line**, on multi-line shipments.
+  - `PO Sent to Vendor Date`: 5,732 without a date (55.5%); `PQ First Sent to Client Date`:
+    2,681 (26.0%); `Shipment Mode` "N/A": 360 (3.5%); `Dosage` "N/A": 1,736 (16.8%).
+- Heavy right tails in all money and quantity columns (IQR-rule outliers: quantity 1,371,
+  value 1,127, pack price 1,160, unit price 880, freight 388 of 6,198, weight 623 of 6,372).
+  They are large orders and expensive products, not evident errors, and were not removed.
+- Implausible dates: delivery precedes the PO date on 5 lines and the PQ date on 10 lines.
+- Zero prices (18 lines with pack price 0) are unexplained in the file.
+
+### 5.3 Delivery outcome
+
+`Delivered to Client Date` − `Scheduled Delivery Date` (days; derived): on the scheduled day
+6,324 lines (61.3%), early 2,814 (27.3%), **late 1,186 (11.5%)**; median 0, 95th percentile
++14, range −372 to +192. The late share is not stable over time (≤ 1.6% in 2006–2008, 23.8%
+in 2011, 12.0% in 2015) and differs by channel: **Direct Drop 5.3%, From RDC 17.2%**; by mode
+(Air 9.6%, Truck 16.1%, Ocean 17.5%); and by country (Vietnam 0.9% … Congo DRC 24.9% among
+countries with ≥ 200 lines). First-line designation makes no difference (11.4% vs 11.6%).
+
+### 5.4 Suppliers and alternatives
+
+- `Vendor` cannot serve as the supplier: on all 5,404 "From RDC" lines it is the programme's
+  own regional distribution centre. `Manufacturing Site` is complete: 88 sites, 31 with ≥ 30
+  lines (9,940 lines), 16 with ≥ 100. Late shares among the 31 range from 0% to 22.7%.
+- The file records only shipments that happened. **It contains no bids, quotations or rejected
+  alternatives.** Alternatives can only be inferred: 76 of 184 items were made at ≥ 2 sites
+  (8,187 lines); grouping by molecule + dosage + dosage form, 73 of 136 products have ≥ 2
+  sites (9,042 lines) and 38 have ≥ 3 (7,862 lines). Across sites making the same product the
+  median coefficient of variation of site-median unit price is 0.24, so price does differ
+  between alternative sites.
+
+### 5.5 Gaps against the mechanism
+
+| ID | Gap | Proposed handling (needs user approval) |
+|---|---|---|
+| S-1 | **No quality or regulatory-compliance variable** (no inspection, rejection, recall or audit field) | (a) drop the Quality and Compliance roles and define five agents from available variables; do not simulate them |
+| S-2 | **No competing offers**; the chosen supplier is observed, the alternatives are not | (c) construct candidate sets from sites that supplied the same product earlier; label the reference decision as *constructed* and run a sensitivity analysis (CLAUDE.md step 07) |
+| S-3 | `Vendor` is the warehouse on 52% of lines | (b) map supplier → `Manufacturing Site` |
+| S-4 | For "From RDC" lines the delivery outcome reflects the programme's warehouse leg, not the manufacturer, and lateness differs threefold by channel | to decide: restrict supplier-reliability evidence to Direct Drop lines (4,920), or keep all lines with channel as a feature |
+| S-5 | Freight and weight are per shipment and non-numeric on about 40% of lines | (b) resolve pointers, allocate or aggregate to shipment level; "included in commodity cost" stays a category, not a zero |
+| S-6 | Order-to-delivery lead time exists only where a PO date exists (4,592 lines, all Direct Drop) | (a)/(b) use only where observed; no imputation of dates |
+| S-7 | No supplier risk variable (financial, capacity, geopolitical) | (c) only as history-based reliability computed from *earlier* deliveries (time-ordered, leakage-free), labelled derived |
+| S-8 | Two product families, one buyer; late share drifts strongly by year | report as a threat to external validity; time-ordered splits |
+| S-9 | CC BY-ND | do not redistribute processed data; publish code that regenerates it |
+
+Nothing has been built on this file beyond a strict loader and schema tests.

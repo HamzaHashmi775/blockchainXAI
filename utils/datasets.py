@@ -117,3 +117,28 @@ def load_energy(sheets=ENERGY_SHEETS):
         if len(prof) != ENERGY_N_HOURS or prof["Hour"].tolist() != list(range(1, ENERGY_N_HOURS + 1)):
             raise SchemaError("Profiles sheet is not a complete 8760-hour series")
     return data
+
+
+PHARMA_SCMS_FILE = RAW / "pharma_scms" / "SCMS_Delivery_History_Dataset_20150929.csv"
+PHARMA_SCMS_SHAPE = (10324, 33)
+PHARMA_SCMS_COLUMNS = [
+    "ID", "Project Code", "PQ #", "PO / SO #", "ASN/DN #", "Country", "Managed By",
+    "Fulfill Via", "Vendor INCO Term", "Shipment Mode", "PQ First Sent to Client Date",
+    "PO Sent to Vendor Date", "Scheduled Delivery Date", "Delivered to Client Date",
+    "Delivery Recorded Date", "Product Group", "Sub Classification", "Vendor",
+    "Item Description", "Molecule/Test Type", "Brand", "Dosage", "Dosage Form",
+    "Unit of Measure (Per Pack)", "Line Item Quantity", "Line Item Value", "Pack Price",
+    "Unit Price", "Manufacturing Site", "First Line Designation", "Weight (Kilograms)",
+    "Freight Cost (USD)", "Line Item Insurance (USD)"]
+
+
+def load_pharma_scms():
+    """SCMS delivery history exactly as published: every cell a string, nothing coerced.
+
+    The file mixes numbers, dates and text codes in the same columns (docs/dataset_audit.md
+    section 5), so typing is left to preprocessing.
+    """
+    df = pd.read_csv(PHARMA_SCMS_FILE, encoding="cp1252", dtype=str, keep_default_na=False)
+    if list(df.columns) != PHARMA_SCMS_COLUMNS or df.shape != PHARMA_SCMS_SHAPE:
+        raise SchemaError("SCMS delivery history does not match the audited schema")
+    return df

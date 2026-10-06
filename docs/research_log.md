@@ -206,3 +206,28 @@ made separable"):
   ambiguity): source URL and licence; and whether to (a) use it explicitly labelled as a
   synthetic benchmark with a constructed demand-allocation reference, (b) use the source
   study's real but tiny Tables 2–11, or (c) find another real dataset.
+
+## 2026-10-06 — Disk incident; v1.1 reruns; new pharma candidate (SCMS delivery history)
+
+- Drive C: filled during the v1.1 runs; the ω sensitivity run failed while writing. Freed
+  space by deleting the project's duplicate of `pharma-data.csv` (original intact, same
+  SHA-256; audit and metadata updated). The rerun was then cut off when the session ended
+  (5 of 10 seeds) and was restarted from scratch on 2026-10-06.
+- v1.1 baseline, proposed, ablation and adversarial runs completed (10 seeds each).
+  Robustness, v1.1, post hoc relative to v1.0: H4 primary test Δ degradation = −0.020
+  (95% CI [−0.043, +0.002]), p = 0.068 → **H4 still not supported**. Details:
+  `tables/energy_adversarial.md`.
+- User proposed https://www.kaggle.com/datasets/apoorvwatsky/supply-chain-shipment-pricing-data
+  and supplied the Kaggle archive. Copied unchanged to `data/raw/pharma_scms/` (read-only),
+  hash and provenance in `data/metadata/datasets.json`, full audit in
+  `docs/dataset_audit.md` §5, loader + 4 schema tests added.
+  - Real USAID/PEPFAR SCMS shipment lines: 10,324 × 33, deliveries 2006–2015, 88
+    manufacturing sites, 11.5% of lines late.
+  - Not verified: identity with the publisher's copy (data.usaid.gov unreachable); the
+    licence text on the Kaggle page (login). Licence taken from a catalogue mirror: CC BY-ND.
+  - Gaps S-1…S-9 (audit §5.5). The two that force a design change: **no quality or
+    compliance variable**, and **no competing offers** (reference decision must be
+    constructed).
+- **Open, waiting for the user** (CLAUDE.md §10: needed variables absent): approve replacing
+  the figshare criteria list as primary pharma dataset (protocol amendment 2), the five-agent
+  mapping, and the handling of S-2 and S-4. No preprocessing, agents or scenarios built yet.
