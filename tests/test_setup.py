@@ -71,12 +71,18 @@ def test_cli_help():
 
 
 def test_unimplemented_experiment_produces_no_results(tmp_path):
-    code = main(["--config", str(ROOT / "configs" / "pharma_baseline.yaml"),
-                 "--output-dir", str(tmp_path)])
+    config = tmp_path / "unregistered.yaml"
+    config.write_text("name: unregistered
+experiment: not_registered
+seeds: [0]
+"
+                      "dataset_files: ['data/raw/pharma/Table 1.xls']
+")
+    code = main(["--config", str(config), "--output-dir", str(tmp_path)])
     assert code == 2
-    files = sorted(p.name for p in (tmp_path / "pharma_baseline").iterdir())
+    files = sorted(p.name for p in (tmp_path / "unregistered").iterdir())
     assert files == ["manifest.json"]
-    manifest = json.loads((tmp_path / "pharma_baseline" / "manifest.json").read_text())
+    manifest = json.loads((tmp_path / "unregistered" / "manifest.json").read_text())
     assert manifest["status"] == "not_implemented"
     assert manifest["dataset_sha256"]
 
