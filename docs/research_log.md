@@ -284,3 +284,67 @@ candidate = reference in 46–52%.
   processed data); `scenarios_meta.json` is committed.
 - Tests: 21 new pharma tests, including a rebuild-from-past-lines test that shows no future
   information enters a scenario. Full suite passes.
+
+## 2026-10-06 — Pharma steps 17–21: main experiment, ablation, robustness; CRITICAL CHECKPOINT
+
+Runs (10 seeds each, protocol v1.2, paired): `pharma_baseline`, `pharma_ablation`,
+`pharma_proposed`, `pharma_adversarial`. Statistics: `tables/pharma_main.md`,
+`tables/pharma_adversarial.md`, `results/summaries/pharma_*.json`. Nothing was tuned or
+rerun after seeing results.
+
+### Main results, proposed vs baseline (mean over seeds; Holm-adjusted p)
+| Metric | Baseline | Proposed | Δ | Rel. | p (Holm) | Verdict |
+|---|---|---|---|---|---|---|
+| Fidelity | 0.510 | 0.936 | +0.426 | +83.5% | < 0.0001 | improved |
+| Evidence support | 0.522 | 0.917 | +0.395 | +75.7% | < 0.0001 | improved |
+| Manipulation | 0.392 | 0.119 | −0.273 | −69.7% | < 0.0001 | improved |
+
+Collective accuracy 0.578 → 0.606 (p = 0.20, not significant). Ablation (incentive without
+reputation): F 0.892, E 0.892, M 0.153, all improved; so most of the effect is the incentive,
+with a further gain when reputation weights the vote.
+
+### Caveats that must travel with these numbers
+1. **The baseline is far from honest in pharma** (honest share 9.5%, manipulative 41%),
+   unlike energy (78% honest). In the baseline, deviating from honesty pays for every agent
+   (unilateral-deviation table: manipulative best in 10/10 seeds for all five), because an
+   agent's model predicts the reference only moderately well (validation accuracy
+   0.64–0.79) while steering towards its own criterion pays privately. The large effect is
+   therefore measured against a baseline with much room to improve; it is not comparable in
+   size to the energy effect.
+2. **Strategic voting is not removed.** Under the proposed system *strategic* (vote for the
+   privately preferred candidate, truthful explanation) is still the best unilateral
+   deviation for Cost, Logistics and Reliability in 10/10 seeds; honest is best only for
+   Lead time and Continuity. Learned shares under proposed: honest 41%, strategic 35%. The
+   mechanism suppresses false explanations and unsupported evidence, not self-interested
+   voting. No equilibrium claim.
+3. Decision accuracy means agreement with a **constructed** reference that matches the real
+   procurement choice only at chance level (protocol §11.2).
+4. Designed after the energy results; same mechanism and weights (replication, not blind).
+5. Manipulation contains 1 − F and 1 − E, so H3 is not independent of H1/H2.
+
+### Robustness (H4)
+- Accuracy degradation over 10–40% malicious, proposed − baseline: Δ = +0.039 (95% CI
+  [−0.010, +0.088]), p = 0.10. **H4 not supported in pharma; the point estimate is in the
+  wrong direction** (proposed loses slightly more accuracy, not significant). Friedman
+  across shares: baseline p = 0.56, proposed p = 0.20 — accuracy barely moves with the
+  malicious share in either system, plausibly because the baseline is already mostly
+  non-honest at 0%.
+- Collusion: in the baseline colluders gain (private utility +0.161, payoff +0.085) and
+  steer 38% of decisions wrongly; under proposed their reward falls 0.475 → 0.017,
+  reputation → 0.018, payoff −0.231, and wrong steered decisions fall to 12.6%. Collective
+  accuracy still drops under collusion in proposed (−0.036, p = 0.008).
+
+### Hypotheses so far
+| | Energy (v1.1, post hoc) | Pharma (v1.2) |
+|---|---|---|
+| H1 fidelity | negligible (+3.6%, significant) | improved (+83.5%) |
+| H2 evidence | negligible (+4.3%, significant) | improved (+75.7%) |
+| H3 manipulation | improved (−44%) | improved (−70%) |
+| H4 robustness | not supported (p = 0.068) | not supported (p = 0.10, wrong sign) |
+
+**H6 (same verdict in both domains) holds for H3 and H4 only**: direction is the same for
+F and E in both domains, but the pre-declared verdicts differ (negligible vs improved).
+
+### Checkpoint decision (pharma)
+By the pre-declared rule the mechanism passes (three improved, none worse). Reported to the
+user with the caveats above. Blockchain (Phase 8) not started; waiting for the user.
