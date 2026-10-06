@@ -31,7 +31,7 @@ def prepare(config, seed):
     game = {**GAME_DEFAULTS, **config.get("game", {})}
     df, battery = _scenarios(json.dumps(config.get("reference", {}), sort_keys=True))
     train, val = df[df["split"] == "train"], df[df["split"] == "val"]
-    test = df[df["split"] == "test"]
+    test = df[df["split"] == game.get("round_split", "test")]
     agents = train_agents(train, seed, **config.get("model", {}))
 
     rng = np.random.default_rng([seed, 1])
@@ -45,7 +45,7 @@ def prepare(config, seed):
                for s in STYLES}
     explanations = {s: [[[None] * N_ACTIONS for _ in range(N_AGENTS)] for _ in range(T)]
                     for s in STYLES}
-    views, val_accuracy = [], {}
+    views, val_accuracy, audit = [], {}, []
     for i, name in enumerate(AGENTS):
         agent = agents[name]
         X = rounds[agent.features].to_numpy()
@@ -55,6 +55,10 @@ def prepare(config, seed):
         phi, _ = shap_values(agent.model, X)                      # (T, features, actions)
         sd = train_X.std(axis=0)
         views.append((X - train_X.mean(axis=0)) / np.where(sd > 0, sd, 1.0))
+        # same layout as pharma: (rounds, actions, features); the hour's features are shared
+        audit.append({"features": agent.features, "phi": phi.transpose(0, 2, 1),
+                      "X": np.repeat(X[:, None, :], N_ACTIONS, axis=1),
+                      "thresholds": thresholds})
         val_accuracy[name] = float((agent.predict(val) == val["reference_action"]).mean())
         for t in range(T):
             for c in range(N_ACTIONS):
@@ -68,7 +72,8 @@ def prepare(config, seed):
             "hours": rounds["Hour"].to_numpy(),
             "reference": rounds["reference_action"].to_numpy(), "utilities": util,
             "preferred": util.argmax(axis=-1), "proba": proba, "quality": quality,
-            "explanations": explanations, "views": views, "val_accuracy": val_accuracy}
+            "explanations": explanations, "views": views, "val_accuracy": val_accuracy,
+            "audit": audit}
 
 
 register_domain("energy", prepare)

@@ -35,7 +35,7 @@ def prepare(config, seed, table=None):
     if table is None:
         table = _scenarios(json.dumps(config.get("reference", {}), sort_keys=True))
     train, val = table[table["split"] == "train"], table[table["split"] == "val"]
-    test = table[table["split"] == "test"]
+    test = table[table["split"] == game.get("round_split", "test")]
     agents = train_agents(train, seed, **config.get("model", {}))
 
     test_ids = test["scenario_id"].unique()                       # already in order-date order
@@ -50,7 +50,7 @@ def prepare(config, seed, table=None):
                for s in STYLES}
     explanations = {s: [[[None] * N_ACTIONS for _ in range(N_AGENTS)] for _ in range(T)]
                     for s in STYLES}
-    views, val_accuracy = [], {}
+    views, val_accuracy, audit = [], {}, []
     for i, name in enumerate(AGENTS):
         agent = agents[name]
         flat = rounds[agent.features].to_numpy()
@@ -62,6 +62,7 @@ def prepare(config, seed, table=None):
         phi = values[:, :, 1].reshape(T, N_ACTIONS, -1)           # positive-class score
         sd = train_X.std(axis=0)
         views.append((X - train_X.mean(axis=0)) / np.where(sd > 0, sd, 1.0))
+        audit.append({"features": agent.features, "phi": phi, "X": X, "thresholds": thresholds})
         val_accuracy[name] = float((agent.predict(val) == _reference(val)).mean())
         for t in range(T):
             for c in range(N_ACTIONS):
@@ -75,7 +76,7 @@ def prepare(config, seed, table=None):
             "scenario_ids": test_ids[chosen], "reference": _reference(rounds),
             "utilities": util, "preferred": util.argmax(axis=-1), "proba": proba,
             "quality": quality, "explanations": explanations, "views": views,
-            "val_accuracy": val_accuracy}
+            "val_accuracy": val_accuracy, "audit": audit}
 
 
 register_domain("pharma", prepare)

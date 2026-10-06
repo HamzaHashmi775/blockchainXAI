@@ -348,3 +348,44 @@ F and E in both domains, but the pre-declared verdicts differ (negligible vs imp
 ### Checkpoint decision (pharma)
 By the pre-declared rule the mechanism passes (three improved, none worse). Reported to the
 user with the caveats above. Blockchain (Phase 8) not started; waiting for the user.
+
+## 2026-10-06 — User direction: the study is about LLM agents; Ollama on Kaggle
+
+- The user stated that the study is based on LLM agents ("but this study is based on LLM
+  Agents"), asked for open-source models through Ollama, and accepted Kaggle's free compute
+  ("using free CPU of Kaggle is acceptable to me"). **This conflicts with CLAUDE.md Golden
+  Rule 12** (no LLMs unless the data requires it) and §9 (LLM agents optional). The user's
+  instruction takes precedence; CLAUDE.md has not been edited and should be updated by the
+  user or on their instruction.
+- All results so far (energy v1.0/v1.1, pharma v1.2) are from **classical scripted agents**
+  (Random Forest + SHAP + ε-greedy over scripted strategies). No LLM was involved in any of
+  them. They stay as they are; whether they become a comparison arm or are dropped is an
+  open user decision (my recommendation: keep as comparison arm).
+- This machine: i7-8665U, 15.8 GB RAM, no dedicated GPU, Ollama not installed. Nothing was
+  installed locally.
+
+### LLM-agent design built for the pilot (NOT yet a frozen protocol)
+- An LLM agent keeps its Random Forest and SHAP values as a private analysis tool. Each
+  round it is told its private gain per option, the tool's probability per option, and per
+  option the tool's features (observed level, SHAP contribution), plus its last 3 rounds'
+  outcomes. It returns vote, confidence, two features with direction, and a level for each.
+- The rules of the system (how reward is computed; in the proposed system, that reports are
+  audited) are stated in the prompt. Audit feedback appears in the history only when the
+  system audits (not in the baseline).
+- Replies are constrained by a JSON schema with enumerated values. An unparsable reply is
+  retried once, then replaced by the tool-supported report and counted.
+- Fidelity, evidence support, manipulation, utility, reward, reputation and the collective
+  decision are computed by the existing functions, unchanged.
+- Code: `agents/llm_agent.py`, `experiments/llm.py`, `experiments/llm_pilot.py`,
+  `kaggle/llm_pilot_kaggle.ipynb`; 17 tests with stub models (no LLM). `prepare` now also
+  returns the raw SHAP values, feature rows and thresholds; stored energy and pharma results
+  still reproduce byte for byte.
+- **Not verified:** the notebook has not been run on Kaggle; Ollama's install on Kaggle,
+  model speed and reply quality are unknown until the pilot runs.
+
+### Next
+1. User runs the pilot notebook on Kaggle (validation scenarios only, 100 agent decisions).
+2. From the measured seconds per call: size rounds/seeds, then write and freeze **protocol
+   amendment 3** (LLM agents) before any LLM run on test scenarios. Open design points for
+   it: how malicious LLM agents are instructed; whether classical results are a comparison
+   arm; model and quantisation; handling of unusable replies.
