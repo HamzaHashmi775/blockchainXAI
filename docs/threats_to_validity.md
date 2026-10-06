@@ -54,10 +54,30 @@ Started 2026-10-05 (Phase 2). Updated as phases complete.
   users, and all users share one peak load. Whether the profiles are metered or modelled is
   unverified; the data must not be described as metered household observations until checked.
 - **One community, one year, hourly resolution**, no network power flow.
-- **Pharma case study not yet run.** The specified file is a list of 24 criteria names. The
-  study's other tables give 4 suppliers × 4 criteria × 2 decision makers — not
-  transaction-level, tiny, and able to support at most four criterion-based agents plus one
-  on rating reliability. H6 (cross-domain) is untested.
+- **Pharma data is one programme's procurement, not the pharmaceutical supply chain.** The
+  case study uses USAID/PEPFAR SCMS shipment lines (protocol §11): antiretrovirals and HIV
+  test kits, one buyer, 2007–2015, direct-from-supplier lines only (48% of the file). The
+  originally specified figshare file is a list of 24 criteria names with no observations.
+  The file's identity with the publisher's copy could not be checked (publisher site
+  offline); its licence is taken from a catalogue mirror.
+- **The pharma choice set and ground truth are constructed.** The data records the supplier
+  that was used, never the offers it was compared with. Candidates are the three sites that
+  most recently delivered the product; the reference is an equal-weight score of five
+  history-based criteria. That reference agrees with the site actually used in only 35% of
+  scenarios (chance 33%) and changes in 18–32% of scenarios when one criterion's weight is
+  doubled or dropped. Pharma "decision accuracy" is agreement with this normative score, not
+  with real procurement decisions or real outcomes.
+- **No quality or compliance evidence in pharma.** The data has no inspection, rejection or
+  audit variable, so the template's Quality and Compliance agents were replaced by Lead-time
+  and Supply-continuity agents (user-approved). Claims about "quality" cannot be made.
+- **All pharma agent features are derived** from a site's earlier shipments (prices,
+  on-time record, lead times, freight per kg, volumes). Some histories are short; missing
+  lead-time or freight history is filled with the all-site median of the time.
+- **Late-delivery share drifts by year**, and the pharma test period (2013–2015) differs from
+  the training period (2007–2012); models are evaluated out of time by design.
+- **Pharma was designed after the energy results were known** and reuses the mechanism
+  unchanged; it is a replication on a second domain, not an independent blind test. Its game
+  has 600 rounds (energy 1,000), so strategy learning has less time to settle.
 - **Dataset-specific criteria constrain agent design** in both domains.
 
 ## Statistical conclusion validity

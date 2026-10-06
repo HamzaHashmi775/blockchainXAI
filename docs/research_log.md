@@ -231,3 +231,56 @@ made separable"):
 - **Open, waiting for the user** (CLAUDE.md §10: needed variables absent): approve replacing
   the figshare criteria list as primary pharma dataset (protocol amendment 2), the five-agent
   mapping, and the handling of S-2 and S-4. No preprocessing, agents or scenarios built yet.
+
+## 2026-10-06 (later) — Energy v1.1 verdicts and ω sensitivity; pharma amendment 2 and pipeline
+
+### Energy v1.1 (post hoc relative to v1.0) — verdicts by the pre-declared rule
+From `tables/energy_main.md`, proposed vs baseline, n = 10:
+- Fidelity +0.034 (+3.6%), Holm p = 0.004 → **negligible** (significant, but below the 5%
+  relative-improvement threshold). Evidence support +0.040 (+4.3%), Holm p = 0.004 →
+  **negligible**. Manipulation −0.029 (−44.4%), Holm p = 0.003 → **improved**.
+- So under v1.1 **H1 and H2 do not meet the pre-declared rule; H3 does.** Under v1.0 the
+  rule had been met for all three. Cause visible in the table: the baseline is already 78%
+  honest at ω = 0.5, leaving F and E little room. Not re-tuned.
+- Ablation ≈ proposed on F, E, M: the effect comes from the incentive, not from reputation.
+- H4 unchanged: not supported (p = 0.068).
+
+### ω sensitivity (energy, v1.1; `tables/energy_sensitivity_omega.md`)
+Rerun completed (10 seeds). Proposed − baseline: ω = 0.25: F +3.3%, E +3.7%, M −41%;
+ω = 0.5: as above; ω = 0.75: F +27.8%, E +28.6%, M −71% (all Holm p ≤ 0.002);
+ω = 0.9 (exploratory, not pre-declared): F +50%, E +57%, M −45%. The incentive matters more
+the more an agent weighs its private gain; at the pre-declared ω = 0.5 the F and E effects
+are below the 5% threshold. At ω = 0.9 honesty collapses in every system (honest share
+0.16–0.34).
+
+### Pharma: user decisions (2026-10-06, verbatim: "ok go a head with your recommendation")
+Approved: (1) SCMS delivery history replaces the figshare criteria list as primary pharma
+dataset; (2) agents Cost, Delivery reliability, Lead time, Logistics, Supply continuity
+(no Quality/Compliance — no variable); (3) direct-from-supplier lines only; (4) a
+constructed reference decision with sensitivity analysis.
+
+### Protocol amendment 2 (v1.2) — committed before any pharma model was trained
+`docs/research_protocol.md` §11 and §12. Design choices made by me within the approved
+recommendations (flagged for the user):
+- Scenario = purchase order × product; three candidates = sites that most recently delivered
+  the product before the order date; slot order hashed.
+- Reference = equal-weight sum of five min–max-normalised criteria.
+- Time-ordered split 50/10/40; 600 rounds, evaluation on the last 300.
+- Mechanism parameters identical to energy v1.1.
+
+Feasibility figures seen before freezing: 1,648 scenarios (824/165/659), 31 products, 49
+sites; reference = site actually used in 35% of scenarios where it is a candidate (chance
+33%); reference unchanged in 68–82% of scenarios under weight changes; criterion-preferred
+candidate = reference in 46–52%.
+
+### Steps 06–16 for pharma
+- `environments/pharma/preprocess.py`, `agents/pharma_agents.py`, `experiments/pharma.py`,
+  seven `configs/pharma_*.yaml` (derived from the energy configs; only data-dependent keys
+  differ).
+- The game, metric aggregation and runners moved unchanged from `experiments/energy.py` to
+  `experiments/core.py` so both domains share them. Checked: energy_proposed seed 0
+  reproduces the stored result byte for byte.
+- `data/processed/pharma/scenarios.csv` is git-ignored (CC BY-ND: no redistribution of
+  processed data); `scenarios_meta.json` is committed.
+- Tests: 21 new pharma tests, including a rebuild-from-past-lines test that shows no future
+  information enters a scenario. Full suite passes.
