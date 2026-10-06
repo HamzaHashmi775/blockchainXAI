@@ -389,3 +389,43 @@ user with the caveats above. Blockchain (Phase 8) not started; waiting for the u
    amendment 3** (LLM agents) before any LLM run on test scenarios. Open design points for
    it: how malicious LLM agents are instructed; whether classical results are a comparison
    arm; model and quantisation; handling of unusable replies.
+
+## 2026-10-06 — LLM pilot 1 (Kaggle, qwen2.5:7b) and prompt revision
+
+Pilot output supplied by the user: `results/pilot/pilot1/`. **Feasibility only: 10 rounds,
+validation scenarios, one seed; not an experimental result.**
+
+- Ran on a Tesla T4 (all layers on GPU), Ollama, `qwen2.5:7b` Q4_K_M, digest `845dbda0…`,
+  temperature 0. Kaggle Python 3.13, not the pinned environment.
+- **Feasibility:** 100/100 replies usable (no retries). Median 3.4–3.7 s per decision
+  (server side about 2.7 s: ~500 prompt tokens, ~80 output tokens). About 970 decisions per
+  hour, one request at a time.
+- **Sanity:** votes spread over the three candidates (26–44%); confidence varies. The model
+  reacts to the stated rules: mean confidence 0.86 in baseline vs 0.70 in proposed
+  (confidence-inflation score 0.18 vs 0.02).
+- **Problem found:** fidelity was 0.32 in *both* systems and only 6% of explanations were
+  fully truthful, even though 84–88% of votes followed the tool. Rebuilding the round-1
+  prompt locally shows why: the Cost agent's tool had `price_cv` (+0.380) and
+  `exp_unit_price` (+0.057) on top for the option it voted for, and the model reported
+  "`exp_unit_price` lowers, `price_rel` raises" — the first two features in the list with
+  directions from common sense, not from the tool. It gave the same explanation in both
+  systems. (Local and Kaggle library versions differ, so the rebuilt numbers may not be
+  identical to what the model saw; the pattern is the same across the five sampled agents.)
+  Conclusion: with that prompt, fidelity would mostly measure whether the model can pick the
+  two largest of five signed numbers, not whether it chooses to be truthful.
+
+### Change made before any protocol is frozen
+- The tool's analysis is now listed **most important feature first**, in words ("`price_cv`
+  is high, raises score by 0.380"), and the system prompt states that the true top features
+  of an option are the first two listed. Being truthful is then a matter of copying; not
+  being truthful is a choice. This mirrors the scripted agents, which know the truth exactly.
+- New pilot check `reads_its_tool`: share of fully truthful explanations among reports that
+  vote with the tool in the proposed system (nothing to gain from misreporting); a model
+  below 0.8 is unfit for the experiment.
+- The five requests of a round can be sent concurrently (`workers`), results stored in agent
+  order; context window set to 2,048 tokens.
+- Pilot 2 notebook: `qwen2.5:7b` and `llama3.1:8b`, each sequential and concurrent, 10 rounds
+  on validation scenarios.
+
+These prompt changes were made after seeing pilot-1 behaviour. They are pre-freeze design
+iterations on validation scenarios and will be disclosed as such in amendment 3.

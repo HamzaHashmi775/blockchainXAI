@@ -8,15 +8,16 @@
 # Before running:
 # 1. Settings -> Internet: **On** (needs a phone-verified Kaggle account).
 # 2. Settings -> Accelerator: **GPU T4 x2** if you have GPU quota; otherwise leave it on
-#    CPU and set MODEL below to a small model.
+#    CPU and set MODELS below to one small model.
 # 3. Add Input -> your uploaded dataset that contains `project_bundle.zip`.
 # Then: Run All. When it finishes, download `/kaggle/working/pilot_output.zip` from the
 # Output panel and give it to Claude Code.
 
 # %%
-MODEL = "qwen2.5:7b"        # on CPU use a small model instead, e.g. "qwen2.5:3b"
+MODELS = ["qwen2.5:7b", "llama3.1:8b"]   # on CPU use one small model, e.g. ["qwen2.5:3b"]
 DOMAINS = ["pharma"]        # add "energy" to pilot the second case study as well
-ROUNDS = 10                 # 10 rounds x 5 agents x 2 systems = 100 agent decisions
+ROUNDS = 10                 # 10 rounds x 5 agents x 2 systems = 100 agent decisions per run
+PARALLEL = 5                # the five agents of a round are asked at the same time
 
 # %%
 import glob
@@ -53,16 +54,23 @@ print(subprocess.run("nvidia-smi --query-gpu=name,memory.total --format=csv,nohe
 subprocess.run("apt-get install -y -qq zstd pciutils > /dev/null 2>&1", shell=True)
 subprocess.run("curl -fsSL https://ollama.com/install.sh | sh", shell=True, check=True)
 server = subprocess.Popen(["ollama", "serve"], stdout=open("/kaggle/working/ollama.log", "w"),
-                          stderr=subprocess.STDOUT)
+                          stderr=subprocess.STDOUT,
+                          env={**os.environ, "OLLAMA_NUM_PARALLEL": str(PARALLEL)})
 time.sleep(8)
-subprocess.run(["ollama", "pull", MODEL], check=True)
+for model in MODELS:
+    subprocess.run(["ollama", "pull", model], check=True)
 print(subprocess.run(["ollama", "list"], capture_output=True, text=True).stdout)
 
 # %%
+# Each model is run one request at a time and then with the five agents asked together,
+# to measure the speed-up and to check that the answers do not change.
 for domain in DOMAINS:
-    subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
-                    "--model", MODEL, "--rounds", str(ROUNDS),
-                    "--output-dir", "/kaggle/working/pilot"], check=True)
+    for model in MODELS:
+        for workers, tag in ((1, "_seq"), (PARALLEL, "_par")):
+            subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
+                            "--model", model, "--rounds", str(ROUNDS),
+                            "--workers", str(workers), "--tag", tag,
+                            "--output-dir", "/kaggle/working/pilot"], check=True)
 
 # %%
 shutil.copy("/kaggle/working/ollama.log", "/kaggle/working/pilot/ollama.log")

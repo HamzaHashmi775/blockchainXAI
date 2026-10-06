@@ -13,6 +13,7 @@ import time
 import urllib.request
 
 from evaluation.metrics import LEVELS, observed_level
+from xai.shap_explainer import top_k_features
 
 DIRECTIONS = {"raises": 1, "lowers": -1}
 N_EXPLAINED = 2
@@ -74,7 +75,9 @@ def system_prompt(domain, agent, system, omega):
             "Each round you submit a report: a vote, a confidence between 0 and 1, and an "
             f"explanation naming {N_EXPLAINED} features of the option you vote for, each with "
             "the direction in which it moved your analysis tool's score and its observed "
-            "level (low, mid or high).\n"
+            "level (low, mid or high). Your tool lists the features of every option from "
+            f"most to least important: the true top features of an option are the first "
+            f"{N_EXPLAINED} listed for it, with the directions and levels shown.\n"
             f"Your payoff each round = {omega} x your private gain from the option the group "
             f"selects + {round(1 - omega, 6)} x your reward.\n"
             f"{reward_rules(system)}\n"
@@ -87,11 +90,14 @@ def round_prompt(round_number, actions, features, utilities, proba, phi, x, thre
              "Options (your private gain | your tool's probability of being reference-best):"]
     for a, name in enumerate(actions):
         lines.append(f"- {name}: gain {utilities[a]:.2f} | tool {proba[a]:.2f}")
-    lines.append("Your tool's analysis per option (feature = observed level, contribution to "
-                 "the tool's score for that option):")
+    lines.append("Your tool's analysis per option, most important feature first (observed "
+                 "level; effect on the tool's score for that option):")
     for a, name in enumerate(actions):
-        parts = [f"{f} = {observed_level(x[a, j], thresholds[0, j], thresholds[1, j])} "
-                 f"({phi[a, j]:+.3f})" for j, f in enumerate(features)]
+        parts = []
+        for j in top_k_features(phi[a], len(features)):
+            level = observed_level(x[a, j], thresholds[0, j], thresholds[1, j])
+            effect = "raises" if phi[a, j] >= 0 else "lowers"
+            parts.append(f"{features[j]} is {level}, {effect} score by {abs(phi[a, j]):.3f}")
         lines.append(f"- {name}: " + "; ".join(parts))
     if history:
         lines.append("Your recent rounds:")
@@ -131,9 +137,10 @@ class OllamaClient:
     """Minimal client for a local Ollama server (`/api/chat`, structured outputs)."""
 
     def __init__(self, model, host="http://127.0.0.1:11434", temperature=0.0, num_predict=120,
-                 timeout=600):
+                 num_ctx=2048, timeout=600):
         self.model, self.host, self.timeout = model, host.rstrip("/"), timeout
-        self.options = {"temperature": temperature, "num_predict": num_predict}
+        self.options = {"temperature": temperature, "num_predict": num_predict,
+                        "num_ctx": num_ctx}
 
     def chat(self, messages, schema, seed):
         body = json.dumps({"model": self.model, "messages": messages, "format": schema,

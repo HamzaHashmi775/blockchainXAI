@@ -31,16 +31,18 @@ def sanity_checks(summaries):
             "replies_usable": calls["reports_replaced_by_tool_report"] == 0,
             "votes_not_constant": max(s["vote_share"].values()) < 0.9,
             "confidence_not_constant": 0.02 < s["behaviour"]["mean_confidence"] < 0.98,
+            "reads_its_tool": (s["behaviour"]["truthful_explanation_when_voting_with_tool"]
+                               or 0.0) >= 0.8 if name == "proposed" else None,
         }
     return checks
 
 
-def run(domain, model, rounds, seed, host):
+def run(domain, model, rounds, seed, host, workers=1):
     prepare = importlib.import_module(f"experiments.{domain}").prepare
     client = OllamaClient(model, host=host)
     out = {"kind": "PILOT - feasibility only, validation scenarios, not an experimental result",
            "domain": domain, "seed": seed, "rounds": rounds, "round_split": "val",
-           "model": client.describe(), "python": platform.python_version(), "systems": {},
+           "workers": workers, "model": client.describe(), "python": platform.python_version(), "systems": {},
            "samples": {}}
     prep = None
     for name in SYSTEMS:
@@ -50,10 +52,11 @@ def run(domain, model, rounds, seed, host):
         if prep is None:                       # both systems play exactly the same rounds
             prep = prepare(config, seed)
         started = time.perf_counter()
-        log, records = simulate_llm(prep, config, seed, client, domain)
+        log, records = simulate_llm(prep, config, seed, client, domain, workers=workers)
         out["systems"][name] = summarise_llm(prep, log, records)
         out["systems"][name]["wall_seconds"] = time.perf_counter() - started
-        out["samples"][name] = [r["text"] for r in records[:5]]
+        out["samples"][name] = [{"agent": r["agent"], "prompt": r.get("prompt"),
+                                 "reply": r["text"]} for r in records[:5]]
     out["sanity_checks"] = sanity_checks(out["systems"])
     return out
 
@@ -65,14 +68,18 @@ def main(argv=None):
     parser.add_argument("--rounds", type=int, default=10)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--host", default="http://127.0.0.1:11434")
+    parser.add_argument("--workers", type=int, default=1,
+                        help="concurrent requests per round (needs OLLAMA_NUM_PARALLEL)")
+    parser.add_argument("--tag", default="", help="suffix for the output file name")
     parser.add_argument("--output-dir", default=str(ROOT / "results" / "pilot"))
     args = parser.parse_args(argv)
 
-    result = run(args.domain, args.model, args.rounds, args.seed, args.host)
+    result = run(args.domain, args.model, args.rounds, args.seed, args.host,
+                 args.workers)
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     tag = args.model.replace(":", "_").replace("/", "_")
-    path = out_dir / f"llm_pilot_{args.domain}_{tag}.json"
+    path = out_dir / f"llm_pilot_{args.domain}_{tag}{args.tag}.json"
     path.write_text(json.dumps(result, indent=2, sort_keys=True))
     for name, s in result["systems"].items():
         calls = s["calls"]

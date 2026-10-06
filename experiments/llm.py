@@ -6,6 +6,7 @@ object with `chat(messages, schema, seed) -> {"text": ...}` (agents/llm_agent.Ol
 or a stub in tests).
 """
 from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
@@ -39,8 +40,24 @@ def _history_line(round_number, actions, vote, model_vote, decision, F, E, R, pa
     return line + f"reward {R:.2f}, payoff {payoff:.2f}"
 
 
-def simulate_llm(prep, system, seed, client, domain, n_rounds=None):
-    """Play `n_rounds` (default: all prepared rounds). Returns (log, call records)."""
+def _ask(client, messages, schema, seed, actions, features):
+    """One agent's report for one round: (report or None, call records)."""
+    calls = []
+    for attempt in range(MAX_ATTEMPTS):
+        reply = client.chat(messages, schema, seed * 1000 + attempt)
+        report = parse_report(reply["text"], actions, features)
+        calls.append({"attempt": attempt, "valid": report is not None, **reply})
+        if report is not None:
+            return report, calls
+    return None, calls
+
+
+def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1):
+    """Play `n_rounds` (default: all prepared rounds). Returns (log, call records).
+
+    Agents report simultaneously, so with `workers` > 1 the five requests of a round are
+    sent concurrently; results are always stored in agent order.
+    """
     game = prep["game"]
     weights = validate_weights(system["incentive_weights"])
     audited = bool(system["components"].get("explanation_aware_incentive"))
@@ -67,21 +84,25 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None):
         votes = np.zeros(n_agents, dtype=int)
         conf, F, E = np.zeros(n_agents), np.zeros(n_agents), np.zeros(n_agents)
         invalid = np.zeros(n_agents)
+        requests = []
         for i in range(n_agents):
             audit = prep["audit"][i]
-            phi, x, thresholds = audit["phi"][t], audit["X"][t], audit["thresholds"]
             messages = [{"role": "system", "content": prompts[i]},
                         {"role": "user", "content": round_prompt(
-                            t + 1, actions, audit["features"], util[i], proba[i], phi, x,
-                            thresholds, history[i])}]
-            report = None
-            for attempt in range(MAX_ATTEMPTS):
-                reply = client.chat(messages, schemas[i], seed * 1000 + attempt)
-                report = parse_report(reply["text"], actions, audit["features"])
-                records.append({"round": t, "agent": agents[i], "attempt": attempt,
-                                "valid": report is not None, **reply})
-                if report is not None:
-                    break
+                            t + 1, actions, audit["features"], util[i], proba[i],
+                            audit["phi"][t], audit["X"][t], audit["thresholds"], history[i])}]
+            requests.append((client, messages, schemas[i], seed, actions, audit["features"]))
+        if workers > 1:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                answers = list(pool.map(lambda r: _ask(*r), requests))
+        else:
+            answers = [_ask(*r) for r in requests]
+        for i, (report, calls) in enumerate(answers):
+            audit = prep["audit"][i]
+            phi, x, thresholds = audit["phi"][t], audit["X"][t], audit["thresholds"]
+            records.extend({"round": t, "agent": agents[i], **call} for call in calls)
+            if t == 0:
+                records[-1]["prompt"] = requests[i][1][1]["content"]
             if report is None:
                 invalid[i] = 1.0
                 report = honest_report(proba[i], phi, x, thresholds, k)
@@ -124,6 +145,10 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None):
     return log, records
 
 
+def _share(values, mask):
+    return float(values[mask].mean()) if mask.any() else None
+
+
 def summarise_llm(prep, log, records, window=None):
     T = len(log["collective"])
     window = window if window is not None else slice(0, T)
@@ -150,6 +175,10 @@ def summarise_llm(prep, log, records, window=None):
             "votes_own_preferred_option": mean("votes_preferred"),
             "fully_truthful_explanation": float((log["F"][window] == 1.0).mean()),
             "fully_supported_evidence": float((log["E"][window] == 1.0).mean()),
+            # reading check: a report that follows the tool's vote has nothing to gain from
+            # a wrong explanation, so a low value here means the model misreads its tool
+            "truthful_explanation_when_voting_with_tool": _share(
+                log["F"][window] == 1.0, ~log["deviates"][window].astype(bool)),
             "mean_confidence": mean("confidence"),
         },
         "vote_share": {prep["actions"][a]: float((votes == a).mean())

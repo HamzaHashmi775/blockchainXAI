@@ -75,7 +75,9 @@ def test_round_prompt_shows_tool_output_without_the_reference():
     text = round_prompt(4, ACTIONS, FEATURES, [0.0, 0.5, 1.0], [0.2, 0.3, 0.5], phi, x,
                         thresholds, ["round 3: ..."])
     assert "Round 4." in text and "candidate_3: gain 1.00 | tool 0.50" in text
-    assert "f_a = low (+0.200)" in text and "f_c = high (+0.000)" in text
+    line = [row for row in text.split("\n") if row.startswith("- candidate_1: f_a")][0]
+    assert line == ("- candidate_1: f_a is low, raises score by 0.200; "
+                    "f_b is mid, lowers score by 0.100; f_c is high, raises score by 0.000")
     assert "round 3: ..." in text and "reference" not in text.split("\n", 2)[2]
 
 
@@ -143,6 +145,28 @@ def test_tool_following_agents_are_audited_as_truthful(prep):
             calls["reports_replaced_by_tool_report"]) == (60, 0, 0)
     assert calls["mean_seconds"] == pytest.approx(0.01)
     assert abs(sum(summary["vote_share"].values()) - 1.0) < 1e-9
+    assert summary["behaviour"]["truthful_explanation_when_voting_with_tool"] == 1.0
+    assert records[0]["prompt"].startswith("Round 1.")
+
+
+def test_concurrent_requests_give_the_same_game(prep):
+    class Stateless:
+        """Answers from the prompt alone, so call order cannot matter."""
+
+        def chat(self, messages, schema, seed):
+            first = [row for row in messages[1]["content"].split("\n")
+                     if row.startswith("- candidate_1: ") and " is " in row][0]
+            parts = first[len("- candidate_1: "):].split("; ")
+            name = [part.split(" is ")[0] for part in parts[:2]]
+            level = [part.split(" is ")[1].split(",")[0] for part in parts[:2]]
+            direction = [part.split(", ")[1].split(" ")[0] for part in parts[:2]]
+            return {"text": reply("candidate_1", 0.5, name, direction, level), "seconds": 0.0}
+
+    one, _ = simulate_llm(prep, PROPOSED, 0, Stateless(), "pharma", n_rounds=4)
+    many, _ = simulate_llm(prep, PROPOSED, 0, Stateless(), "pharma", n_rounds=4, workers=5)
+    for key in ("votes", "F", "E", "R", "collective"):
+        assert np.array_equal(one[key], many[key])
+    assert (one["F"] == 1.0).all() and (one["E"] == 1.0).all()
 
 
 def test_selfish_agents_are_audited_as_manipulating(prep):
