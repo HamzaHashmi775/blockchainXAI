@@ -1,0 +1,1407 @@
+{
+  "by_value": {
+    "0.25": {
+      "agents_for_whom_honest_is_best": {
+        "ablation": 5,
+        "baseline": 5,
+        "proposed": 5
+      },
+      "descriptive": {
+        "collective_accuracy": {
+          "ablation": {
+            "ci_high": 0.7616035898224758,
+            "ci_low": 0.7383964101775242,
+            "mean": 0.75,
+            "n": 10,
+            "sd": 0.016220700080795267
+          },
+          "baseline": {
+            "ci_high": 0.7587785662504323,
+            "ci_low": 0.7380214337495679,
+            "mean": 0.7484000000000001,
+            "n": 10,
+            "sd": 0.014508235209317818
+          },
+          "proposed": {
+            "ci_high": 0.7676231739542545,
+            "ci_low": 0.7443768260457455,
+            "mean": 0.756,
+            "n": 10,
+            "sd": 0.016248076809271938
+          }
+        },
+        "evidence_support": {
+          "ablation": {
+            "ci_high": 0.9711227663691965,
+            "ci_low": 0.9663172336308034,
+            "mean": 0.9687199999999999,
+            "n": 10,
+            "sd": 0.003358835777137332
+          },
+          "baseline": {
+            "ci_high": 0.9535581246105238,
+            "ci_low": 0.9143218753894762,
+            "mean": 0.93394,
+            "n": 10,
+            "sd": 0.027424247178971618
+          },
+          "proposed": {
+            "ci_high": 0.9707331561460517,
+            "ci_low": 0.9659068438539482,
+            "mean": 0.96832,
+            "n": 10,
+            "sd": 0.0033733596836915446
+          }
+        },
+        "fidelity": {
+          "ablation": {
+            "ci_high": 0.9742437414599376,
+            "ci_low": 0.9699714061054661,
+            "mean": 0.9721075737827019,
+            "n": 10,
+            "sd": 0.002986156503706612
+          },
+          "baseline": {
+            "ci_high": 0.9578862483878758,
+            "ci_low": 0.922788003204142,
+            "mean": 0.9403371257960089,
+            "n": 10,
+            "sd": 0.024531981791738763
+          },
+          "proposed": {
+            "ci_high": 0.9740627541207196,
+            "ci_low": 0.9692938178613388,
+            "mean": 0.9716782859910292,
+            "n": 10,
+            "sd": 0.0033332566021081578
+          }
+        },
+        "manipulation": {
+          "ablation": {
+            "ci_high": 0.03305306745558222,
+            "ci_low": 0.030268302361329623,
+            "mean": 0.03166068490845592,
+            "n": 10,
+            "sd": 0.0019464165866085875
+          },
+          "baseline": {
+            "ci_high": 0.06452732442146997,
+            "ci_low": 0.04315317235178128,
+            "mean": 0.05384024838662562,
+            "n": 10,
+            "sd": 0.014939502150109382
+          },
+          "proposed": {
+            "ci_high": 0.033406094138399026,
+            "ci_low": 0.02986243136236136,
+            "mean": 0.03163426275038019,
+            "n": 10,
+            "sd": 0.002476849490415753
+          }
+        },
+        "manipulation_success": {
+          "ablation": {
+            "ci_high": 0.02415755794892007,
+            "ci_low": 0.015842442051079923,
+            "mean": 0.019999999999999997,
+            "n": 10,
+            "sd": 0.005811865258054231
+          },
+          "baseline": {
+            "ci_high": 0.03960545200857151,
+            "ci_low": 0.026794547991428476,
+            "mean": 0.03319999999999999,
+            "n": 10,
+            "sd": 0.008954204474869769
+          },
+          "proposed": {
+            "ci_high": 0.02343307166029549,
+            "ci_low": 0.01176692833970451,
+            "mean": 0.0176,
+            "n": 10,
+            "sd": 0.008154071920757682
+          }
+        }
+      },
+      "honest_share": {
+        "ablation": {
+          "ci_high": 0.906457288817613,
+          "ci_low": 0.8903427111823874,
+          "mean": 0.8984000000000002,
+          "n": 10,
+          "sd": 0.011263313110369549
+        },
+        "baseline": {
+          "ci_high": 0.8673874556739661,
+          "ci_low": 0.8166125443260338,
+          "mean": 0.842,
+          "n": 10,
+          "sd": 0.03548921588940004
+        },
+        "proposed": {
+          "ci_high": 0.9145776606981285,
+          "ci_low": 0.8855023393018716,
+          "mean": 0.9000400000000001,
+          "n": 10,
+          "sd": 0.020322248344555215
+        }
+      },
+      "proposed_vs_baseline": {
+        "collective_accuracy": {
+          "ci_high": 0.01574376578607355,
+          "ci_low": -0.0005437657860735369,
+          "ci_method": "t-interval",
+          "effect_size": 0.6675919504799912,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.7484000000000001,
+          "mean_difference": 0.007600000000000007,
+          "mean_treatment": 0.756,
+          "n": 10,
+          "p_value": 0.06395428555374458,
+          "relative_improvement": 0.010154997327632202,
+          "shapiro_p": 0.12644461829525638,
+          "statistic": 2.111111111111111,
+          "test": "paired t-test"
+        },
+        "evidence_support": {
+          "ci_high": 0.05378356579421087,
+          "ci_low": 0.014976434205789146,
+          "ci_method": "t-interval",
+          "effect_size": 1.2674974635130816,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.93394,
+          "mean_difference": 0.03438000000000001,
+          "mean_treatment": 0.96832,
+          "n": 10,
+          "p_holm": 0.00390625,
+          "p_value": 0.003072297951721626,
+          "relative_improvement": 0.036811786624408385,
+          "shapiro_p": 0.13590544040810537,
+          "statistic": 4.008178913187503,
+          "test": "paired t-test"
+        },
+        "fidelity": {
+          "ci_high": 0.0468998997783378,
+          "ci_low": 0.01968390701949551,
+          "ci_method": "percentile bootstrap",
+          "effect_size": 1.0,
+          "effect_size_name": "rank_biserial",
+          "mean_control": 0.9403371257960089,
+          "mean_difference": 0.03134116019502038,
+          "mean_treatment": 0.9716782859910292,
+          "n": 10,
+          "p_holm": 0.00390625,
+          "p_value": 0.001953125,
+          "relative_improvement": 0.03332970626730235,
+          "shapiro_p": 0.003673724380103336,
+          "statistic": 0.0,
+          "test": "Wilcoxon signed-rank"
+        },
+        "manipulation": {
+          "ci_high": -0.012261545504844118,
+          "ci_low": -0.032150425767646755,
+          "ci_method": "t-interval",
+          "effect_size": -1.5973956269909282,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.05384024838662562,
+          "mean_difference": -0.022205985636245436,
+          "mean_treatment": 0.03163426275038019,
+          "n": 10,
+          "p_holm": 0.0020670774802074537,
+          "p_value": 0.0006890258267358179,
+          "relative_improvement": -0.4124421097908899,
+          "shapiro_p": 0.0543253813340905,
+          "statistic": -5.051408505684074,
+          "test": "paired t-test"
+        },
+        "manipulation_success": {
+          "ci_high": -0.009280339168287292,
+          "ci_low": -0.021919660831712703,
+          "ci_method": "t-interval",
+          "effect_size": -1.7658491539834722,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.03319999999999999,
+          "mean_difference": -0.015599999999999998,
+          "mean_treatment": 0.0176,
+          "n": 10,
+          "p_value": 0.00034114987592139554,
+          "relative_improvement": -0.469879518072289,
+          "shapiro_p": 0.9241224144431686,
+          "statistic": -5.584105330869167,
+          "test": "paired t-test"
+        }
+      },
+      "unilateral_deviation": {
+        "ablation": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.3088076421651083,
+            "gain_from_deviating": -0.18082513127442867,
+            "honest": 0.489632773439537,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.35364479871537935,
+            "gain_from_deviating": -0.19020905545751743,
+            "honest": 0.5438538541728968,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.33814757142857144,
+            "gain_from_deviating": -0.1890006428571428,
+            "honest": 0.5271482142857142,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.3543074285714285,
+            "gain_from_deviating": -0.17410507142857157,
+            "honest": 0.5284125000000001,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5335376428571428,
+            "gain_from_deviating": -0.08844807142857136,
+            "honest": 0.6219857142857141,
+            "honest_best_in_n_seeds": 10
+          }
+        },
+        "baseline": {
+          "consumer": {
+            "best_deviation": "misattributing",
+            "best_deviation_payoff": 0.3270485707365369,
+            "gain_from_deviating": -0.16258420270300006,
+            "honest": 0.489632773439537,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "misattributing",
+            "best_deviation_payoff": 0.370450584429665,
+            "gain_from_deviating": -0.17340326974323178,
+            "honest": 0.5438538541728968,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.36992857142857144,
+            "gain_from_deviating": -0.1572196428571428,
+            "honest": 0.5271482142857142,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.37876428571428566,
+            "gain_from_deviating": -0.1496482142857144,
+            "honest": 0.5284125000000001,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5429875,
+            "gain_from_deviating": -0.07899821428571419,
+            "honest": 0.6219857142857141,
+            "honest_best_in_n_seeds": 10
+          }
+        },
+        "proposed": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.3055799668099099,
+            "gain_from_deviating": -0.1833009654830095,
+            "honest": 0.4888809322929194,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.3486682432324578,
+            "gain_from_deviating": -0.1942409519806919,
+            "honest": 0.5429091952131497,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.3343005714285715,
+            "gain_from_deviating": -0.19360835714285696,
+            "honest": 0.5279089285714285,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.34813128571428575,
+            "gain_from_deviating": -0.18136692857142855,
+            "honest": 0.5294982142857143,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5330754285714285,
+            "gain_from_deviating": -0.08909600000000006,
+            "honest": 0.6221714285714286,
+            "honest_best_in_n_seeds": 10
+          }
+        }
+      }
+    },
+    "0.5": {
+      "agents_for_whom_honest_is_best": {
+        "ablation": 5,
+        "baseline": 5,
+        "proposed": 5
+      },
+      "descriptive": {
+        "collective_accuracy": {
+          "ablation": {
+            "ci_high": 0.7644108832148506,
+            "ci_low": 0.7415891167851496,
+            "mean": 0.7530000000000001,
+            "n": 10,
+            "sd": 0.01595131481867388
+          },
+          "baseline": {
+            "ci_high": 0.7577669478124031,
+            "ci_low": 0.7310330521875968,
+            "mean": 0.7444,
+            "n": 10,
+            "sd": 0.01868570457744519
+          },
+          "proposed": {
+            "ci_high": 0.7625678357065059,
+            "ci_low": 0.744632164293494,
+            "mean": 0.7535999999999999,
+            "n": 10,
+            "sd": 0.012536169891779381
+          }
+        },
+        "evidence_support": {
+          "ablation": {
+            "ci_high": 0.9698424869190874,
+            "ci_low": 0.9637575130809124,
+            "mean": 0.9667999999999999,
+            "n": 10,
+            "sd": 0.004253103442063081
+          },
+          "baseline": {
+            "ci_high": 0.948291763093245,
+            "ci_low": 0.9040682369067548,
+            "mean": 0.9261799999999999,
+            "n": 10,
+            "sd": 0.030910113411488985
+          },
+          "proposed": {
+            "ci_high": 0.9690542344460352,
+            "ci_low": 0.9632257655539646,
+            "mean": 0.9661399999999999,
+            "n": 10,
+            "sd": 0.004073818847224323
+          }
+        },
+        "fidelity": {
+          "ablation": {
+            "ci_high": 0.971800906809862,
+            "ci_low": 0.9672722467482285,
+            "mean": 0.9695365767790453,
+            "n": 10,
+            "sd": 0.0031653151202115383
+          },
+          "baseline": {
+            "ci_high": 0.9538311382812135,
+            "ci_low": 0.9190976923098064,
+            "mean": 0.9364644152955099,
+            "n": 10,
+            "sd": 0.02427700472415045
+          },
+          "proposed": {
+            "ci_high": 0.973168336246871,
+            "ci_low": 0.9678275535859866,
+            "mean": 0.9704979449164288,
+            "n": 10,
+            "sd": 0.0037329496761044282
+          }
+        },
+        "manipulation": {
+          "ablation": {
+            "ci_high": 0.03800926034769955,
+            "ci_low": 0.03243762376927721,
+            "mean": 0.03522344205848838,
+            "n": 10,
+            "sd": 0.003894305438249883
+          },
+          "baseline": {
+            "ci_high": 0.07759833186736627,
+            "ci_low": 0.05343311695518134,
+            "mean": 0.0655157244112738,
+            "n": 10,
+            "sd": 0.016890320559214606
+          },
+          "proposed": {
+            "ci_high": 0.040070116491425806,
+            "ci_low": 0.032721798394674304,
+            "mean": 0.036395957443050055,
+            "n": 10,
+            "sd": 0.005136120190788265
+          }
+        },
+        "manipulation_success": {
+          "ablation": {
+            "ci_high": 0.027393949343198207,
+            "ci_low": 0.015806050656801796,
+            "mean": 0.0216,
+            "n": 10,
+            "sd": 0.008099382692526634
+          },
+          "baseline": {
+            "ci_high": 0.06255265781403566,
+            "ci_low": 0.037847342185964354,
+            "mean": 0.0502,
+            "n": 10,
+            "sd": 0.01726782492897637
+          },
+          "proposed": {
+            "ci_high": 0.03419497949067321,
+            "ci_low": 0.016605020509326784,
+            "mean": 0.0254,
+            "n": 10,
+            "sd": 0.012294533563968809
+          }
+        }
+      },
+      "honest_share": {
+        "ablation": {
+          "ci_high": 0.9093279610506226,
+          "ci_low": 0.8565120389493774,
+          "mean": 0.88292,
+          "n": 10,
+          "sd": 0.03691578403760526
+        },
+        "baseline": {
+          "ci_high": 0.8068364109588803,
+          "ci_low": 0.7428435890411197,
+          "mean": 0.77484,
+          "n": 10,
+          "sd": 0.044727898328547566
+        },
+        "proposed": {
+          "ci_high": 0.8989063799185767,
+          "ci_low": 0.8534136200814232,
+          "mean": 0.8761599999999999,
+          "n": 10,
+          "sd": 0.03179724656143812
+        }
+      },
+      "proposed_vs_baseline": {
+        "collective_accuracy": {
+          "ci_high": 0.018598772244503205,
+          "ci_low": -0.00019877224450318837,
+          "ci_method": "t-interval",
+          "effect_size": 0.7002280046501963,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.7444,
+          "mean_difference": 0.009200000000000009,
+          "mean_treatment": 0.7535999999999999,
+          "n": 10,
+          "p_value": 0.054063250446452944,
+          "relative_improvement": 0.01235894680279418,
+          "shapiro_p": 0.5333772560666804,
+          "statistic": 2.214315376129596,
+          "test": "paired t-test"
+        },
+        "evidence_support": {
+          "ci_high": 0.06281590378674029,
+          "ci_low": 0.017104096213259676,
+          "ci_method": "t-interval",
+          "effect_size": 1.250690509957936,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.9261799999999999,
+          "mean_difference": 0.03995999999999998,
+          "mean_treatment": 0.9661399999999999,
+          "n": 10,
+          "p_holm": 0.00390625,
+          "p_value": 0.003329236733029805,
+          "relative_improvement": 0.043144961022695376,
+          "shapiro_p": 0.15417746666605553,
+          "statistic": 3.9550306594245783,
+          "test": "paired t-test"
+        },
+        "fidelity": {
+          "ci_high": 0.04983741788280634,
+          "ci_low": 0.021041987095211764,
+          "ci_method": "percentile bootstrap",
+          "effect_size": 1.0,
+          "effect_size_name": "rank_biserial",
+          "mean_control": 0.9364644152955099,
+          "mean_difference": 0.034033529620918525,
+          "mean_treatment": 0.9704979449164288,
+          "n": 10,
+          "p_holm": 0.00390625,
+          "p_value": 0.001953125,
+          "relative_improvement": 0.036342576466377834,
+          "shapiro_p": 0.03574905945076139,
+          "statistic": 0.0,
+          "test": "Wilcoxon signed-rank"
+        },
+        "manipulation": {
+          "ci_high": -0.015643006557224434,
+          "ci_low": -0.04259652737922305,
+          "ci_method": "t-interval",
+          "effect_size": -1.5456998392561514,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.0655157244112738,
+          "mean_difference": -0.029119766968223743,
+          "mean_treatment": 0.036395957443050055,
+          "n": 10,
+          "p_holm": 0.0025856526455840904,
+          "p_value": 0.0008618842151946969,
+          "relative_improvement": -0.4444698922265581,
+          "shapiro_p": 0.8147971135801402,
+          "statistic": -4.887932071005582,
+          "test": "paired t-test"
+        },
+        "manipulation_success": {
+          "ci_high": -0.012323679705611292,
+          "ci_low": -0.03727632029438871,
+          "ci_method": "t-interval",
+          "effect_size": -1.4219618324524361,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.0502,
+          "mean_difference": -0.0248,
+          "mean_treatment": 0.0254,
+          "n": 10,
+          "p_value": 0.001496163608784672,
+          "relative_improvement": -0.4940239043824702,
+          "shapiro_p": 0.4200052285555839,
+          "statistic": -4.496638136376431,
+          "test": "paired t-test"
+        }
+      },
+      "unilateral_deviation": {
+        "ablation": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.39980080813974045,
+            "gain_from_deviating": -0.12029331016790495,
+            "honest": 0.5200941183076454,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4540758831450443,
+            "gain_from_deviating": -0.1240746823436063,
+            "honest": 0.5781505654886506,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.41933171428571425,
+            "gain_from_deviating": -0.12055042857142861,
+            "honest": 0.5398821428571429,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4353549523809524,
+            "gain_from_deviating": -0.10317004761904763,
+            "honest": 0.538525,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6157250952380953,
+            "gain_from_deviating": -0.05303204761904767,
+            "honest": 0.6687571428571429,
+            "honest_best_in_n_seeds": 10
+          }
+        },
+        "baseline": {
+          "consumer": {
+            "best_deviation": "misattributing",
+            "best_deviation_payoff": 0.4119614271873595,
+            "gain_from_deviating": -0.1081326911202859,
+            "honest": 0.5200941183076454,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "misattributing",
+            "best_deviation_payoff": 0.46527974028790153,
+            "gain_from_deviating": -0.11287082520074909,
+            "honest": 0.5781505654886506,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.4418857142857143,
+            "gain_from_deviating": -0.09799642857142854,
+            "honest": 0.5398821428571429,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.4526928571428571,
+            "gain_from_deviating": -0.08583214285714291,
+            "honest": 0.538525,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.6263250000000001,
+            "gain_from_deviating": -0.04243214285714281,
+            "honest": 0.6687571428571429,
+            "honest_best_in_n_seeds": 10
+          }
+        },
+        "proposed": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.39366564790553404,
+            "gain_from_deviating": -0.12416764525173318,
+            "honest": 0.5178332931572672,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4469943912268202,
+            "gain_from_deviating": -0.12938114205662227,
+            "honest": 0.5763755332834425,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.41410038095238094,
+            "gain_from_deviating": -0.1276889047619048,
+            "honest": 0.5417892857142858,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.42785419047619044,
+            "gain_from_deviating": -0.11282795238095222,
+            "honest": 0.5406821428571427,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6152502857142856,
+            "gain_from_deviating": -0.05296400000000001,
+            "honest": 0.6682142857142856,
+            "honest_best_in_n_seeds": 10
+          }
+        }
+      }
+    },
+    "0.75": {
+      "agents_for_whom_honest_is_best": {
+        "ablation": 5,
+        "baseline": 5,
+        "proposed": 5
+      },
+      "descriptive": {
+        "collective_accuracy": {
+          "ablation": {
+            "ci_high": 0.7533538407942402,
+            "ci_low": 0.7254461592057599,
+            "mean": 0.7394000000000001,
+            "n": 10,
+            "sd": 0.01950612439437649
+          },
+          "baseline": {
+            "ci_high": 0.7152977864262193,
+            "ci_low": 0.6171022135737805,
+            "mean": 0.6661999999999999,
+            "n": 10,
+            "sd": 0.06863397279935224
+          },
+          "proposed": {
+            "ci_high": 0.7610320145321989,
+            "ci_low": 0.7409679854678011,
+            "mean": 0.751,
+            "n": 10,
+            "sd": 0.014023789311975099
+          }
+        },
+        "evidence_support": {
+          "ablation": {
+            "ci_high": 0.9509893657809351,
+            "ci_low": 0.9149306342190647,
+            "mean": 0.9329599999999999,
+            "n": 10,
+            "sd": 0.0252033154785459
+          },
+          "baseline": {
+            "ci_high": 0.798480469046067,
+            "ci_low": 0.6629995309539329,
+            "mean": 0.73074,
+            "n": 10,
+            "sd": 0.0946946460999776
+          },
+          "proposed": {
+            "ci_high": 0.9501579464167456,
+            "ci_low": 0.9294420535832544,
+            "mean": 0.9398,
+            "n": 10,
+            "sd": 0.014479410669406875
+          }
+        },
+        "fidelity": {
+          "ablation": {
+            "ci_high": 0.9581445024666403,
+            "ci_low": 0.9288299988146774,
+            "mean": 0.9434872506406589,
+            "n": 10,
+            "sd": 0.02048942521368829
+          },
+          "baseline": {
+            "ci_high": 0.8127692767502053,
+            "ci_low": 0.6763340895039254,
+            "mean": 0.7445516831270653,
+            "n": 10,
+            "sd": 0.09536162026782397
+          },
+          "proposed": {
+            "ci_high": 0.9597820117538666,
+            "ci_low": 0.9429862216097556,
+            "mean": 0.9513841166818111,
+            "n": 10,
+            "sd": 0.01173944782242709
+          }
+        },
+        "manipulation": {
+          "ablation": {
+            "ci_high": 0.10751007958381971,
+            "ci_low": 0.05483874064844051,
+            "mean": 0.08117441011613011,
+            "n": 10,
+            "sd": 0.03681472737298153
+          },
+          "baseline": {
+            "ci_high": 0.2999756754499301,
+            "ci_low": 0.19328852451148537,
+            "mean": 0.24663209998070773,
+            "n": 10,
+            "sd": 0.0745691766221795
+          },
+          "proposed": {
+            "ci_high": 0.08326170375958941,
+            "ci_low": 0.05990204429957041,
+            "mean": 0.07158187402957991,
+            "n": 10,
+            "sd": 0.016327276122624683
+          }
+        },
+        "manipulation_success": {
+          "ablation": {
+            "ci_high": 0.09371892190034029,
+            "ci_low": 0.035481078099659724,
+            "mean": 0.0646,
+            "n": 10,
+            "sd": 0.040705445991087406
+          },
+          "baseline": {
+            "ci_high": 0.2607096647327094,
+            "ci_low": 0.13489033526729058,
+            "mean": 0.19779999999999998,
+            "n": 10,
+            "sd": 0.08794164731987532
+          },
+          "proposed": {
+            "ci_high": 0.05851011015394447,
+            "ci_low": 0.03548988984605554,
+            "mean": 0.04700000000000001,
+            "n": 10,
+            "sd": 0.016090024514862897
+          }
+        }
+      },
+      "honest_share": {
+        "ablation": {
+          "ci_high": 0.7918474394711623,
+          "ci_low": 0.6588725605288377,
+          "mean": 0.72536,
+          "n": 10,
+          "sd": 0.09294303153604959
+        },
+        "baseline": {
+          "ci_high": 0.5085657178606059,
+          "ci_low": 0.38447428213939394,
+          "mean": 0.4465199999999999,
+          "n": 10,
+          "sd": 0.08673393287007751
+        },
+        "proposed": {
+          "ci_high": 0.7784351115292152,
+          "ci_low": 0.6916448884707849,
+          "mean": 0.73504,
+          "n": 10,
+          "sd": 0.06066218298449574
+        }
+      },
+      "proposed_vs_baseline": {
+        "collective_accuracy": {
+          "ci_high": 0.12795499194561902,
+          "ci_low": 0.04164500805438101,
+          "ci_method": "t-interval",
+          "effect_size": 1.405683627580208,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.6661999999999999,
+          "mean_difference": 0.08480000000000001,
+          "mean_treatment": 0.751,
+          "n": 10,
+          "p_value": 0.0016114234348824795,
+          "relative_improvement": 0.12728910237166033,
+          "shapiro_p": 0.21242872438911725,
+          "statistic": 4.445161932761339,
+          "test": "paired t-test"
+        },
+        "evidence_support": {
+          "ci_high": 0.27361604687414903,
+          "ci_low": 0.1445039531258509,
+          "ci_method": "t-interval",
+          "effect_size": 2.3166306179462515,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.73074,
+          "mean_difference": 0.20905999999999997,
+          "mean_treatment": 0.9398,
+          "n": 10,
+          "p_holm": 8.880583966026692e-05,
+          "p_value": 4.440291983013346e-05,
+          "relative_improvement": 0.28609354900511813,
+          "shapiro_p": 0.0544212839413688,
+          "statistic": 7.3258292499934985,
+          "test": "paired t-test"
+        },
+        "fidelity": {
+          "ci_high": 0.26933997778222135,
+          "ci_low": 0.16000275955971324,
+          "ci_method": "percentile bootstrap",
+          "effect_size": 1.0,
+          "effect_size_name": "rank_biserial",
+          "mean_control": 0.7445516831270653,
+          "mean_difference": 0.20683243355474557,
+          "mean_treatment": 0.9513841166818111,
+          "n": 10,
+          "p_holm": 0.001953125,
+          "p_value": 0.001953125,
+          "relative_improvement": 0.2777945953812957,
+          "shapiro_p": 0.01773020895947894,
+          "statistic": 0.0,
+          "test": "Wilcoxon signed-rank"
+        },
+        "manipulation": {
+          "ci_high": -0.12968118501852582,
+          "ci_low": -0.22041926688372981,
+          "ci_method": "t-interval",
+          "effect_size": -2.7601065716132336,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.24663209998070773,
+          "mean_difference": -0.17505022595112782,
+          "mean_treatment": 0.07158187402957991,
+          "n": 10,
+          "p_holm": 3.2893607294149754e-05,
+          "p_value": 1.0964535764716583e-05,
+          "relative_improvement": -0.7097625409053434,
+          "shapiro_p": 0.7267083221061442,
+          "statistic": -8.728223351096464,
+          "test": "paired t-test"
+        },
+        "manipulation_success": {
+          "ci_high": -0.09524030661699534,
+          "ci_low": -0.20635969338300464,
+          "ci_method": "t-interval",
+          "effect_size": -1.9416201719603936,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.19779999999999998,
+          "mean_difference": -0.1508,
+          "mean_treatment": 0.04700000000000001,
+          "n": 10,
+          "p_value": 0.00017078238106648167,
+          "relative_improvement": -0.762386248736097,
+          "shapiro_p": 0.19385977561201195,
+          "statistic": -6.13994209432264,
+          "test": "paired t-test"
+        }
+      },
+      "unilateral_deviation": {
+        "ablation": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4907939741143726,
+            "gain_from_deviating": -0.05976148906138107,
+            "honest": 0.5505554631757537,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5545069675747094,
+            "gain_from_deviating": -0.057940309229695064,
+            "honest": 0.6124472768044045,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5005158571428573,
+            "gain_from_deviating": -0.0521002142857141,
+            "honest": 0.5526160714285714,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5164024761904761,
+            "gain_from_deviating": -0.03223502380952403,
+            "honest": 0.5486375000000001,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6979125476190476,
+            "gain_from_deviating": -0.017616023809523762,
+            "honest": 0.7155285714285714,
+            "honest_best_in_n_seeds": 10
+          }
+        },
+        "baseline": {
+          "consumer": {
+            "best_deviation": "misattributing",
+            "best_deviation_payoff": 0.49687428363818203,
+            "gain_from_deviating": -0.05368117953757162,
+            "honest": 0.5505554631757537,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5603994065394116,
+            "gain_from_deviating": -0.05204787026499291,
+            "honest": 0.6124472768044045,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5138428571428572,
+            "gain_from_deviating": -0.03877321428571423,
+            "honest": 0.5526160714285714,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5266214285714286,
+            "gain_from_deviating": -0.022016071428571538,
+            "honest": 0.5486375000000001,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.7096625000000001,
+            "gain_from_deviating": -0.005866071428571318,
+            "honest": 0.7155285714285714,
+            "honest_best_in_n_seeds": 9
+          }
+        },
+        "proposed": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4817513290011582,
+            "gain_from_deviating": -0.06503432502045697,
+            "honest": 0.5467856540216152,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5453205392211827,
+            "gain_from_deviating": -0.06452133213255229,
+            "honest": 0.609841871353735,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.4939001904761905,
+            "gain_from_deviating": -0.06176945238095233,
+            "honest": 0.5556696428571428,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5075770952380954,
+            "gain_from_deviating": -0.044288976190476226,
+            "honest": 0.5518660714285716,
+            "honest_best_in_n_seeds": 10
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6974251428571427,
+            "gain_from_deviating": -0.01683200000000018,
+            "honest": 0.7142571428571429,
+            "honest_best_in_n_seeds": 10
+          }
+        }
+      }
+    },
+    "0.9": {
+      "agents_for_whom_honest_is_best": {
+        "ablation": 3,
+        "baseline": 3,
+        "proposed": 4
+      },
+      "descriptive": {
+        "collective_accuracy": {
+          "ablation": {
+            "ci_high": 0.5340540695055884,
+            "ci_low": 0.42514593049441163,
+            "mean": 0.4796,
+            "n": 10,
+            "sd": 0.07612154024248909
+          },
+          "baseline": {
+            "ci_high": 0.5220529737373873,
+            "ci_low": 0.4319470262626127,
+            "mean": 0.47700000000000004,
+            "n": 10,
+            "sd": 0.06297971454718133
+          },
+          "proposed": {
+            "ci_high": 0.7236218143920956,
+            "ci_low": 0.6235781856079046,
+            "mean": 0.6736000000000001,
+            "n": 10,
+            "sd": 0.06992567482691889
+          }
+        },
+        "evidence_support": {
+          "ablation": {
+            "ci_high": 0.6301866934930487,
+            "ci_low": 0.553133306506951,
+            "mean": 0.5916599999999999,
+            "n": 10,
+            "sd": 0.053856603845561755
+          },
+          "baseline": {
+            "ci_high": 0.5407941487038287,
+            "ci_low": 0.4972858512961715,
+            "mean": 0.5190400000000001,
+            "n": 10,
+            "sd": 0.030410202966182995
+          },
+          "proposed": {
+            "ci_high": 0.8545732899502582,
+            "ci_low": 0.7771867100497422,
+            "mean": 0.8158800000000002,
+            "n": 10,
+            "sd": 0.05408948963420611
+          }
+        },
+        "fidelity": {
+          "ablation": {
+            "ci_high": 0.668264927193499,
+            "ci_low": 0.5760791544561527,
+            "mean": 0.6221720408248258,
+            "n": 10,
+            "sd": 0.06443341216665817
+          },
+          "baseline": {
+            "ci_high": 0.5865451870381301,
+            "ci_low": 0.5074400137804748,
+            "mean": 0.5469926004093024,
+            "n": 10,
+            "sd": 0.05529070356168418
+          },
+          "proposed": {
+            "ci_high": 0.8604891451954979,
+            "ci_low": 0.7803434675108869,
+            "mean": 0.8204163063531924,
+            "n": 10,
+            "sd": 0.056017966008073676
+          }
+        },
+        "manipulation": {
+          "ablation": {
+            "ci_high": 0.453818336623812,
+            "ci_low": 0.38626540219766536,
+            "mean": 0.4200418694107387,
+            "n": 10,
+            "sd": 0.04721624538906516
+          },
+          "baseline": {
+            "ci_high": 0.4767723739840004,
+            "ci_low": 0.43255438513500644,
+            "mean": 0.4546633795595034,
+            "n": 10,
+            "sd": 0.030906243079456143
+          },
+          "proposed": {
+            "ci_high": 0.31144415781212353,
+            "ci_low": 0.19288466933357207,
+            "mean": 0.2521644135728478,
+            "n": 10,
+            "sd": 0.0828673683646617
+          }
+        },
+        "manipulation_success": {
+          "ablation": {
+            "ci_high": 0.5273648166917928,
+            "ci_low": 0.4090351833082073,
+            "mean": 0.46820000000000006,
+            "n": 10,
+            "sd": 0.0827067107313548
+          },
+          "baseline": {
+            "ci_high": 0.5304714362195713,
+            "ci_low": 0.4227285637804288,
+            "mean": 0.4766,
+            "n": 10,
+            "sd": 0.0753070750697141
+          },
+          "proposed": {
+            "ci_high": 0.2690051169710878,
+            "ci_low": 0.1109948830289122,
+            "mean": 0.19,
+            "n": 10,
+            "sd": 0.1104415380793537
+          }
+        }
+      },
+      "honest_share": {
+        "ablation": {
+          "ci_high": 0.21653034154761616,
+          "ci_low": 0.13002965845238387,
+          "mean": 0.17328000000000002,
+          "n": 10,
+          "sd": 0.06045980850486085
+        },
+        "baseline": {
+          "ci_high": 0.18901716758272263,
+          "ci_low": 0.12642283241727742,
+          "mean": 0.15772000000000003,
+          "n": 10,
+          "sd": 0.043750423490013846
+        },
+        "proposed": {
+          "ci_high": 0.461749337048119,
+          "ci_low": 0.21745066295188104,
+          "mean": 0.3396,
+          "n": 10,
+          "sd": 0.1707529989975774
+        }
+      },
+      "proposed_vs_baseline": {
+        "collective_accuracy": {
+          "ci_high": 0.26041635836552823,
+          "ci_low": 0.13278364163447184,
+          "ci_method": "t-interval",
+          "effect_size": 2.203810610882523,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.47700000000000004,
+          "mean_difference": 0.19660000000000002,
+          "mean_treatment": 0.6736000000000001,
+          "n": 10,
+          "p_value": 6.544839260419831e-05,
+          "relative_improvement": 0.4121593291404613,
+          "shapiro_p": 0.5310788432660348,
+          "statistic": 6.969061062035831,
+          "test": "paired t-test"
+        },
+        "evidence_support": {
+          "ci_high": 0.3395446064388117,
+          "ci_low": 0.2541353935611883,
+          "ci_method": "t-interval",
+          "effect_size": 4.972450554545868,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.5190400000000001,
+          "mean_difference": 0.29684,
+          "mean_treatment": 0.8158800000000002,
+          "n": 10,
+          "p_holm": 2.2455392355924268e-07,
+          "p_value": 7.48513078530809e-08,
+          "relative_improvement": 0.5719019728729965,
+          "shapiro_p": 0.16636997218034988,
+          "statistic": 15.724269304932267,
+          "test": "paired t-test"
+        },
+        "fidelity": {
+          "ci_high": 0.3331006570729867,
+          "ci_low": 0.21374675481479327,
+          "ci_method": "t-interval",
+          "effect_size": 3.277572540191105,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.5469926004093024,
+          "mean_difference": 0.27342370594389,
+          "mean_treatment": 0.8204163063531924,
+          "n": 10,
+          "p_holm": 5.3077268015325315e-06,
+          "p_value": 2.6538634007662657e-06,
+          "relative_improvement": 0.49986728474808084,
+          "shapiro_p": 0.8365922152474954,
+          "statistic": 10.364594423427658,
+          "test": "paired t-test"
+        },
+        "manipulation": {
+          "ci_high": -0.1419459101836183,
+          "ci_low": -0.26305202178969306,
+          "ci_method": "t-interval",
+          "effect_size": -2.39226628366469,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.4546633795595034,
+          "mean_difference": -0.20249896598665568,
+          "mean_treatment": 0.2521644135728478,
+          "n": 10,
+          "p_holm": 3.4500240816473335e-05,
+          "p_value": 3.4500240816473335e-05,
+          "relative_improvement": -0.44538217743167474,
+          "shapiro_p": 0.3747747709201832,
+          "statistic": -7.565010226006881,
+          "test": "paired t-test"
+        },
+        "manipulation_success": {
+          "ci_high": -0.19781872879500587,
+          "ci_low": -0.3753812712049941,
+          "ci_method": "t-interval",
+          "effect_size": -2.3092853534142646,
+          "effect_size_name": "cohen_dz",
+          "mean_control": 0.4766,
+          "mean_difference": -0.28659999999999997,
+          "mean_treatment": 0.19,
+          "n": 10,
+          "p_value": 4.551930350609171e-05,
+          "relative_improvement": -0.6013428451531683,
+          "shapiro_p": 0.8766566303486135,
+          "statistic": -7.302601484055968,
+          "test": "paired t-test"
+        }
+      },
+      "unilateral_deviation": {
+        "ablation": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5453898736991519,
+            "gain_from_deviating": -0.023442396397466703,
+            "honest": 0.5688322700966186,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6147656182325083,
+            "gain_from_deviating": -0.018259685361348588,
+            "honest": 0.6330253035938569,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.549226342857143,
+            "gain_from_deviating": -0.011030085714285653,
+            "honest": 0.5602564285714287,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5650309904761904,
+            "gain_from_deviating": 0.010325990476190428,
+            "honest": 0.554705,
+            "honest_best_in_n_seeds": 0
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.7472250190476188,
+            "gain_from_deviating": 0.0036335904761902738,
+            "honest": 0.7435914285714286,
+            "honest_best_in_n_seeds": 2
+          }
+        },
+        "baseline": {
+          "consumer": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5487846050549449,
+            "gain_from_deviating": -0.020047665041673768,
+            "honest": 0.5688322700966186,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.6182035735615796,
+            "gain_from_deviating": -0.01482173003227727,
+            "honest": 0.6330253035938569,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5570171428571429,
+            "gain_from_deviating": -0.003239285714285778,
+            "honest": 0.5602564285714287,
+            "honest_best_in_n_seeds": 9
+          },
+          "producer": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.5709785714285716,
+            "gain_from_deviating": 0.016273571428571554,
+            "honest": 0.554705,
+            "honest_best_in_n_seeds": 0
+          },
+          "storage": {
+            "best_deviation": "manipulative",
+            "best_deviation_payoff": 0.7596649999999998,
+            "gain_from_deviating": 0.016073571428571243,
+            "honest": 0.7435914285714286,
+            "honest_best_in_n_seeds": 0
+          }
+        },
+        "proposed": {
+          "consumer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5346027376585328,
+            "gain_from_deviating": -0.02955433288169107,
+            "honest": 0.5641570705402239,
+            "honest_best_in_n_seeds": 10
+          },
+          "grid": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.6043162280178003,
+            "gain_from_deviating": -0.025605446178110447,
+            "honest": 0.6299216741959107,
+            "honest_best_in_n_seeds": 10
+          },
+          "market": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5417800761904762,
+            "gain_from_deviating": -0.022217780952381028,
+            "honest": 0.5639978571428572,
+            "honest_best_in_n_seeds": 10
+          },
+          "producer": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.5554108380952381,
+            "gain_from_deviating": -0.003165590476190694,
+            "honest": 0.5585764285714288,
+            "honest_best_in_n_seeds": 8
+          },
+          "storage": {
+            "best_deviation": "strategic",
+            "best_deviation_payoff": 0.7467300571428571,
+            "gain_from_deviating": 0.0048472000000000515,
+            "honest": 0.7418828571428571,
+            "honest_best_in_n_seeds": 1
+          }
+        }
+      }
+    }
+  },
+  "exploratory_values": [
+    "0.9"
+  ],
+  "name": "energy_sensitivity_omega",
+  "parameter": "game.omega",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "values": [
+    "0.25",
+    "0.5",
+    "0.75",
+    "0.9"
+  ]
+}

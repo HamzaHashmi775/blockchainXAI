@@ -1,0 +1,112 @@
+# Pharma case study. Values are frozen in docs/research_protocol.md section 11
+# (amendment 2, v1.2, 2026-10-06); changing them requires a logged amendment.
+# Mechanism parameters are identical to the energy configs.
+# U_i = alpha*D + beta*F + gamma*E + delta*C - lambda*M
+name: pharma_sensitivity_rho
+experiment: pharma_sensitivity
+system: sensitivity
+domain: pharma
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+dataset_files:
+- data/raw/pharma_scms/SCMS_Delivery_History_Dataset_20150929.csv
+reference:
+  weights:
+    cost: 0.2
+    reliability: 0.2
+    lead_time: 0.2
+    logistics: 0.2
+    continuity: 0.2
+  recent_prices: 5
+  split:
+    train: 0.5
+    val: 0.1
+model:
+  n_estimators: 100
+  max_depth: 6
+game:
+  n_rounds: 600
+  eval_last: 300
+  top_k: 2
+  deviation_threshold: 0.25
+  inflation: 0.3
+  epsilon: 0.1
+  learning_rate: 0.1
+  q_init: 0.5
+  omega: 0.5
+  consistency_neighbours: 5
+systems:
+  baseline:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: false
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.75
+      beta: 0.0
+      gamma: 0.0
+      delta: 0.25
+      lambda: 0.0
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  ablation:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  proposed:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: true
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+sensitivity:
+  parameter: reputation.rho
+  values:
+  - 0.5
+  - 0.8
+  - 0.95
+  pre_declared_values:
+  - 0.5
+  - 0.8
+  - 0.95
+  exploratory_values: []

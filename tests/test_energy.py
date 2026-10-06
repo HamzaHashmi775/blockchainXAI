@@ -10,8 +10,8 @@ from agents.energy_agents import (AGENTS, FEATURE_VIEWS, normalise_utilities,
                                   preferred_actions, private_utilities, train_agents)
 from environments.energy.preprocess import (ACTIONS, DERIVED, REAL, assign_split,
                                             battery_parameters, build_scenarios, solve_day)
-from experiments.energy import (_apply_parameter, _malicious_count, deviation_table, prepare,
-                                simulate, summarise)
+from experiments.core import _apply_parameter, _malicious_count, deviation_table, simulate, summarise
+from experiments.energy import prepare
 from game.strategies import STRATEGIES
 from utils import datasets as ds
 from xai.shap_explainer import shap_values
@@ -244,7 +244,7 @@ def test_simulation_is_reproducible(small_config, prep):
 def test_malicious_share_expectation_and_behaviour(small_config, prep):
     rng = np.random.default_rng(0)
     for fraction, expected in ((0.0, 0.0), (0.1, 0.5), (0.2, 1.0), (0.3, 1.5), (0.4, 2.0)):
-        counts = [_malicious_count(rng, fraction) for _ in range(4000)]
+        counts = [_malicious_count(rng, fraction, 5) for _ in range(4000)]
         assert np.mean(counts) == pytest.approx(expected, abs=0.05)
         assert set(counts) <= {int(np.floor(expected)), int(np.ceil(expected))}
     log = simulate(prep, small_config, 3, malicious_fraction=0.4)
