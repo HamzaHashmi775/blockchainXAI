@@ -1,9 +1,8 @@
 # Research Protocol (Phase 2, Step 05)
 
-**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0; amended to v1.1, see §12). Any later
-change is recorded in §12 as a dated amendment with its reason. The pharma case study is
-deferred by user decision (research log, GATE 1); its protocol section (§11) will be frozen
-by amendment before any pharma experiment is run.
+**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0; amended to v1.1, see §12) **and 2026-10-06 for the pharma case study** (v1.2, §11). Any later
+change is recorded in §12 as a dated amendment with its reason. The pharma case study was
+deferred at GATE 1 and is specified in §11 by amendment 2.
 
 **What was looked at before freezing** (design feasibility only): the dataset schema and
 descriptive statistics (`docs/dataset_audit.md`); the class shares of the constructed
@@ -232,7 +231,120 @@ reported as obtained; weights are not re-tuned to obtain support.
 
 ## 11. Pharma case study
 
-Deferred. To be specified and frozen by amendment before any pharma experiment.
+**Status: FROZEN 2026-10-06 by amendment 2 (§12), before any pharma agent model was trained
+or any mechanism outcome computed.** Everything not restated here is exactly as in §5–§9
+(v1.1): strategy space, report construction, collective decision rule, bandit, payoff,
+metrics, incentive weights, reward, reputation, robustness conditions, statistical tests and
+decision rules.
+
+**What was looked at before freezing** (design feasibility only): the dataset audit
+(`docs/dataset_audit.md` §5); the number of scenarios and their split sizes; the slot shares
+of the constructed reference; how often each criterion's preferred candidate coincides with
+the reference (46–52%); the agreement of the reference with the site actually used (below);
+and the reference's sensitivity to its weights (below).
+
+### 11.1 Data and scenarios
+
+- Source: SCMS delivery history (USAID/PEPFAR), `data/raw/pharma_scms/`. **Only
+  direct-from-supplier lines** (`Fulfill Via` = "Direct Drop", 4,920 of 10,324) are used,
+  because on warehouse lines the delivery outcome is not the manufacturer's (audit gap S-4).
+- Supplier = `Manufacturing Site` (gap S-3). Product = `Molecule/Test Type` + `Dosage` +
+  `Dosage Form`.
+- **Scenario** = one purchase order for one product (`PO / SO #` × product) that has an order
+  date (`PO Sent to Vendor Date`); lines of the same order and product are merged (units
+  summed).
+- **History rule (no leakage):** everything known about a site in a scenario is computed from
+  direct-drop lines *delivered strictly before the order date*. The order's own outcome is
+  never used.
+- **Candidates (constructed; gap S-2):** the three sites that most recently delivered the
+  product before the order date (ties: more deliveries of the product, then site name), among
+  sites with a positive recorded price for it. Orders with fewer than three such sites are
+  not scenarios. Slot order within a scenario is a hash of order, product and site, so slot
+  index carries no information. The file contains no real competing offers; the candidate set
+  is an experimental construction and is labelled as such.
+- Result: **1,648 scenarios**, 31 products, 49 sites, orders 2007-07-03 to 2015-08-24. The
+  site actually used is one of the three candidates in 83% of scenarios.
+- **Split, time-ordered on order date** (orders of one day share a split): first 50% train
+  (824; to 2012-08-15), next 10% validation (165), last 40% test (659; from 2013-08-05).
+- Derived variables (all computed from real columns; none is an original observation):
+
+| Variable | Definition (history = lines delivered before the order date) |
+|---|---|
+| `exp_unit_price` | median of the site's 5 most recent unit prices for the product; unit price = `Pack Price` ÷ `Unit of Measure (Per Pack)`; zero prices ignored |
+| `price_rel`, `last_price_rel` | `exp_unit_price`, and the site's latest price, ÷ mean `exp_unit_price` of the three candidates |
+| `price_cv` | coefficient of variation of the site's past prices for the product (0 if one) |
+| `log_order_units` | log(1 + units ordered) — scenario-level |
+| `ontime_rate` | (on-time lines + 1) ÷ (lines + 2) over all the site's past lines; on time = delivered on or before `Scheduled Delivery Date` |
+| `ontime_rel` | `ontime_rate` − mean over the candidates |
+| `mean_late_days`, `late_last5`, `log_n_lines` | mean days late (0 if on time); late share of the last 5 lines; log(1 + lines) |
+| `median_lead_days` | median days from order date to delivery over the site's past lines with an order date; the median over all sites' past lines if the site has none (2.7% of candidate rows) |
+| `lead_rel`, `lead_iqr`, `log_n_lead` | ratio to the candidates' mean; interquartile range; log(1 + lines with a lead time) |
+| `requested_lead_days` | scheduled delivery date − order date — scenario-level |
+| `freight_per_kg` | median `Freight Cost (USD)` ÷ `Weight (Kilograms)` over the site's past lines where both are numbers; the median over all sites' past lines if it has none |
+| `freight_rel`, `share_air`, `share_freight_included`, `log_n_country_lines` | ratio to the candidates' mean; share of past lines by air; share with freight included in the commodity cost; log(1 + past lines to the destination country) |
+| `n_product_lines`, `log_n_product_lines`, `product_share` | the site's past deliveries of the product; its log; its share among the candidates |
+| `days_since_last`, `n_countries`, `log_units_supplied` | days since the site last delivered the product; countries it has delivered to; log(1 + units of the product delivered) |
+
+### 11.2 Reference decision — a *constructed reference*, not an observation
+
+Five criteria, one per agent, each min–max normalised over the three candidates of a
+scenario (0.5 for all three if they are equal): cost = −`exp_unit_price`; reliability =
+`ontime_rate`; lead time = −`median_lead_days`; logistics = −`freight_per_kg`; continuity =
+`n_product_lines`. **Reference = the candidate with the highest equal-weight (0.2 each) sum**;
+ties to the lowest slot (none occur). Equal weights are used because the source gives no
+weights and none are invented; the multi-criteria form follows standard supplier-selection
+practice (cf. the figshare criteria study, §4.1 of CLAUDE.md).
+
+Declared limits of this reference:
+- It **does not reproduce the programme's real choices**: where the site actually used is a
+  candidate, the reference picks it in 35% of scenarios (chance is 33%). The reference is a
+  normative score, not a model of SCMS procurement.
+- **Weight sensitivity:** dropping one criterion leaves the reference unchanged in 68–74% of
+  scenarios; doubling one, in 72–82% (`data/processed/pharma/scenarios_meta.json`).
+- There is no quality or compliance criterion because the data has none (gap S-1).
+
+### 11.3 Agents
+
+| Agent | Private objective u_i(c, t) | Feature view (of candidate c) |
+|---|---|---|
+| Cost | −`exp_unit_price` | `exp_unit_price`, `price_rel`, `last_price_rel`, `price_cv`, `log_order_units` |
+| Delivery reliability | `ontime_rate` | `ontime_rate`, `ontime_rel`, `mean_late_days`, `log_n_lines`, `late_last5` |
+| Lead time | −`median_lead_days` | `median_lead_days`, `lead_rel`, `lead_iqr`, `log_n_lead`, `requested_lead_days` |
+| Logistics | −`freight_per_kg` | `freight_per_kg`, `freight_rel`, `share_air`, `share_freight_included`, `log_n_country_lines` |
+| Supply continuity | `n_product_lines` | `log_n_product_lines`, `product_share`, `days_since_last`, `n_countries`, `log_units_supplied` |
+
+- ũ_i = u_i min–max normalised over the three candidates; preferred candidate a*_i = argmax,
+  ties to the lowest slot. Feature views do not overlap.
+- **Model:** `RandomForestClassifier(n_estimators=100, max_depth=6)`, seeded per agent and
+  run seed, trained on the train split with one row per (scenario, candidate) and target
+  "this candidate is the reference". The agent's probability for candidate c is the model's
+  positive-class score of c divided by the sum over the three candidates (1/3 each if all
+  scores are zero); its model vote is the argmax.
+- **SHAP:** exact TreeSHAP of the positive-class score of the voted candidate's own feature
+  row. Attributions are additive to that *unnormalised* score, not to the normalised
+  probability; fidelity, explanation and evidence are computed on it exactly as in §5–§6,
+  with tercile thresholds from the training rows.
+- Actions = the three candidate slots. Decision quality D_i = 1 if the agent's vote is the
+  reference.
+
+### 11.4 Game size and runs
+
+- Rounds: **600** of the 659 test scenarios, drawn without replacement per seed and played in
+  order of order date; evaluation window = **last 300** rounds. (Energy uses 1,000 and 500;
+  the pharma test split is smaller. Fewer rounds give the bandit less time to converge; this
+  is a declared limit, not tuned.)
+- All other game parameters, incentive weights, ρ, seeds (0–9), systems
+  (baseline/ablation/proposed), robustness conditions (malicious share 0–40%, collusion),
+  tests and decision rules: as for energy v1.1.
+- Consistency: nearest neighbours in the agent's standardised feature view of the voted
+  candidate.
+
+### 11.5 Hypothesis H6
+
+After the pharma runs, H6 is assessed as in CLAUDE.md step 32: the direction, and the
+relative improvement, of F, E and M in both domains. "Similar qualitative improvement" =
+same direction with the §9 decision rule giving the same verdict (improved / negligible /
+worse) in both domains.
 
 ## 12. Amendments
 
@@ -272,3 +384,25 @@ strongly self-interested agent still prefers honesty; it carries no confirmatory
 **Limitation not addressed by this amendment.** In this game an explanation never
 influences the collective decision, so falsifying one brings an agent no benefit even in
 the baseline; explanation attacks are imposed interventions, not profitable deviations.
+
+### Amendment 2 — 2026-10-06 (protocol v1.2): pharma case study on SCMS delivery history
+
+**Reason.** The primary pharma file named in CLAUDE.md §4.1 (figshare) is a list of 24
+criteria with no observations (audit gap P-1). The user supplied the USAID/PEPFAR SCMS
+delivery history and, on 2026-10-06, approved: (1) adopting it as the primary pharma dataset;
+(2) five agents defined from available variables (Cost, Delivery reliability, Lead time,
+Logistics, Supply continuity) instead of the template's Quality and Compliance roles, for
+which the data has no variable; (3) using only direct-from-supplier lines; (4) a constructed
+reference decision.
+
+**Change.** §11 is written and frozen (was "Deferred"). Nothing in §1–§10 changes; the
+energy protocol and its results are unaffected.
+
+**Status of the evidence.** The pharma design was fixed after the energy results (v1.0 and
+v1.1) were known, and reuses the energy mechanism unchanged. It is therefore a
+pre-specified replication on a second domain, not an independent blind design. What was
+inspected before freezing is listed at the top of §11. This amendment was committed before
+any pharma agent model was trained.
+
+**Deviations from CLAUDE.md recorded here.** Agent roles differ from the §Phase 3 template
+(approved, above). The quality/compliance gap is dropped, not simulated.

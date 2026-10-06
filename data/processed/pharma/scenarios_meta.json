@@ -1,0 +1,83 @@
+{
+  "constructed_reference": {
+    "column": "reference_slot",
+    "method": "equal-weight sum of min-max normalised criteria (protocol section 11)",
+    "parameters": {
+      "recent_prices": 5,
+      "split": {
+        "train": 0.5,
+        "val": 0.1
+      },
+      "weights": {
+        "continuity": 0.2,
+        "cost": 0.2,
+        "lead_time": 0.2,
+        "logistics": 0.2,
+        "reliability": 0.2
+      }
+    }
+  },
+  "derived_columns": [
+    "days_since_last",
+    "exp_unit_price",
+    "freight_per_kg",
+    "freight_rel",
+    "last_price_rel",
+    "last_unit_price",
+    "late_last5",
+    "lead_iqr",
+    "lead_rel",
+    "log_n_country_lines",
+    "log_n_lead",
+    "log_n_lines",
+    "log_n_product_lines",
+    "log_order_units",
+    "log_units_supplied",
+    "mean_late_days",
+    "median_lead_days",
+    "n_countries",
+    "n_product_lines",
+    "ontime_rate",
+    "ontime_rel",
+    "price_cv",
+    "price_rel",
+    "product_share",
+    "requested_lead_days",
+    "share_air",
+    "share_freight_included"
+  ],
+  "lines_used": "Fulfill Via == 'Direct Drop'",
+  "n_products": 31,
+  "n_scenarios": 1648,
+  "n_sites": 49,
+  "observed_site_among_candidates": 0.8337378640776699,
+  "order_dates": [
+    "2007-07-03",
+    "2015-08-24"
+  ],
+  "reference_equals_observed_site_when_candidate": 0.34934497816593885,
+  "reference_sensitivity_share_unchanged": {
+    "double_continuity": 0.7226941747572816,
+    "double_cost": 0.8155339805825242,
+    "double_lead_time": 0.7864077669902912,
+    "double_logistics": 0.8143203883495146,
+    "double_reliability": 0.7949029126213593,
+    "drop_continuity": 0.7184466019417476,
+    "drop_cost": 0.725121359223301,
+    "drop_lead_time": 0.6759708737864077,
+    "drop_logistics": 0.6802184466019418,
+    "drop_reliability": 0.7445388349514563
+  },
+  "reference_slot_shares": {
+    "candidate_1": 0.33737864077669905,
+    "candidate_2": 0.3300970873786408,
+    "candidate_3": 0.3325242718446602
+  },
+  "source": "data/raw/pharma_scms/SCMS_Delivery_History_Dataset_20150929.csv",
+  "split_counts": {
+    "test": 659,
+    "train": 824,
+    "val": 165
+  },
+  "unit": "one purchase order for one product, with three candidate manufacturing sites"
+}

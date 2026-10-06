@@ -6,3 +6,4 @@ results/raw/*
 results/processed/*
 !results/**/.gitkeep
 data/raw/pharma_sales/pharma-data.csv
+data/processed/pharma/scenarios.csv
