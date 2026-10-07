@@ -78,6 +78,7 @@ def test_round_prompt_shows_tool_output_without_the_reference():
     line = [row for row in text.split("\n") if row.startswith("- candidate_1: f_a")][0]
     assert line == ("- candidate_1: f_a is low, raises score by 0.200; "
                     "f_b is mid, lowers score by 0.100; f_c is high, raises score by 0.000")
+    assert "- candidate_1: f_a raises, low; f_b lowers, mid" in text
     assert "round 3: ..." in text and "reference" not in text.split("\n", 2)[2]
 
 

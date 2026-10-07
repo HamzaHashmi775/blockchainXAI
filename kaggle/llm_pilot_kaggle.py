@@ -14,7 +14,7 @@
 # Output panel and give it to Claude Code.
 
 # %%
-MODELS = ["qwen2.5:7b", "llama3.1:8b"]   # on CPU use one small model, e.g. ["qwen2.5:3b"]
+MODELS = ["llama3.1:8b", "qwen2.5:7b", "qwen2.5:14b"]   # on CPU: one small model only
 DOMAINS = ["pharma"]        # add "energy" to pilot the second case study as well
 ROUNDS = 10                 # 10 rounds x 5 agents x 2 systems = 100 agent decisions per run
 PARALLEL = 5                # the five agents of a round are asked at the same time
@@ -62,15 +62,14 @@ for model in MODELS:
 print(subprocess.run(["ollama", "list"], capture_output=True, text=True).stdout)
 
 # %%
-# Each model is run one request at a time and then with the five agents asked together,
-# to measure the speed-up and to check that the answers do not change.
+# Pilot 3: every model with the five agents of a round asked together (pilot 2 showed this
+# is 2-3 times faster and changes only a few replies).
 for domain in DOMAINS:
     for model in MODELS:
-        for workers, tag in ((1, "_seq"), (PARALLEL, "_par")):
-            subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
-                            "--model", model, "--rounds", str(ROUNDS),
-                            "--workers", str(workers), "--tag", tag,
-                            "--output-dir", "/kaggle/working/pilot"], check=True)
+        subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
+                        "--model", model, "--rounds", str(ROUNDS),
+                        "--workers", str(PARALLEL), "--tag", "_p3",
+                        "--output-dir", "/kaggle/working/pilot"], check=True)
 
 # %%
 shutil.copy("/kaggle/working/ollama.log", "/kaggle/working/pilot/ollama.log")

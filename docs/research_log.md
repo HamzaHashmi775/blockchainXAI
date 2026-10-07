@@ -429,3 +429,41 @@ validation scenarios, one seed; not an experimental result.**
 
 These prompt changes were made after seeing pilot-1 behaviour. They are pre-freeze design
 iterations on validation scenarios and will be disclosed as such in amendment 3.
+
+## 2026-10-07 — LLM pilot 2 (Kaggle; qwen2.5:7b and llama3.1:8b) and last prompt revision
+
+Output: `results/pilot/pilot2/`. **Feasibility only: 10 rounds, validation scenarios, one
+seed; not an experimental result.** Prompt of pilot 2 = features listed by importance.
+
+| Model | Mode | System | Fidelity | Evidence | Truthful when voting with tool | Votes against tool | Confidence inflation |
+|---|---|---|---|---|---|---|---|
+| qwen2.5:7b | sequential | baseline | 0.764 | 0.97 | 0.49 | 0.18 | 0.215 |
+| qwen2.5:7b | sequential | proposed | 0.792 | 0.99 | 0.61 | 0.12 | 0.017 |
+| llama3.1:8b | sequential | baseline | 0.904 | 0.96 | 0.78 | 0.26 | 0.238 |
+| llama3.1:8b | sequential | proposed | 0.904 | 0.95 | 0.78 | 0.28 | 0.080 |
+
+- 400/400 replies usable. Fidelity rose from 0.32 (pilot 1) to 0.76–0.90, so most of the
+  pilot-1 problem was the prompt layout.
+- **Both models fail the pre-set reading check (≥ 0.80):** llama3.1:8b 0.78 (about 36
+  reports, so the miss is within sampling noise), qwen2.5:7b 0.61.
+- Sampled replies show two kinds of non-truthful explanation: (a) near-tie substitution —
+  the model names a familiar feature instead of the second-ranked one when their effects
+  are almost equal (0.056 vs 0.054); (b) cherry-picking — when voting for its privately
+  preferred option against the tool, llama dropped the top feature that *lowered* the score
+  and reported two that raised it. (b) is the behaviour the study is about; (a) is noise.
+- **Concurrency:** five requests at once gave 2.6× (qwen) and 1.9× (llama) throughput:
+  about 1.3 s and 1.6 s per decision. Votes were identical between modes; a few explanations
+  differed (fidelity 0.764 vs 0.761), so concurrent runs are **not bit-reproducible**. Every
+  raw reply must therefore be saved in the real runs.
+- Both models lowered their stated confidence under the proposed rules.
+
+### Last prompt revision (pre-freeze, validation data only)
+The round prompt now also states the truthful explanation of each option outright (its two
+most important features with direction and level). Reporting truthfully then needs no
+reading skill, as for a scripted agent; all five features stay visible, so cherry-picking
+remains possible.
+
+**Stopping rule, set before pilot 3:** this is the last prompt change. Pilot 3 runs
+llama3.1:8b, qwen2.5:7b and qwen2.5:14b. The model with the highest reading-check value
+that is ≥ 0.80 is used. If none reaches 0.80, the best model is used anyway and its
+reading-check value is reported as a limitation (explanation errors that are not choices).
