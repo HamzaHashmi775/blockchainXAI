@@ -46,10 +46,15 @@ def test_required_config_stubs_exist():
 def test_config_loads_and_is_paired(path):
     cfg = load_config(path)
     assert cfg["name"] == path.stem
-    assert len(cfg["seeds"]) >= 5
-    # paired comparison: every config of a domain uses the same seeds
     reference = load_config(ROOT / "configs" / f"{cfg['domain']}_baseline.yaml")
-    assert cfg["seeds"] == reference["seeds"]
+    if "_llm_" in path.stem:
+        # protocol amendment 3: 5 seeds (main) or 3 (robustness), a prefix of the others
+        expected = 3 if path.stem.endswith("adversarial") else 5
+        assert cfg["seeds"] == reference["seeds"][:expected]
+    else:
+        assert len(cfg["seeds"]) >= 5
+        # paired comparison: every classical config of a domain uses the same seeds
+        assert cfg["seeds"] == reference["seeds"]
     systems = cfg["systems"].values() if "systems" in cfg else [cfg]
     for system in systems:
         assert set(system["incentive_weights"]) == {"alpha", "beta", "gamma", "delta", "lambda"}

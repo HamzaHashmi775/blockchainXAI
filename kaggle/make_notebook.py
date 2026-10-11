@@ -1,4 +1,4 @@
-"""Turn kaggle/llm_pilot_kaggle.py ("# %%" cells) into the .ipynb Kaggle imports.
+"""Turn the kaggle/*.py sources ("# %%" cells) into the .ipynb files Kaggle imports.
 
     python kaggle/make_notebook.py
 """
@@ -22,12 +22,13 @@ def cells(source):
 
 
 def main():
-    source = (HERE / "llm_pilot_kaggle.py").read_text(encoding="utf-8")
-    notebook = {"cells": list(cells(source)), "nbformat": 4, "nbformat_minor": 5,
-                "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python",
-                                            "name": "python3"},
-                             "language_info": {"name": "python"}}}
-    (HERE / "llm_pilot_kaggle.ipynb").write_text(json.dumps(notebook, indent=1), encoding="utf-8")
+    for name in ("llm_pilot_kaggle", "llm_run_kaggle"):
+        source = (HERE / f"{name}.py").read_text(encoding="utf-8")
+        notebook = {"cells": list(cells(source)), "nbformat": 4, "nbformat_minor": 5,
+                    "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python",
+                                                "name": "python3"},
+                                 "language_info": {"name": "python"}}}
+        (HERE / f"{name}.ipynb").write_text(json.dumps(notebook, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -511,3 +511,13 @@ agent has seen a test scenario. The pilots are feasibility checks and are not re
   discover them.
 - Scripted malicious agents among LLM agents test the mechanism's response to a controlled
   attack, not what a malicious LLM would do.
+
+#### A3.5 Erratum to A3.1 — 2026-10-11, before any LLM run on test scenarios
+The option list of the round prompt now marks the tool's top option in words
+("(your tool's top option)"). Reason: probabilities are shown to two decimals, so two
+options can look tied while the audit treats only one as the tool's top; an agent voting
+for the other would have been counted as voting against its tool without being able to see
+the difference. Found by a unit test of the run code, not by observing model behaviour; no
+pilot was run with or after this change. It is nevertheless a prompt change made after the
+stopping rule of 2026-10-07 and is disclosed as such. The frozen prompt text is
+`agents/llm_agent.py` at the commit that adds this erratum.

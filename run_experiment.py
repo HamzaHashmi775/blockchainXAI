@@ -16,6 +16,7 @@ from pathlib import Path
 import yaml
 
 import experiments.energy  # noqa: F401  (registers the energy experiments)
+import experiments.llm_runs  # noqa: F401  (registers the LLM-agent experiments)
 import experiments.pharma  # noqa: F401  (registers the pharma experiments)
 from experiments import REGISTRY
 from utils.seed import seed_everything
@@ -47,9 +48,14 @@ def main(argv=None):
     parser.add_argument("--config", required=True, help="path to a YAML config")
     parser.add_argument("--output-dir", default=str(ROOT / "results" / "raw"),
                         help="directory for raw results (default: results/raw)")
+    parser.add_argument("--seeds", type=int, nargs="+",
+                        help="run only these seeds of the config (results of the others stay)")
+    parser.add_argument("--resume", action="store_true",
+                        help="skip seeds whose result file already exists")
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
+    seeds = [s for s in config["seeds"] if args.seeds is None or s in args.seeds]
     out_dir = Path(args.output_dir) / config["name"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -71,13 +77,18 @@ def main(argv=None):
               f"no results were produced (manifest: {out_dir / 'manifest.json'})", file=sys.stderr)
         return 2
 
-    for seed in config["seeds"]:
+    indent = None if config.get("compact_output") else 2
+    for seed in seeds:
+        path = out_dir / f"seed_{seed}.json"
+        if args.resume and path.exists():
+            continue
         seed_everything(seed)
         result = runner(config, seed)
-        (out_dir / f"seed_{seed}.json").write_text(json.dumps(result, indent=2, sort_keys=True))
-    manifest["status"] = "completed"
+        path.write_text(json.dumps(result, indent=indent, sort_keys=True))
+    done = all((out_dir / f"seed_{seed}.json").exists() for seed in config["seeds"])
+    manifest["status"] = "completed" if done else "partial"
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
-    print(f"wrote {len(config['seeds'])} seed result(s) to {out_dir}")
+    print(f"wrote {len(seeds)} seed result(s) to {out_dir}")
     return 0
 
 

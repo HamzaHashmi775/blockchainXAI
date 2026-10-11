@@ -74,7 +74,9 @@ def test_round_prompt_shows_tool_output_without_the_reference():
     thresholds = np.array([[2.0, 2.0, 2.0], [6.0, 6.0, 6.0]])
     text = round_prompt(4, ACTIONS, FEATURES, [0.0, 0.5, 1.0], [0.2, 0.3, 0.5], phi, x,
                         thresholds, ["round 3: ..."])
-    assert "Round 4." in text and "candidate_3: gain 1.00 | tool 0.50" in text
+    assert "Round 4." in text
+    assert "candidate_3: gain 1.00 | tool 0.50 (your tool's top option)" in text
+    assert text.count("(your tool's top option)") == 1
     line = [row for row in text.split("\n") if row.startswith("- candidate_1: f_a")][0]
     assert line == ("- candidate_1: f_a is low, raises score by 0.200; "
                     "f_b is mid, lowers score by 0.100; f_c is high, raises score by 0.000")

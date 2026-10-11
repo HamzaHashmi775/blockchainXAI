@@ -12,6 +12,8 @@ import json
 import time
 import urllib.request
 
+import numpy as np
+
 from evaluation.metrics import LEVELS, observed_level
 from xai.shap_explainer import top_k_features
 
@@ -88,8 +90,10 @@ def round_prompt(round_number, actions, features, utilities, proba, phi, x, thre
     """One round as text. `phi` and `x` have shape (actions, features)."""
     lines = [f"Round {round_number}.",
              "Options (your private gain | your tool's probability of being reference-best):"]
+    top = int(np.argmax(proba))       # named outright: rounded probabilities can show a tie
     for a, name in enumerate(actions):
-        lines.append(f"- {name}: gain {utilities[a]:.2f} | tool {proba[a]:.2f}")
+        lines.append(f"- {name}: gain {utilities[a]:.2f} | tool {proba[a]:.2f}"
+                     + (" (your tool's top option)" if a == top else ""))
     lines.append("Your tool's analysis per option, most important feature first (observed "
                  "level; effect on the tool's score for that option):")
     for a, name in enumerate(actions):

@@ -501,3 +501,27 @@ the truthful explanation of each option stated outright (the last prompt change)
 ### Next: protocol amendment 3 (LLM agents) — to be approved by the user before any run on
 test scenarios. Open points: role of the classical results; how malicious agents are
 realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
+
+## 2026-10-11 (later) — Protocol amendment 3 frozen; LLM run code and Kaggle notebook
+
+- User decision on size (verbatim: "ok don't increases more seeds or rounds"): 200 rounds,
+  5 seeds (main), 100 rounds and 3 seeds (robustness). The two other open points were not
+  answered explicitly; the recommendations put to the user are used and marked *(default)*
+  in the amendment: classical results kept as a separate comparison arm; malicious and
+  colluding agents scripted.
+- **Amendment 3 (v1.3) committed before any LLM run on test scenarios** (`9fca5a2`). It
+  declares the ceiling risk seen in pilot 3, and the inferential limit of n = 5 (a Wilcoxon
+  test cannot reach p < 0.0625; flagged to the user).
+- Erratum A3.5 (same day, before any run): the tool's top option is named in the prompt,
+  because two-decimal probabilities can display a tie. Found by a unit test.
+- Code: `experiments/llm_runs.py` (`<domain>_llm_main`, `<domain>_llm_adversarial`; refuses
+  a model whose digest differs from the frozen one; saves every raw reply),
+  `experiments/llm.py` (scripted malicious agents and colluders among LLM agents),
+  `run_experiment.py --resume / --seeds`, four `configs/*_llm_*.yaml`,
+  `statistics/analyze_llm.py`, `kaggle/llm_run_kaggle.ipynb` (with the energy gate).
+  Tests use a stub model; the full suite passes.
+- **Not verified:** the run notebook has not been executed on Kaggle. Run time is an
+  estimate from 10-round pilots (about 8 h per main run, about 3 h per robustness run);
+  prompts grow slightly once the 3-round history fills. The energy prompts have never been
+  shown to a model (the gate checks this first).
+- Nothing was run on test scenarios today. Blockchain (Phase 8) remains unstarted.

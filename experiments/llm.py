@@ -13,6 +13,7 @@ import numpy as np
 from agents.llm_agent import parse_report, report_schema, round_prompt, system_prompt
 from evaluation.metrics import (collective_decision, contributions, evidence_support, fidelity,
                                 observed_level)
+from game.strategies import FALSIFIED, choose_report, collusive_vote
 from incentives.mechanism import (ATTACKS, manipulation_components, manipulation_score, reward,
                                   utility, validate_weights)
 from reputation.reputation import initial_reputation, update_reputation
@@ -52,11 +53,15 @@ def _ask(client, messages, schema, seed, actions, features):
     return None, calls
 
 
-def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1):
+def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1,
+                 malicious=(), colluders=None):
     """Play `n_rounds` (default: all prepared rounds). Returns (log, call records).
 
-    Agents report simultaneously, so with `workers` > 1 the five requests of a round are
-    sent concurrently; results are always stored in agent order.
+    Agents report simultaneously, so with `workers` > 1 the requests of a round are sent
+    concurrently; results are always stored in agent order.
+    malicious: indices of agents that are scripted *manipulative* agents (protocol A3.2).
+    colluders: optional pair of indices that are scripted colluders. Scripted agents make
+    no model call; every other agent is an LLM agent.
     """
     game = prep["game"]
     weights = validate_weights(system["incentive_weights"])
@@ -68,6 +73,7 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1):
     agents, actions = prep["agents"], prep["actions"]
     n_agents, n_actions = prep["proba"].shape[1:]
     T = len(prep["reference"]) if n_rounds is None else int(n_rounds)
+    scripted = set(int(i) for i in malicious) | set(int(i) for i in (colluders or ()))
 
     reputation = initial_reputation(n_agents, rep_cfg.get("initial", 0.5))
     prompts = [system_prompt(domain, name, system, omega) for name in agents]
@@ -75,7 +81,8 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1):
     history = [deque(maxlen=HISTORY_LENGTH) for _ in range(n_agents)]
     log = {key: np.zeros((T, n_agents)) for key in
            ("F", "E", "D", "C", "M", "U", "R", "payoff", "private", "confidence", "deviates",
-            "votes_preferred", "invalid", "reputation", *ATTACKS)}
+            "votes_preferred", "invalid", "reputation", "scripted", *ATTACKS)}
+    log["scripted"][:, sorted(scripted)] = 1.0
     log["votes"] = np.zeros((T, n_agents), dtype=int)
     collective, records = np.zeros(T, dtype=int), []
 
@@ -84,25 +91,38 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1):
         votes = np.zeros(n_agents, dtype=int)
         conf, F, E = np.zeros(n_agents), np.zeros(n_agents), np.zeros(n_agents)
         invalid = np.zeros(n_agents)
-        requests = []
+        requests, asked = [], []
         for i in range(n_agents):
+            if i in scripted:
+                pref = prep["preferred"][t, i]
+                vote, confidence, style = choose_report(
+                    "manipulative", proba[i], pref, util[i], game["deviation_threshold"],
+                    game["inflation"])
+                if colluders is not None and i in colluders:
+                    a, b = colluders
+                    vote, confidence, style = collusive_vote(util[a], util[b]), 1.0, FALSIFIED
+                votes[i], conf[i] = vote, confidence
+                F[i] = prep["quality"][style]["F"][t, i, vote]
+                E[i] = prep["quality"][style]["E"][t, i, vote]
+                continue
+            asked.append(i)
             audit = prep["audit"][i]
             messages = [{"role": "system", "content": prompts[i]},
                         {"role": "user", "content": round_prompt(
                             t + 1, actions, audit["features"], util[i], proba[i],
                             audit["phi"][t], audit["X"][t], audit["thresholds"], history[i])}]
             requests.append((client, messages, schemas[i], seed, actions, audit["features"]))
-        if workers > 1:
+        if workers > 1 and requests:
             with ThreadPoolExecutor(max_workers=workers) as pool:
                 answers = list(pool.map(lambda r: _ask(*r), requests))
         else:
             answers = [_ask(*r) for r in requests]
-        for i, (report, calls) in enumerate(answers):
+        for n, (i, (report, calls)) in enumerate(zip(asked, answers)):
             audit = prep["audit"][i]
             phi, x, thresholds = audit["phi"][t], audit["X"][t], audit["thresholds"]
             records.extend({"round": t, "agent": agents[i], **call} for call in calls)
             if t == 0:
-                records[-1]["prompt"] = requests[i][1][1]["content"]
+                records[-1]["prompt"] = requests[n][1][1]["content"]
             if report is None:
                 invalid[i] = 1.0
                 report = honest_report(proba[i], phi, x, thresholds, k)
@@ -162,6 +182,11 @@ def summarise_llm(prep, log, records, window=None):
 
     seconds = [r["seconds"] for r in records if r.get("seconds") is not None]
     votes = log["votes"][window]
+    llm = ~log["scripted"][window].astype(bool)
+
+    def llm_mean(key):
+        return _share(log[key][window].astype(float), llm)
+
     return {
         "n_rounds": int(len(collective)),
         "fidelity": mean("F"), "evidence_support": mean("E"), "manipulation": mean("M"),
@@ -170,18 +195,29 @@ def summarise_llm(prep, log, records, window=None):
         "collective_accuracy": float((collective == ref).mean()),
         "manipulation_success": float((wrong & steered).mean()),
         "attack_scores": {a: mean(a) for a in ATTACKS},
+        # the same quantities over LLM agents only (differs when some agents are scripted)
+        "llm_agents": {"fidelity": llm_mean("F"), "evidence_support": llm_mean("E"),
+                       "manipulation": llm_mean("M"), "reward": llm_mean("R"),
+                       "payoff": llm_mean("payoff")},
+        "scripted_agents": {"reward": _share(log["R"][window], ~llm),
+                            "payoff": _share(log["payoff"][window], ~llm),
+                            "private_utility": _share(log["private"][window], ~llm),
+                            "final_reputation": (
+                                None if log["final_reputation"] is None or llm.all() else float(
+                                    log["final_reputation"][~llm[0]].mean()))},
         "behaviour": {
-            "votes_against_tool": mean("deviates"),
-            "votes_own_preferred_option": mean("votes_preferred"),
-            "fully_truthful_explanation": float((log["F"][window] == 1.0).mean()),
-            "fully_supported_evidence": float((log["E"][window] == 1.0).mean()),
+            "votes_against_tool": llm_mean("deviates"),
+            "votes_own_preferred_option": llm_mean("votes_preferred"),
+            "fully_truthful_explanation": _share(log["F"][window] == 1.0, llm),
+            "fully_supported_evidence": _share(log["E"][window] == 1.0, llm),
+            "confidence_inflation": llm_mean("confidence_inflation"),
             # reading check: a report that follows the tool's vote has nothing to gain from
             # a wrong explanation, so a low value here means the model misreads its tool
             "truthful_explanation_when_voting_with_tool": _share(
-                log["F"][window] == 1.0, ~log["deviates"][window].astype(bool)),
-            "mean_confidence": mean("confidence"),
+                log["F"][window] == 1.0, ~log["deviates"][window].astype(bool) & llm),
+            "mean_confidence": llm_mean("confidence"),
         },
-        "vote_share": {prep["actions"][a]: float((votes == a).mean())
+        "vote_share": {prep["actions"][a]: float((votes[llm] == a).mean())
                        for a in range(prep["proba"].shape[2])},
         "calls": {"total": len(records),
                   "unusable_replies": int(sum(not r["valid"] for r in records)),
