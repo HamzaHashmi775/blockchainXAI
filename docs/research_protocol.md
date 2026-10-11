@@ -581,3 +581,16 @@ to be reported as such in the paper.
 Amendment 4 (conditions, rounds, seeds, analysis) will be written after pilot 4 and needs
 the user's approval before any test-scenario run. A natural × pressure design doubles the
 model calls of amendment 3 at the sizes the user fixed.
+
+#### Scope fixed on 2026-10-11, before pilot 4 was run (no model result seen)
+Basis: the payoff check logged the same day (research log, "Is ω = 0.75 real strategic
+pressure?"), which uses no model output.
+- ω = 0.75 is called the **higher-private-gain** condition. It is called *strategic
+  pressure* only for pharma, where unilateral selfish voting pays under the baseline in that
+  check. For energy the name is not used: unilateral selfish voting does not pay there under
+  either system at either weight.
+- Pilot 4 still runs both weights in both domains, as fixed above.
+- Proposed for amendment 4, subject to the user's approval: in the main experiment the
+  ω = 0.75 condition is run for pharma only; energy is run at ω = 0.5 only. Energy
+  hypotheses on manipulation are then about behaviour under payoffs in which unilateral
+  strategic voting is not profitable, and are to be worded that way.

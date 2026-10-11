@@ -18,8 +18,8 @@ DOMAINS = ["pharma", "energy"]
 ROUNDS = 20                 # 20 rounds x 5 agents x 2 systems = 200 agent decisions per run
 PARALLEL = 5                # the five agents of a round are asked at the same time
 # Pilot 4: the prompt gives the tool's raw numbers only (no truthful explanation), under two
-# weights of the private gain: 0.5 (natural) and 0.75 (strategic pressure).
-CONDITIONS = [("natural", 0.5), ("pressure", 0.75)]
+# weights of the private gain: 0.5 (natural) and 0.75 (higher private gain).
+CONDITIONS = [("natural", 0.5), ("higher_gain", 0.75)]
 
 # %%
 import glob

@@ -580,3 +580,5 @@ realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
   a property of the payoff rule, not a result about LLM behaviour.
 - `kaggle/llm_run_kaggle.ipynb` now stops at its first code cell with a "suspended" message.
 - ω for the pressure condition stays 0.75 as fixed before the pilot; it is not re-chosen.
+
+- Later the same night, before pilot 4 was run: the ω = 0.75 condition is renamed "higher private gain" (file tag `higher_gain`); "strategic pressure" is used for pharma only. Proposed scope for amendment 4 (pharma-only ω = 0.75 in the main experiment) written into the protocol before any model result; it still needs the user's approval.
