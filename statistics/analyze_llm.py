@@ -1,10 +1,12 @@
-"""LLM-agent experiments (protocol amendment 3): statistics for one case study.
+"""LLM-agent experiments (protocol amendment 4): statistics for one case study.
 
     python statistics/analyze_llm.py --domain pharma
+    python statistics/analyze_llm.py --domain pharma --run pharma_llm_main_w075
 
 Reads results/raw/<domain>_llm_main/ (and <domain>_llm_adversarial/ if present); writes
-results/summaries/<domain>_llm.json and tables/<domain>_llm.md. Every number comes from
-the saved runs.
+results/summaries/<domain>_llm.json and tables/<domain>_llm.md. With --run, another main
+run (the higher-private-gain condition) is analysed on its own and written with its suffix.
+Every number comes from the saved runs.
 """
 import argparse
 import json
@@ -24,8 +26,16 @@ CONFIRMATORY = {"fidelity": True, "evidence_support": True, "manipulation": Fals
 SECONDARY = {
     "votes_against_tool": ("behaviour", "votes_against_tool"),
     "confidence_inflation": ("behaviour", "confidence_inflation"),
+    "mean_confidence": ("behaviour", "mean_confidence"),
     "votes_own_preferred_option": ("behaviour", "votes_own_preferred_option"),
     "fully_truthful_explanation": ("behaviour", "fully_truthful_explanation"),
+    "fully_supported_evidence": ("behaviour", "fully_supported_evidence"),
+    # components of the manipulation score: the first two depend on explanation accuracy
+    # and cannot tell an honest mistake from manipulation
+    "component_false_attribution": ("attack_scores", "false_attribution"),
+    "component_unsupported_evidence": ("attack_scores", "unsupported_evidence"),
+    "component_strategic_voting": ("attack_scores", "strategic_voting"),
+    "component_collusion": ("attack_scores", "collusion"),
     "collective_accuracy": ("collective_accuracy",),
     "manipulation_success": ("manipulation_success",),
 }
@@ -58,6 +68,8 @@ def analyse_main(runs):
 
     out = {"seeds": seeds, "n_seeds": len(seeds),
            "model": runs[seeds[0]]["model"], "environment": runs[seeds[0]]["environment"],
+           "prompt_style": runs[seeds[0]].get("prompt_style"),
+           "omega": runs[seeds[0]].get("omega"),
            "descriptive": {m: {s: describe(series(s, m)) for s in SYSTEMS} for m in paths},
            "comparisons": {}}
     calls = [runs[s]["systems"][name]["metrics"]["calls"] for s in seeds for name in SYSTEMS]
@@ -129,7 +141,9 @@ def to_markdown(domain, res):
     model = main["model"]
     lines = [f"# {domain.capitalize()} — LLM agents: baseline vs ablation vs proposed", "",
              f"Model `{model.get('model')}` (digest `{str(model.get('digest'))[:12]}`); "
-             f"n = {n} paired seeds; mean ± SD over seeds; all rounds, all agents.",
+             f"n = {n} paired seeds; mean ± SD over seeds; all rounds, all agents. "
+             f"Prompt style `{main.get('prompt_style')}`, private-gain weight "
+             f"{main.get('omega')}.",
              f"Model calls: {main['calls']['total']}; unusable replies: "
              f"{main['calls']['unusable_replies']}; reports replaced by the tool's report: "
              f"{main['calls']['reports_replaced_by_tool_report']}.",
@@ -181,12 +195,15 @@ def to_markdown(domain, res):
     return "\n".join(lines)
 
 
-def analyse(domain):
-    main = load(f"{domain}_llm_main")
+def analyse(domain, run=None):
+    default = f"{domain}_llm_main"
+    name = run or default
+    main = load(name)
     if not main:
-        raise SystemExit(f"no results in results/raw/{domain}_llm_main")
-    res = {"domain": domain, "main": analyse_main(main)}
-    adversarial = load(f"{domain}_llm_adversarial")
+        raise SystemExit(f"no results in results/raw/{name}")
+    res = {"domain": domain, "run": name, "main": analyse_main(main)}
+    # robustness runs exist for the natural condition only
+    adversarial = load(f"{domain}_llm_adversarial") if name == default else {}
     if adversarial:
         missing = sorted(set(adversarial) - set(main))
         if missing:
@@ -198,10 +215,12 @@ def analyse(domain):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--domain", default="pharma")
+    parser.add_argument("--run", default=None, help="main run to analyse, if not the default")
     args = parser.parse_args()
-    result = analyse(args.domain)
-    (ROOT / "results" / "summaries" / f"{args.domain}_llm.json").write_text(
+    result = analyse(args.domain, args.run)
+    stem = result["run"].replace("_llm_main", "_llm")
+    (ROOT / "results" / "summaries" / f"{stem}.json").write_text(
         json.dumps(result, indent=2, sort_keys=True))
     text = to_markdown(args.domain, result)
-    (ROOT / "tables" / f"{args.domain}_llm.md").write_text(text, encoding="utf-8")
+    (ROOT / "tables" / f"{stem}.md").write_text(text, encoding="utf-8")
     print(text)

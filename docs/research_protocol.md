@@ -594,3 +594,110 @@ pressure?"), which uses no model output.
   ω = 0.75 condition is run for pharma only; energy is run at ω = 0.5 only. Energy
   hypotheses on manipulation are then about behaviour under payoffs in which unilateral
   strategic voting is not profitable, and are to be worded that way.
+
+### Amendment 4 — 2026-10-11 (protocol v1.4): LLM agents that work out their own explanation
+
+**Status: FROZEN 2026-10-11, before any LLM agent was run on a test scenario.** It replaces
+amendment 3, which was never executed. Everything in amendment 3 that is not changed here
+(tool, audit, model, reply format, retry rule, scripted attackers, saving of raw replies,
+Kaggle environment) stays as written there.
+
+**Approval.** Plan put to the user after pilot 4; the user answered by pasting written
+advice (author not stated) that approves the scope on one condition: a metric audit before
+freezing. The audit is A4.4. Sizes are those the user fixed earlier (200 rounds and 5 seeds;
+100 rounds and 3 seeds) and are not increased.
+
+**Status of the evidence.** Designed with knowledge of the classical results of both
+domains and of four validation pilots (`results/pilot/`, research log). Pilot 4 (raw
+prompt, 20 validation rounds, seed 0, both domains, ω 0.5 and 0.75) showed: fidelity and
+evidence support near 0.45–0.55 with no difference between systems; lower stated confidence
+under the proposed rules in every cell; no visible response to ω. The rules fixed before
+pilot 4 are kept: prompt, model and ω = 0.75 are unchanged by what the pilot showed.
+
+#### A4.1 Agents
+- Prompt style `raw` exactly as described under "Pilot 4" above; text =
+  `agents/llm_agent.py` at the commit of this amendment. No change after pilot 4.
+- Model, digest, temperature, seeds of requests, context, output limit, concurrency: A3.1.
+- The reading check of amendment 3 does not exist for this prompt (pilot files show
+  `reads_its_tool: null`). Whether the model reads its tool correctly is no longer a
+  precondition; it is the measured behaviour (fidelity, evidence support).
+
+#### A4.2 Runs
+| Run | Domain | ω | Systems | Rounds | Seeds |
+|---|---|---|---|---|---|
+| `pharma_llm_main` | pharma | 0.5 | baseline, ablation, proposed | 200 | 0–4 |
+| `energy_llm_main` | energy | 0.5 | baseline, ablation, proposed | 200 | 0–4 |
+| `pharma_llm_main_w075` | pharma | 0.75 | baseline, ablation, proposed | 200 | 0–4 |
+| `pharma_llm_adversarial`, `energy_llm_adversarial` | both | 0.5 | baseline, proposed | first 100 | 0–2 |
+
+- ω = 0.5 is the primary condition in both domains (it is the classical arm's value).
+- ω = 0.75 is run for pharma only, on the same seeds and rounds as the pharma main run.
+  Scope and naming were fixed before pilot 4 from a payoff check that used no model output:
+  it is *strategic pressure* in pharma, where unilateral selfish voting pays under the
+  baseline; in energy it does not pay at either weight, so the condition is not run there.
+- Robustness runs (scripted malicious agents at shares 0.2 and 0.4, scripted colluding
+  pair) as in A3.2.
+- The energy gate of A3.2 is dropped: pilot 4 ran the model on energy validation scenarios
+  (no unusable reply, longest prompt 1,326 of 2,048 tokens).
+- Order of execution: pharma main, energy main, pharma ω = 0.75, robustness. Measured speed
+  about 2,050 decisions per GPU hour, so about 7.3 h per main run (estimate).
+
+#### A4.3 Analysis
+- Unit, descriptive statistics, paired test, Holm correction, decision rule and the limit of
+  n = 5 (a Wilcoxon test cannot give p < 0.0625): as A3.3. All tests two-sided.
+- **Confirmatory, per domain at ω = 0.5:** family {H1: fidelity, H2: evidence support,
+  H3: manipulation score}, proposed vs baseline.
+- **Pharma at ω = 0.75:** the same three comparisons with their own Holm family, reported
+  as a second condition, plus the difference between the two conditions' effects per seed
+  (descriptive).
+- **Expectations written down before any test-scenario run, from pilot 4 only** (secondary
+  outcomes, unadjusted p, reported whether they hold or not):
+  P1 stated confidence and confidence inflation are lower under the proposed system;
+  P2 fidelity does not differ between systems;
+  P3 evidence support is not higher under the proposed system (it was 0.01–0.06 lower in
+  all four pilot cells; the cells are not independent).
+- **Manipulation score of LLM agents.** M is the mean of five audited components. Two of
+  them (false attribution = 1 − F, unsupported evidence = 1 − E) cannot tell an honest
+  mistake from manipulation; in pilot 4 they were about 0.55 and 0.45–0.5 and dominated M.
+  All five components are therefore reported separately. A change in M is attributed to
+  behaviour only as far as it comes from confidence inflation, strategic voting or
+  collusion. M of LLM agents is not to be described as intent to deceive.
+- Decision quality (collective accuracy, manipulation success) is reported with its interval
+  next to every claim about M; no non-inferiority margin is declared.
+- Other secondary outcomes as A3.3, plus mean stated confidence and the share of fully
+  supported evidence. H4 and collusion as A3.3 (three seeds, no confirmatory claim).
+- H6 for LLM agents: same qualitative verdicts for H1–H3 in both domains at ω = 0.5.
+- The classical results remain a separate arm (A3.3).
+
+#### A4.4 Metric audit required before freezing (done 2026-10-11)
+Question: do fidelity and evidence support score reversed directions, wrong levels and
+unimportant features correctly? No evaluation rule was changed.
+- Three stub agents, each making one kind of error on real scenarios, played through the
+  full game loop and compared with values worked out in the test
+  (`tests/test_llm_agents.py::test_audit_scores_each_kind_of_explanation_error`):
+  reversed direction → F = 0, E unaffected; wrong level → E = 0, F unaffected; the two
+  least important features with correct signs → F = their share of the top-2 |SHAP| mass.
+- The 40 real model replies saved by pilot 4 (round 1 of each run) were re-scored from the
+  numbers in their own prompts with the production functions and with a separate
+  implementation: 0 disagreements. Of their 80 feature claims, 23 named a feature outside
+  the top 2, 21 reversed the direction, 35 stated the wrong level.
+- No defect found. Two properties of the existing definitions, unchanged and stated here:
+  a correctly signed feature outside the top 2 earns partial fidelity (its |SHAP| relative
+  to the top-2 mass); evidence support checks the level of whatever features are named,
+  important or not.
+- Limit of the audit: pilot files keep 5 replies per system, so 760 of the 800 pilot
+  decisions could not be re-scored. The main runs save every reply and the round-1 prompts.
+
+#### A4.5 Risks declared before the runs
+- **Likely outcome.** From pilot 4 the expected result is no effect on H1 and H2 and a
+  modest reduction of M that comes from confidence alone. If so, that is the finding.
+- **Ability versus incentive.** Low fidelity reflects the model's reading errors. The design
+  cannot show whether a more capable model would respond to the incentive.
+- **Instruction versus payoff.** The proposed system's reward rules also tell the agent what
+  a good report is. An effect on confidence may come from that text, not from the payoff.
+- An explanation has no private payoff in this game; ω acts on vote and confidence only.
+- This design reverses A3.4 after validation pilots had shown a ceiling. It was changed
+  before any test-scenario run, with knowledge of pilot behaviour.
+- One model, one quantisation, temperature 0. n = 5 seeds.
+- Not verified: the run notebook has not been executed on Kaggle. One Kaggle session ran
+  for an hour without output before pilot 4 succeeded on a restart; the cause is unknown.

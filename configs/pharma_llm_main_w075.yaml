@@ -1,0 +1,106 @@
+# LLM-agent experiment. Values are frozen in docs/research_protocol.md, amendment 4
+# (v1.4, 2026-10-11); changing them requires a logged amendment.
+# Higher-private-gain condition (omega 0.75), pharma only; same seeds and rounds as
+# pharma_llm_main.
+# Mechanism parameters are identical to the classical configs.
+name: pharma_llm_main_w075
+experiment: pharma_llm_main
+system: llm_main
+domain: pharma
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+compact_output: true
+dataset_files:
+- data/raw/pharma_scms/SCMS_Delivery_History_Dataset_20150929.csv
+reference:
+  weights:
+    cost: 0.2
+    reliability: 0.2
+    lead_time: 0.2
+    logistics: 0.2
+    continuity: 0.2
+  recent_prices: 5
+  split:
+    train: 0.5
+    val: 0.1
+model:
+  n_estimators: 100
+  max_depth: 6
+game:
+  n_rounds: 200
+  eval_last: 200
+  top_k: 2
+  deviation_threshold: 0.25
+  inflation: 0.3
+  epsilon: 0.1
+  learning_rate: 0.1
+  q_init: 0.5
+  omega: 0.75
+  consistency_neighbours: 5
+llm:
+  model: qwen2.5:7b
+  digest: 845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e
+  temperature: 0.0
+  num_ctx: 2048
+  num_predict: 120
+  workers: 5
+  prompt_style: raw
+systems:
+  baseline:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: false
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.75
+      beta: 0.0
+      gamma: 0.0
+      delta: 0.25
+      lambda: 0.0
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  ablation:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: false
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5
+  proposed:
+    components:
+      game: true
+      xai: true
+      explanation_aware_incentive: true
+      reputation: true
+      blockchain: false
+    incentive_weights:
+      alpha: 0.3
+      beta: 0.25
+      gamma: 0.15
+      delta: 0.1
+      lambda: 0.2
+    reputation:
+      initial: 0.5
+      rho: 0.8
+    reward:
+      degenerate_value: 0.5

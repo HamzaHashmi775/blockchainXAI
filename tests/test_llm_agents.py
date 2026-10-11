@@ -8,6 +8,7 @@ from agents.llm_agent import (OBJECTIVES, parse_report, report_schema, reward_ru
                               round_prompt, system_prompt)
 from agents.pharma_agents import AGENTS
 from environments.pharma.preprocess import ACTIONS, build_scenarios
+from evaluation.metrics import observed_level
 from experiments.llm import honest_report, simulate_llm, summarise_llm
 from experiments.llm_pilot import sanity_checks
 from experiments.pharma import prepare
@@ -164,6 +165,59 @@ class SelfishClient:
         vote = self.prep["actions"][int(self.prep["preferred"][t, i])]
         return {"text": reply(vote, 1.0, (names[0], names[0]), ("raises", "lowers"),
                               ("high", "low")), "seconds": 0.01}
+
+
+class MistakeClient(ToolClient):
+    """Stub model that follows its tool but makes one kind of explanation error."""
+
+    def __init__(self, prep, kind):
+        super().__init__(prep)
+        self.kind = kind
+
+    def chat(self, messages, schema, seed):
+        t, i = divmod(self.calls, len(self.prep["agents"]))
+        self.calls += 1
+        audit = self.prep["audit"][i]
+        proba = self.prep["proba"][t, i]
+        vote = int(np.argmax(proba))
+        phi, x, cuts = audit["phi"][t][vote], audit["X"][t][vote], audit["thresholds"]
+        order = np.argsort(-np.abs(phi), kind="stable")
+        chosen = order[-2:] if self.kind == "least_important" else order[:2]
+        signs = [1 if phi[f] >= 0 else -1 for f in chosen]
+        levels = [observed_level(x[f], cuts[0, f], cuts[1, f]) for f in chosen]
+        if self.kind == "reversed":
+            signs = [-s for s in signs]
+        if self.kind == "wrong_level":
+            levels = [next(v for v in ("low", "mid", "high") if v != level) for level in levels]
+        return {"text": reply(self.prep["actions"][vote], float(proba[vote]),
+                              tuple(audit["features"][f] for f in chosen),
+                              tuple("raises" if s > 0 else "lowers" for s in signs),
+                              tuple(levels)), "seconds": 0.01}
+
+
+@pytest.mark.parametrize("kind", ["reversed", "wrong_level", "least_important"])
+def test_audit_scores_each_kind_of_explanation_error(prep, kind):
+    """The errors seen in pilot 4, one at a time, against values worked out here."""
+    T, n = 6, len(prep["agents"])
+    log, _ = simulate_llm(prep, PROPOSED, 0, MistakeClient(prep, kind), "pharma", n_rounds=T)
+    assert not log["deviates"].any() and not log["confidence_inflation"].any()
+    for t in range(T):
+        for i in range(n):
+            vote = int(np.argmax(prep["proba"][t, i]))
+            mass = np.sort(np.abs(prep["audit"][i]["phi"][t][vote]))
+            if mass[-2:].sum() == 0:
+                continue
+            if kind == "reversed":               # right features, wrong direction: no credit
+                assert log["F"][t, i] == 0.0 and log["false_attribution"][t, i] == 1.0
+                assert log["E"][t, i] == 1.0
+            elif kind == "wrong_level":          # right explanation, unsupported claims
+                assert log["F"][t, i] == pytest.approx(1.0) and log["E"][t, i] == 0.0
+                assert log["unsupported_evidence"][t, i] == 1.0
+            else:                                # correct but unimportant features: their share
+                assert log["F"][t, i] == pytest.approx(mass[:2].sum() / mass[-2:].sum())
+                assert log["E"][t, i] == 1.0
+    if kind == "least_important":
+        assert log["F"].mean() < 0.5
 
 
 class BrokenClient:

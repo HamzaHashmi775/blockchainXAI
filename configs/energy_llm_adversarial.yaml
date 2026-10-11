@@ -1,5 +1,5 @@
-# LLM-agent experiment. Values are frozen in docs/research_protocol.md, amendment 3
-# (v1.3, 2026-10-11); changing them requires a logged amendment.
+# LLM-agent experiment. Values are frozen in docs/research_protocol.md, amendment 4
+# (v1.4, 2026-10-11); changing them requires a logged amendment.
 # Mechanism parameters are identical to the classical configs.
 name: energy_llm_adversarial
 experiment: energy_llm_adversarial
@@ -40,6 +40,7 @@ llm:
   num_ctx: 2048
   num_predict: 120
   workers: 5
+  prompt_style: raw
 systems:
   baseline:
     components:

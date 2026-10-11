@@ -1,4 +1,4 @@
-"""LLM-agent experiments (protocol amendment 3).
+"""LLM-agent experiments (protocol amendments 3 and 4).
 
 `<domain>_llm_main`: baseline, ablation and proposed on the same rounds of a seed.
 `<domain>_llm_adversarial`: scripted malicious agents and scripted colluders among LLM
@@ -32,6 +32,11 @@ def make_client(llm):
     return client, served
 
 
+def _style(config):
+    """Prompt style of the run; amendment 3 configs have none and mean "disclosed"."""
+    return config["llm"].get("prompt_style", "disclosed")
+
+
 def environment():
     versions = {"python": platform.python_version()}
     for name in ("numpy", "pandas", "sklearn", "shap", "scipy"):
@@ -56,10 +61,12 @@ def register_llm_domain(domain, client_factory=make_client):
         client, served = client_factory(config["llm"])
         prep = prepare(config, seed)
         out = {"seed": seed, "domain": domain, "model": served, "environment": environment(),
+               "prompt_style": _style(config), "omega": config["game"]["omega"],
                "tool_val_accuracy": prep["val_accuracy"], "systems": {}}
         for name, system in config["systems"].items():
             log, records = simulate_llm(prep, system, seed, client, domain,
-                                        workers=config["llm"]["workers"])
+                                        workers=config["llm"]["workers"],
+                                        prompt_style=_style(config))
             out["systems"][name] = _package(prep, log, records)
         return out
 
@@ -71,6 +78,7 @@ def register_llm_domain(domain, client_factory=make_client):
         order = np.random.default_rng([seed, 3]).permutation(n_agents)      # as experiments/core
         pair = tuple(int(i) for i in np.random.default_rng([seed, 4]).permutation(n_agents)[:2])
         out = {"seed": seed, "domain": domain, "model": served, "environment": environment(),
+               "prompt_style": _style(config), "omega": config["game"]["omega"],
                "rounds_played": rounds, "colluders": [prep["agents"][i] for i in pair],
                "systems": {}}
         for name, system in config["systems"].items():
@@ -79,12 +87,14 @@ def register_llm_domain(domain, client_factory=make_client):
                 count = int(round(n_agents * fraction))
                 bad = [int(i) for i in order[:count]]
                 log, records = simulate_llm(prep, system, seed, client, domain, n_rounds=rounds,
-                                            workers=config["llm"]["workers"], malicious=bad)
+                                            workers=config["llm"]["workers"],
+                                        prompt_style=_style(config), malicious=bad)
                 by_fraction[str(fraction)] = {
                     "malicious_agents": [prep["agents"][i] for i in bad],
                     **_package(prep, log, records)}
             log, records = simulate_llm(prep, system, seed, client, domain, n_rounds=rounds,
-                                        workers=config["llm"]["workers"], colluders=pair)
+                                        workers=config["llm"]["workers"],
+                                        prompt_style=_style(config), colluders=pair)
             out["systems"][name] = {"malicious": by_fraction,
                                     "collusion": _package(prep, log, records)}
         return out

@@ -1,6 +1,7 @@
 """LLM-agent experiment runners and their statistics, with a stub model (no LLM)."""
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -14,26 +15,32 @@ from run_experiment import main
 ROOT = Path(__file__).resolve().parents[1]
 
 
-class CopyTruth:
-    """Stub model: votes for the tool's top option and copies its truthful explanation."""
+ITEM = re.compile(r"(\w+) = (\S+) \(low <= (\S+), high > (\S+)\), contribution ([+-]\d+\.\d+)")
+
+
+class ReadNumbers:
+    """Stub model: votes for the tool's top option and works the explanation out of the
+    numbers of the raw prompt (two largest absolute contributions, sign, level)."""
 
     def chat(self, messages, schema, seed):
         rows = messages[1]["content"].split("\n")
+        assert not any("truthful" in r for r in rows)
         tool = {r.split(":")[0][2:]: float(r.split("| tool ")[1].split(" ")[0])
                 for r in rows if "| tool" in r}
         vote = next(r for r in rows if r.endswith("(your tool's top option)")).split(":")[0][2:]
-        start = next(i for i, r in enumerate(rows) if r.startswith("The truthful explanation"))
-        truth = next(r for r in rows[start:] if r.startswith(f"- {vote}: "))
+        line = next(r for r in rows if r.startswith(f"- {vote}: ") and "contribution" in r)
+        items = sorted(ITEM.findall(line), key=lambda m: -abs(float(m[4])))[:2]
         data = {"vote": vote, "confidence": tool[vote]}
-        for n, part in enumerate(truth.split(": ", 1)[1].split("; "), start=1):
-            name, rest = part.split(" ", 1)
-            direction, level = rest.split(", ")
-            data.update({f"feature_{n}": name, f"direction_{n}": direction, f"level_{n}": level})
+        for n, (name, value, low, high, contribution) in enumerate(items, start=1):
+            level = ("low" if float(value) <= float(low)
+                     else "high" if float(value) > float(high) else "mid")
+            data.update({f"feature_{n}": name, f"level_{n}": level,
+                         f"direction_{n}": "raises" if float(contribution) >= 0 else "lowers"})
         return {"text": json.dumps(data), "seconds": 0.0}
 
 
 def stub_factory(llm):
-    return CopyTruth(), {"model": llm["model"], "digest": llm["digest"]}
+    return ReadNumbers(), {"model": llm["model"], "digest": llm["digest"]}
 
 
 @pytest.fixture(scope="module")
@@ -69,6 +76,16 @@ def test_frozen_configs_match_the_protocol():
         assert adv["seeds"] == [0, 1, 2] and adv["adversarial"]["rounds"] == 100
         assert adv["adversarial"]["malicious_fractions"] == [0.2, 0.4]
         assert f"{domain}_llm_main" in REGISTRY and f"{domain}_llm_adversarial" in REGISTRY
+        # amendment 4: raw prompt everywhere; natural condition at omega 0.5
+        assert cfg["llm"]["prompt_style"] == adv["llm"]["prompt_style"] == "raw"
+        assert cfg["game"]["omega"] == adv["game"]["omega"] == 0.5
+    main_cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_main.yaml").read_text("utf-8"))
+    higher = yaml.safe_load((ROOT / "configs" / "pharma_llm_main_w075.yaml").read_text("utf-8"))
+    assert higher["game"]["omega"] == 0.75 and higher["experiment"] == "pharma_llm_main"
+    # the higher-private-gain run differs from the main run in omega and name only
+    higher["game"]["omega"], higher["name"] = 0.5, "pharma_llm_main"
+    assert higher == main_cfg
+    assert not (ROOT / "configs" / "energy_llm_main_w075.yaml").exists()
 
 
 def test_a_wrong_model_digest_is_refused(monkeypatch):
@@ -82,12 +99,14 @@ def test_a_wrong_model_digest_is_refused(monkeypatch):
 def test_main_run_saves_metrics_rounds_and_every_reply(results):
     run = json.loads((results / "pharma_llm_main" / "seed_0.json").read_text())
     assert set(run["systems"]) == {"baseline", "ablation", "proposed"}
+    assert run["prompt_style"] == "raw" and run["omega"] == 0.5
     assert set(run["environment"]) >= {"python", "numpy", "sklearn", "shap"}
     for system in run["systems"].values():
         assert len(system["calls"]) == 8 * 5 and len(system["rounds"]["collective"]) == 8
         assert np.array(system["rounds"]["votes"]).shape == (8, 5)
         assert len(system["first_round_prompts"]) == 5
-        assert system["metrics"]["fidelity"] == 1.0
+        assert system["metrics"]["fidelity"] > 0.98
+        assert "truthful" not in system["first_round_prompts"][0]
         assert system["metrics"]["behaviour"]["votes_against_tool"] == 0.0
     # all systems of a seed play the same rounds
     refs = [s["rounds"]["reference"] for s in run["systems"].values()]
@@ -103,8 +122,9 @@ def test_adversarial_run_scripts_the_attackers_only(results):
         assert len(one["malicious_agents"]) == 1 and len(two["malicious_agents"]) == 2
         assert one["malicious_agents"][0] == two["malicious_agents"][0]
         assert len(one["calls"]) == 4 * 4 and len(two["calls"]) == 4 * 3
-        assert one["metrics"]["llm_agents"]["fidelity"] == 1.0
-        assert one["metrics"]["fidelity"] < 1.0                # the scripted agent falsifies
+        assert one["metrics"]["llm_agents"]["fidelity"] > 0.98
+        # the scripted agent falsifies
+        assert one["metrics"]["fidelity"] < one["metrics"]["llm_agents"]["fidelity"]
         assert len(system["collusion"]["calls"]) == 4 * 3
         assert system["collusion"]["metrics"]["scripted_agents"]["reward"] is not None
     assert len(run["colluders"]) == 2

@@ -622,3 +622,26 @@ was restarted and its cause was not established.
 - By the rules fixed before the pilot, the prompt, the model and ω = 0.75 stay as they are.
 - Sizing from the measured speed: one main run (200 rounds, 5 seeds, 3 systems) = 15,000
   decisions = about 7.3 GPU hours.
+
+## 2026-10-11 — Metric audit; protocol amendment 4 frozen; run code for the raw-prompt design
+
+- Plan put to the user after pilot 4 (three main runs and the robustness runs, about 29 GPU
+  hours). The user replied with pasted advice (author not stated) approving the scope on
+  condition of a metric audit before freezing. Treated as the user's approval.
+- **Metric audit (no evaluation rule changed):** three stub agents with one error type each
+  are scored as expected through the game loop (new test); the 40 model replies saved by
+  pilot 4 re-scored with production code and a separate implementation agree in all 40.
+  Error types in those replies: 23 of 80 claims name a feature outside the top 2, 21
+  reverse the direction, 35 state the wrong level. No defect found. Only 40 of 800 pilot
+  decisions could be re-scored, because the pilot keeps 5 replies per system.
+- **Amendment 4 (v1.4) frozen before any test-scenario run.** Raw prompt; pharma and energy
+  at ω = 0.5 (primary), pharma at ω = 0.75; robustness at ω = 0.5; sizes unchanged;
+  expectations P1–P3 from pilot 4 written down; manipulation components reported
+  separately because two of them cannot tell mistakes from manipulation.
+- Code: `configs/*_llm_*.yaml` carry `prompt_style: raw`; new
+  `configs/pharma_llm_main_w075.yaml`; `experiments/llm_runs.py` passes the prompt style and
+  records it with ω; `statistics/analyze_llm.py --run` and the added secondary outcomes;
+  `kaggle/llm_run_kaggle.ipynb` re-enabled for amendment 4 (energy gate removed, server log
+  cut to an excerpt because it grows by about 65 kB per call).
+- **Not verified:** the run notebook has not been executed on Kaggle; 7.3 h per main run is
+  an estimate from 20-round pilots. Nothing was run on test scenarios.
