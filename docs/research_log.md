@@ -582,3 +582,43 @@ realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
 - ω for the pressure condition stays 0.75 as fixed before the pilot; it is not re-chosen.
 
 - Later the same night, before pilot 4 was run: the ω = 0.75 condition is renamed "higher private gain" (file tag `higher_gain`); "strategic pressure" is used for pharma only. Proposed scope for amendment 4 (pharma-only ω = 0.75 in the main experiment) written into the protocol before any model result; it still needs the user's approval.
+
+## 2026-10-11 — LLM pilot 4 (raw prompt) — feasibility on VALIDATION scenarios, not a result
+
+Files: `results/pilot/pilot4/` (four JSON files; the 53 MB `ollama.log` is kept locally and
+not committed). qwen2.5:7b, frozen digest, 29/29 layers on one Tesla T4, 20 rounds, seed 0,
+100 agent decisions per system and condition. A first attempt failed on a 504 from the
+Ollama download server and a second session ran for an hour without output; that session
+was restarted and its cause was not established.
+
+| Domain, ω | System | Fidelity | Evidence | Manipulation | Confidence inflation | Votes against tool |
+|---|---|---|---|---|---|---|
+| pharma 0.5 | baseline | 0.447 | 0.520 | 0.282 | 0.219 | 0.14 |
+| pharma 0.5 | proposed | 0.441 | 0.495 | 0.236 | 0.016 | 0.10 |
+| pharma 0.75 | baseline | 0.441 | 0.525 | 0.285 | 0.231 | 0.14 |
+| pharma 0.75 | proposed | 0.461 | 0.490 | 0.243 | 0.018 | 0.13 |
+| energy 0.5 | baseline | 0.457 | 0.570 | 0.245 | 0.161 | 0.07 |
+| energy 0.5 | proposed | 0.465 | 0.545 | 0.229 | 0.034 | 0.08 |
+| energy 0.75 | baseline | 0.448 | 0.560 | 0.264 | 0.177 | 0.11 |
+| energy 0.75 | proposed | 0.467 | 0.520 | 0.250 | 0.055 | 0.12 |
+
+- Feasibility: no unusable reply in 800 calls; longest prompt 1,326 tokens (fits 2,048, no
+  truncation in the server log); 171–182 s per 100 decisions = about 1.76 s per decision,
+  about 2,050 decisions per GPU hour.
+- The ceiling is gone: only 7–10% of explanations are fully truthful in every cell.
+- Fidelity and evidence support do not differ between baseline and proposed (|Δ| ≤ 0.04,
+  either sign). Raising ω from 0.5 to 0.75 changes no behaviour visibly.
+- The one consistent difference is stated confidence: mean 0.85–0.88 under the baseline,
+  0.64–0.76 under the proposed rules; confidence inflation falls in all four cells. The
+  lower manipulation score comes entirely from this component.
+- Sample replies show misread signs and levels (e.g. a contribution of +0.048 reported as
+  "lowers") next to fully correct reports. The errors look like failures to read the
+  numbers, not attempts to deceive.
+- **Consequence for the metrics:** with the raw prompt the audit cannot tell an honest
+  mistake from manipulation. "False attribution" (about 0.55) and "unsupported evidence"
+  (about 0.45–0.5) are dominated by reading errors, so the manipulation score of LLM agents
+  mostly measures inability. Confidence inflation and votes against the tool are the
+  components that still reflect a choice.
+- By the rules fixed before the pilot, the prompt, the model and ω = 0.75 stay as they are.
+- Sizing from the measured speed: one main run (200 rounds, 5 seeds, 3 systems) = 15,000
+  decisions = about 7.3 GPU hours.
