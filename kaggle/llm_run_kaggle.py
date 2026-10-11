@@ -17,6 +17,12 @@
 #    `llm_results.zip` and give it to Claude Code.
 
 # %%
+# SUSPENDED 2026-10-11: protocol amendment 3 is on hold (see docs/research_protocol.md).
+# This notebook runs the suspended design on TEST scenarios and must not be run until a new
+# amendment is approved.
+raise SystemExit("Suspended: do not run. Use llm_pilot_kaggle.ipynb (pilot 4) instead.")
+
+# %%
 RUNS = ["pharma_llm_main"]
 MODEL = "qwen2.5:7b"        # frozen in the protocol; a different model is refused
 PARALLEL = 5

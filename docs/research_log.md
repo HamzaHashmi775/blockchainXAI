@@ -554,3 +554,29 @@ realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
   3,900 characters; whether it fits 2,048 tokens is unknown until the pilot reports counts.
 - `kaggle/llm_run_kaggle.ipynb` still runs amendment 3 and must not be used for now.
 - Full suite: 150 passed.
+
+## 2026-10-11 (night) — Is ω = 0.75 real strategic pressure? Payoff check without a model
+
+- Prompted by a second piece of pasted advice (author not stated): verify, rather than
+  assume, that raising ω makes a difference. Checked by payoff arithmetic on the pilot's own
+  validation rounds (20 rounds, seed 0), no LLM: all agents report what their tool supports,
+  then one agent at a time votes for its privately preferred option with confidence 1 and a
+  truthful explanation. Mean payoff change of the deviating agent:
+
+  | Domain | System | ω = 0.5 | ω = 0.75 |
+  |---|---|---|---|
+  | pharma | baseline | +0.027 (2 of 5 agents gain) | +0.082 (5 of 5 gain) |
+  | pharma | proposed | −0.123 (0 of 5) | −0.050 (1 of 5) |
+  | energy | baseline | −0.074 (0 of 5) | −0.030 (0 of 5) |
+  | energy | proposed | −0.138 (0 of 5) | −0.066 (0 of 5) |
+
+- Reading: in pharma, ω = 0.75 is real pressure (selfish voting pays every agent under the
+  baseline and is penalised under the proposed system). In energy it is not: a single agent
+  changes the group decision in only 2–3% of rounds, so always voting selfishly loses even
+  under the baseline at both weights. The label "strategic pressure" is therefore not
+  justified for energy by this check.
+- Limits: 20 validation rounds, one seed, one crude policy (always vote the preferred
+  option); a selective deviator could do better, and coalitions were not examined. This is
+  a property of the payoff rule, not a result about LLM behaviour.
+- `kaggle/llm_run_kaggle.ipynb` now stops at its first code cell with a "suspended" message.
+- ω for the pressure condition stays 0.75 as fixed before the pilot; it is not re-chosen.
