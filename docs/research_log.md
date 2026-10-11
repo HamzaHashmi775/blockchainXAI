@@ -467,3 +467,37 @@ remains possible.
 llama3.1:8b, qwen2.5:7b and qwen2.5:14b. The model with the highest reading-check value
 that is ≥ 0.80 is used. If none reaches 0.80, the best model is used anyway and its
 reading-check value is reported as a limitation (explanation errors that are not choices).
+
+## 2026-10-11 — LLM pilot 3 (Kaggle; llama3.1:8b, qwen2.5:7b, qwen2.5:14b) and model choice
+
+Output: `results/pilot/pilot3/`. **Feasibility only: 10 rounds, validation scenarios, one
+seed, five concurrent requests; not an experimental result.** Prompt = pilot-2 prompt plus
+the truthful explanation of each option stated outright (the last prompt change).
+
+| Model (all Q4_K_M) | Reading check (proposed) | Fidelity base / prop | Votes against tool base / prop | Confidence inflation base / prop | Seconds per decision |
+|---|---|---|---|---|---|
+| llama3.1:8b (8.0B) | 0.972 | 0.982 / 0.982 | 0.26 / 0.28 | 0.173 / 0.083 | about 2.1 |
+| qwen2.5:7b (7.6B) | 0.977 | 0.975 / 0.989 | 0.16 / 0.14 | 0.191 / 0.023 | about 1.7 |
+| qwen2.5:14b (14.8B) | 0.977 | 0.968 / 0.998 | 0.26 / 0.14 | 0.197 / 0.001 | about 11 |
+
+- 300/300 replies usable. All three models pass every sanity check, including the reading
+  check (≥ 0.80).
+- qwen2.5:14b did not fit one T4 entirely (40 of 49 layers on GPU) and is about 6–7 times
+  slower; it is impractical on the free tier.
+- **Model chosen by the stopping rule set before pilot 3: `qwen2.5:7b`** (digest
+  `845dbda0ea48…`, Q4_K_M). It ties with qwen2.5:14b for the highest reading-check value
+  (0.977); the tie is resolved by speed, a tie-break not written down beforehand and
+  recorded here as such. llama3.1:8b (0.972) is the documented alternative.
+- Seconds per decision = wall time ÷ 50 decisions of the proposed run; per-request latency
+  is 7–10 s because five requests share the GPU.
+- With truthful reporting made trivial, explanations are almost always truthful in *both*
+  systems in these 10 rounds (fidelity ≥ 0.97 in the baseline). If that holds at scale, the
+  LLM experiment will have little room to show a fidelity or evidence effect (ceiling), and
+  the informative outcomes will be strategic voting and confidence inflation. This is a
+  pilot observation on validation data, not a result; it is noted so that amendment 3 can
+  declare it as a known risk rather than discover it afterwards.
+- No further prompt changes will be made (stopping rule).
+
+### Next: protocol amendment 3 (LLM agents) — to be approved by the user before any run on
+test scenarios. Open points: role of the classical results; how malicious agents are
+realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
