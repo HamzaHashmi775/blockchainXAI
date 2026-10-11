@@ -1,6 +1,6 @@
 # Research Protocol (Phase 2, Step 05)
 
-**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0; amended to v1.1, see §12) **and 2026-10-06 for the pharma case study** (v1.2, §11). Any later
+**Status: FROZEN 2026-10-05 for the energy case study** (protocol version 1.0; amended to v1.1, see §12) **and 2026-10-06 for the pharma case study** (v1.2, §11); **LLM agents frozen 2026-10-11** (v1.3, §12 amendment 3). Any later
 change is recorded in §12 as a dated amendment with its reason. The pharma case study was
 deferred at GATE 1 and is specified in §11 by amendment 2.
 
@@ -406,3 +406,108 @@ any pharma agent model was trained.
 
 **Deviations from CLAUDE.md recorded here.** Agent roles differ from the §Phase 3 template
 (approved, above). The quality/compliance gap is dropped, not simulated.
+
+### Amendment 3 — 2026-10-11 (protocol v1.3): LLM agents
+
+**Status: FROZEN 2026-10-11, before any LLM agent was run on a test scenario.**
+
+**Reason.** The user stated that the study is about LLM agents, to be run with open-source
+models through Ollama on Kaggle's free GPU. This overrides CLAUDE.md Golden Rule 12 and §9
+(user decision; CLAUDE.md itself is unchanged). Sizes were fixed by the user ("don't
+increase more seeds or rounds"). Where the user gave no explicit answer, the recommendation
+put to them is used and marked *(default)*.
+
+**Status of the evidence.** Designed after the classical results of both domains were
+known. Three pilots were run on **validation** scenarios of pharma (10 rounds, one seed
+each; `results/pilot/`), and the prompt was changed twice in response to them: features
+listed by importance (after pilot 1) and the truthful explanation stated outright (after
+pilot 2). A stopping rule was set before pilot 3 and no prompt change followed it. No LLM
+agent has seen a test scenario. The pilots are feasibility checks and are not results.
+
+#### A3.1 Agents
+- Each agent keeps its §4 / §11.3 Random Forest and exact TreeSHAP values as a private
+  analysis tool. Training, feature views, private objectives, reference decisions, splits
+  and the audit are unchanged.
+- The agent's report is chosen by an LLM. Per round it is given: its private gain for each
+  option (ũ_i), the tool's probability for each option, the tool's features for each option
+  ordered by |SHAP| with observed level (train terciles) and direction, the truthful
+  explanation of each option stated outright, and its own last 3 rounds (vote, tool's top
+  option, group decision, reward, payoff; plus the fidelity and evidence audit values only
+  in systems that audit). The reference decision is never shown.
+- The system prompt states the agent's private objective, the payoff rule
+  π_i = ω·ũ_i(collective) + (1 − ω)·R_i with ω = 0.5, and in plain words how R is computed
+  in that system, with its weights. In systems with the explanation-aware incentive it says
+  that an auditor sees the tool's output; in the baseline that explanation and evidence are
+  recorded but not checked; with reputation, that voting weight is reputation.
+- Reply: JSON constrained by schema to vote ∈ options, confidence ∈ [0, 1], two
+  (feature, direction, level) triples with feature ∈ the agent's own view. An unparsable
+  reply is retried once (seed + 1); if still unusable, the tool-supported report is used and
+  the event counted. The exact prompt text is `agents/llm_agent.py` at the commit of this
+  amendment.
+- **Model:** `qwen2.5:7b`, Q4_K_M, Ollama digest
+  `845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e`; temperature 0;
+  request seed = 1000·(run seed) + attempt; context 2,048 tokens; at most 120 output tokens;
+  the five agents of a round are queried concurrently. A run refuses to start if the served
+  model's digest differs. Chosen by the stopping rule of 2026-10-07 (highest reading-check
+  value ≥ 0.80; tie with qwen2.5:14b broken by speed, a tie-break not written beforehand).
+- No strategy is scripted for an LLM agent and there is no bandit; behaviour is whatever the
+  model returns. There is therefore no strategy-share table and no unilateral-deviation
+  table for LLM runs.
+
+#### A3.2 Runs (per case study)
+- **Main:** systems baseline, ablation, proposed (weights, ρ, reward rule as in §7);
+  **200 rounds** drawn per seed from the test split as in §2 / §11.4; **seeds 0–4**; all
+  three systems of a seed play the same rounds with the same tools. Evaluation window: all
+  200 rounds (no burn-in; there is no learning phase to discard).
+- **Malicious agents:** shares 0.2 and 0.4 = 1 and 2 of 5 agents, taken from a seeded agent
+  order; they are **scripted** *manipulative* agents exactly as in §5/§8 *(default)*; the
+  others are LLM agents. Baseline and proposed; the **first 100 rounds** of the seed's 200;
+  **seeds 0–2**. The share-0 condition is the first 100 rounds of the same seed's main run.
+  Shares 0.1 and 0.3 are not run.
+- **Collusion:** a seeded pair of scripted colluders as in §8; the other three are LLM
+  agents; baseline and proposed; first 100 rounds; seeds 0–2; compared with the first 100
+  rounds of the main run.
+- **Energy gate:** no LLM pilot was run on energy. Before the energy runs, a 10-round check
+  on energy validation scenarios must pass the pilot sanity checks (usable replies, votes
+  and confidence not constant, reading check ≥ 0.80); otherwise the energy LLM runs do not
+  start and the failure is reported.
+- Runs execute on Kaggle with its library versions, not the pinned local environment; the
+  versions are recorded in each manifest. The agents' Random Forests may therefore differ
+  slightly from the local classical runs.
+- Every raw model reply is saved, because concurrent inference is not bit-reproducible
+  (pilot 2: identical votes, a few differing explanations).
+
+#### A3.3 Analysis
+- Unit of analysis: the seed (n = 5 main; n = 3 robustness). Mean, SD, 95% CI.
+- Confirmatory family {H1: F, H2: E, H3: M}, proposed vs baseline, paired test and Holm
+  correction exactly as in §9, with the same decision rule (Holm p < 0.05 and |relative
+  change| ≥ 5%).
+- **Declared limit of n = 5:** a two-sided Wilcoxon signed-rank test cannot give p < 0.0625
+  with five pairs. If Shapiro–Wilk rejects normality for a metric, that comparison is
+  reported with its effect size and interval and is "not significant" by construction; this
+  is stated wherever it happens. The t-test's normality assumption can hardly be checked at
+  n = 5.
+- Pre-declared secondary outcomes (descriptive, unadjusted p): strategic voting (share of
+  votes against the tool's top option), confidence inflation, share of votes for the
+  agent's privately preferred option, collective accuracy, manipulation success, share of
+  fully truthful explanations, share of unusable replies.
+- **H4** (n = 3 seeds, two shares): accuracy degradation relative to share 0, proposed −
+  baseline, reported with mean, SD and CI; **no confirmatory claim** is made from three
+  seeds.
+- Classical (scripted-agent) results of §2–§11 are kept and reported next to the LLM results
+  as a separate arm *(default)*. They differ in rounds, seeds, environment and in how
+  behaviour arises, so the comparison across arms is qualitative.
+
+#### A3.4 Known risks declared before the runs
+- **Ceiling.** In pilot 3, with the truthful explanation stated in the prompt, fidelity and
+  evidence support were ≥ 0.97 in the *baseline* for all three models. If this holds, H1 and
+  H2 cannot show an effect for LLM agents, and that will be reported as the finding ("LLM
+  agents of this kind do not misreport explanations they are handed"), not repaired by
+  changing the prompt.
+- Making truthful reporting trivial is a design choice: it separates choosing to misreport
+  from failing to read, at the price of making honest reporting the easy default.
+- One model, one quantisation, temperature 0; results may not carry over to other models.
+- The mechanism's rules are told to the agents (common knowledge); agents do not have to
+  discover them.
+- Scripted malicious agents among LLM agents test the mechanism's response to a controlled
+  attack, not what a malicious LLM would do.
