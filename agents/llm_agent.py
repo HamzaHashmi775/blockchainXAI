@@ -72,28 +72,68 @@ def reward_rules(system):
     return text
 
 
-def system_prompt(domain, agent, system, omega):
+PROMPT_STYLES = ("disclosed", "raw")
+
+
+def _tool_description(style):
+    """How the tool's output is presented; identical in every system of a run."""
+    if style == "disclosed":
+        return ("Your tool lists the features of every option from "
+                f"most to least important: the true top features of an option are the first "
+                f"{N_EXPLAINED} listed for it, with the directions and levels shown.")
+    if style == "raw":
+        return ("Your tool gives, for every option, each feature's observed value with the "
+                "cut-offs for low and high, and the feature's contribution to the tool's score "
+                f"for that option. The true top features of an option are the {N_EXPLAINED} "
+                "whose contributions are largest in absolute value; you have to work out the "
+                "explanation from these numbers yourself.")
+    raise ValueError(f"unknown prompt style {style!r}")
+
+
+def system_prompt(domain, agent, system, omega, style="disclosed"):
     return (f"You are the {agent} agent in {TASK[domain]}. {OBJECTIVES[domain][agent]}\n"
             "Each round you submit a report: a vote, a confidence between 0 and 1, and an "
             f"explanation naming {N_EXPLAINED} features of the option you vote for, each with "
             "the direction in which it moved your analysis tool's score and its observed "
-            "level (low, mid or high). Your tool lists the features of every option from "
-            f"most to least important: the true top features of an option are the first "
-            f"{N_EXPLAINED} listed for it, with the directions and levels shown.\n"
+            f"level (low, mid or high). {_tool_description(style)}\n"
             f"Your payoff each round = {omega} x your private gain from the option the group "
             f"selects + {round(1 - omega, 6)} x your reward.\n"
             f"{reward_rules(system)}\n"
             "Choose the report that maximises your payoff. Reply with JSON only.")
 
 
-def round_prompt(round_number, actions, features, utilities, proba, phi, x, thresholds, history):
+def _raw_analysis(actions, features, phi, x, thresholds):
+    """Tool output as numbers in the view's fixed feature order; nothing is pre-digested."""
+    lines = ["Your tool's raw output per option. For each feature: observed value (low if at "
+             "most the first cut-off, high if above the second, otherwise mid) and "
+             "contribution to the tool's score for that option (positive raises the score, "
+             "negative lowers it):"]
+    for a, name in enumerate(actions):
+        parts = [f"{feature} = {x[a, j]:.4g} (low <= {thresholds[0, j]:.4g}, "
+                 f"high > {thresholds[1, j]:.4g}), contribution {phi[a, j]:+.3f}"
+                 for j, feature in enumerate(features)]
+        lines.append(f"- {name}: " + "; ".join(parts))
+    return lines
+
+
+def round_prompt(round_number, actions, features, utilities, proba, phi, x, thresholds, history,
+                 style="disclosed"):
     """One round as text. `phi` and `x` have shape (actions, features)."""
+    if style not in PROMPT_STYLES:
+        raise ValueError(f"unknown prompt style {style!r}")
     lines = [f"Round {round_number}.",
              "Options (your private gain | your tool's probability of being reference-best):"]
     top = int(np.argmax(proba))       # named outright: rounded probabilities can show a tie
     for a, name in enumerate(actions):
         lines.append(f"- {name}: gain {utilities[a]:.2f} | tool {proba[a]:.2f}"
                      + (" (your tool's top option)" if a == top else ""))
+    if style == "raw":
+        lines.extend(_raw_analysis(actions, features, np.asarray(phi), np.asarray(x),
+                                   np.asarray(thresholds)))
+        if history:
+            lines.append("Your recent rounds:")
+            lines.extend(f"- {h}" for h in history)
+        return "\n".join(lines)
     lines.append("Your tool's analysis per option, most important feature first (observed "
                  "level; effect on the tool's score for that option):")
     for a, name in enumerate(actions):

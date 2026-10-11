@@ -84,6 +84,49 @@ def test_round_prompt_shows_tool_output_without_the_reference():
     assert "round 3: ..." in text and "reference" not in text.split("\n", 2)[2]
 
 
+def test_raw_prompt_gives_numbers_and_never_the_explanation():
+    phi = np.array([[0.02, -0.1, 0.3]] * 3)
+    x = np.array([[1.0, 5.0, 9.0]] * 3)
+    thresholds = np.array([[2.0, 2.0, 2.0], [6.0, 6.0, 6.0]])
+    text = round_prompt(4, ACTIONS, FEATURES, [0.0, 0.5, 1.0], [0.2, 0.3, 0.5], phi, x,
+                        thresholds, ["round 3: ..."], style="raw")
+    # fixed feature order (not by importance), values and cut-offs instead of level words
+    assert ("- candidate_1: f_a = 1 (low <= 2, high > 6), contribution +0.020; "
+            "f_b = 5 (low <= 2, high > 6), contribution -0.100; "
+            "f_c = 9 (low <= 2, high > 6), contribution +0.300") in text
+    analysis = text.split("Your tool's raw output")[1].split("Your recent rounds")[0]
+    assert "truthful" not in text and "most important" not in text
+    assert " is low" not in analysis and " is high" not in analysis and "mid," not in analysis
+    assert "(your tool's top option)" in text and "round 3: ..." in text
+    system = system_prompt("pharma", "cost", BASELINE, 0.75, style="raw")
+    assert "largest in absolute value" in system and "first 2 listed" not in system
+    assert "0.75 x your private gain" in system
+    # the only difference between the systems of a run is the statement of the reward rules
+    proposed = system_prompt("pharma", "cost", PROPOSED, 0.75, style="raw")
+    assert system.replace(reward_rules(BASELINE), "") == proposed.replace(
+        reward_rules(PROPOSED), "")
+    with pytest.raises(ValueError):
+        round_prompt(4, ACTIONS, FEATURES, [0.0, 0.5, 1.0], [0.2, 0.3, 0.5], phi, x,
+                     thresholds, [], style="other")
+
+
+def test_disclosed_prompt_of_amendment_3_is_unchanged():
+    text = system_prompt("pharma", "cost", PROPOSED, 0.5)
+    assert ("level (low, mid or high). Your tool lists the features of every option from most "
+            "to least important: the true top features of an option are the first 2 listed "
+            "for it, with the directions and levels shown.\nYour payoff each round") in text
+
+
+def test_reading_check_does_not_apply_to_the_raw_prompt():
+    summary = {"calls": {"reports_replaced_by_tool_report": 0},
+               "vote_share": {"a": 0.5, "b": 0.5},
+               "behaviour": {"mean_confidence": 0.6,
+                             "truthful_explanation_when_voting_with_tool": 0.1}}
+    systems = {"baseline": summary, "proposed": summary}
+    assert sanity_checks(systems)["proposed"]["reads_its_tool"] is False
+    assert sanity_checks(systems, "raw")["proposed"]["reads_its_tool"] is None
+
+
 @pytest.fixture(scope="module")
 def prep():
     return prepare(PROPOSED, 0, table=build_scenarios())

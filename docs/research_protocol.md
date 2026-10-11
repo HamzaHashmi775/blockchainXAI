@@ -521,3 +521,63 @@ the difference. Found by a unit test of the run code, not by observing model beh
 pilot was run with or after this change. It is nevertheless a prompt change made after the
 stopping rule of 2026-10-07 and is disclosed as such. The frozen prompt text is
 `agents/llm_agent.py` at the commit that adds this erratum.
+
+### Amendment 3 suspended — 2026-10-11; pilot 4 in preparation of amendment 4
+
+**Status.** Amendment 3 was never executed: no LLM agent has been run on a test scenario.
+It is suspended, not withdrawn; its text above is kept unchanged.
+
+**Reason.** The user passed on written advice on the design (pasted into the session; its
+author was not stated). Its central point: a prompt that states the truthful explanation
+makes the baseline truthful by construction (pilot 3: fidelity ≥ 0.97), so the experiment
+cannot show whether the incentive makes an LLM agent explain more faithfully. It asks for
+(a) agents that work out their own explanation from the tool's raw output, (b) a condition
+with strategic pressure next to the natural one, each under baseline and proposed, and
+(c) a validation pilot before any full run.
+
+**This reverses A3.4**, which said a ceiling would be reported and "not repaired by changing
+the prompt". The reversal is made before any test-scenario run, but after validation pilots
+had shown the ceiling. It is a design change made with knowledge of pilot behaviour and has
+to be reported as such in the paper.
+
+#### Pilot 4 (validation scenarios only; fixed before it is run)
+- Prompt style `raw` (`agents/llm_agent.py` at the commit adding this section): per option,
+  every feature in the fixed order of the agent's view with its observed value, the two
+  train-tercile cut-offs and its signed SHAP contribution. No ordering by importance, no
+  level or direction words, no truthful explanation. The system prompt defines the top
+  features as the two with the largest absolute contribution and says the agent has to work
+  the explanation out itself. Within a run the baseline and proposed prompts differ only in
+  the statement of the reward rules and in the audit values shown in the 3-round history.
+- `qwen2.5:7b` (frozen digest), temperature 0, 20 rounds, seed 0, pharma and energy,
+  baseline and proposed, under ω = 0.5 ("natural") and ω = 0.75 ("strategic pressure").
+- The reading check (≥ 0.80) does not apply to the raw prompt: working out the explanation
+  is now the behaviour under study. A new check verifies that the longest prompt fits the
+  context window (Ollama truncates silently).
+
+#### Rules fixed before pilot 4, to prevent tuning towards an effect
+1. The raw prompt is used in the main runs whatever difference between baseline and proposed
+   the pilot shows, including none or the wrong sign. The pilot is not used to choose a
+   prompt, a condition or a model by its effect.
+2. After pilot 4 the prompt may change only for unusable replies or a factual error in the
+   prompt. If the prompt does not fit the context, the context window is raised and the
+   prompt left as it is.
+3. Strategic pressure is ω = 0.75, fixed now (the larger value of the classical ω
+   sensitivity analysis); it is not chosen from the pilot.
+4. If baseline fidelity is again ≥ 0.95 under the raw prompt, that is the finding for
+   H1/H2 with LLM agents; no further prompt change follows.
+
+#### Limits declared now
+- In this game an explanation has no private payoff: it does not influence the collective
+  decision. Private gain acts only through the vote and the stated confidence. Raising ω
+  therefore raises the temptation to vote for the preferred option and to inflate
+  confidence; it gives no motive to misexplain. Low fidelity under the raw prompt reflects
+  the effort or ability an agent spends on its explanation, not a motive to deceive.
+- An effect of the proposed system on fidelity may come from the instruction content of its
+  reward rules ("the true top features ... are rewarded") and the audit feedback, not from
+  the payoff as such. The design cannot separate the two.
+- The explanation remains a structured report (two features, direction, level), not free
+  text; free text could not be audited against SHAP without a second, unvalidated judge.
+
+Amendment 4 (conditions, rounds, seeds, analysis) will be written after pilot 4 and needs
+the user's approval before any test-scenario run. A natural × pressure design doubles the
+model calls of amendment 3 at the sizes the user fixed.

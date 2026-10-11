@@ -525,3 +525,32 @@ realised; rounds, seeds and systems given about 2,100 decisions per GPU hour.
   prompts grow slightly once the 3-round history fills. The energy prompts have never been
   shown to a model (the gate checks this first).
 - Nothing was run on test scenarios today. Blockchain (Phase 8) remains unstarted.
+
+## 2026-10-11 (evening) — Amendment 3 suspended; raw-prompt pilot 4 prepared
+
+- The user asked whether the project is moving in the right direction. Assessment given:
+  the classical pharma result is strong and manipulation falls in both domains, but the LLM
+  arm as frozen would most likely show no gain in fidelity or evidence support, because the
+  prompt hands the agent the truthful explanation (pilot 3 baseline ≥ 0.97; pilot 1, before
+  that change, 0.32).
+- The user then pasted written advice (author not stated) asking for agents that produce
+  their own explanation from raw tool output, a natural and a strategic-pressure condition,
+  and a validation pilot first. Treated as the user's direction.
+- **Amendment 3 suspended before any test-scenario run.** This reverses the statement in
+  A3.4 that a ceiling would not be repaired by changing the prompt, and the stopping rule
+  of 2026-10-07. Recorded in the protocol as a design change made with knowledge of pilot
+  behaviour.
+- Added prompt style `raw` (numbers only, fixed feature order, no truthful explanation);
+  the disclosed prompt of amendment 3 is byte-identical to the previous commit (checked on
+  5 agents x 5 rounds, and guarded by a test). `experiments/llm_pilot.py --prompt raw
+  --omega`; pilot summary now reports the longest prompt in tokens and checks that it fits
+  the context window. `kaggle/llm_pilot_kaggle.ipynb` is now pilot 4.
+- Rules fixed before pilot 4 (protocol): the raw prompt is used whatever the pilot shows;
+  ω = 0.75 as strategic pressure is fixed now; a baseline at the ceiling would be reported.
+- **Design limit found while writing this:** explanations have no private payoff in the
+  game, so strategic pressure acts on vote and confidence only. Declared in the protocol.
+- **Not verified:** the raw prompt has never been shown to a model. Locally it was run only
+  with a stub (energy and pharma, validation rounds). The longest energy prompt is about
+  3,900 characters; whether it fits 2,048 tokens is unknown until the pilot reports counts.
+- `kaggle/llm_run_kaggle.ipynb` still runs amendment 3 and must not be used for now.
+- Full suite: 150 passed.

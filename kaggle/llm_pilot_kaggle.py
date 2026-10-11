@@ -7,17 +7,19 @@
 #
 # Before running:
 # 1. Settings -> Internet: **On** (needs a phone-verified Kaggle account).
-# 2. Settings -> Accelerator: **GPU T4 x2** if you have GPU quota; otherwise leave it on
-#    CPU and set MODELS below to one small model.
-# 3. Add Input -> your uploaded dataset that contains `project_bundle.zip`.
-# Then: Run All. When it finishes, download `/kaggle/working/pilot_output.zip` from the
+# 2. Settings -> Accelerator: **GPU T4 x2**.
+# 3. Add Input -> the dataset made from the latest `project_bundle.zip` (and only that one).
+# Then: Run All (about 30 minutes; keep the tab open). When it finishes, download `/kaggle/working/pilot_output.zip` from the
 # Output panel and give it to Claude Code.
 
 # %%
-MODELS = ["llama3.1:8b", "qwen2.5:7b", "qwen2.5:14b"]   # on CPU: one small model only
-DOMAINS = ["pharma"]        # add "energy" to pilot the second case study as well
-ROUNDS = 10                 # 10 rounds x 5 agents x 2 systems = 100 agent decisions per run
+MODELS = ["qwen2.5:7b"]     # the model frozen in the protocol
+DOMAINS = ["pharma", "energy"]
+ROUNDS = 20                 # 20 rounds x 5 agents x 2 systems = 200 agent decisions per run
 PARALLEL = 5                # the five agents of a round are asked at the same time
+# Pilot 4: the prompt gives the tool's raw numbers only (no truthful explanation), under two
+# weights of the private gain: 0.5 (natural) and 0.75 (strategic pressure).
+CONDITIONS = [("natural", 0.5), ("pressure", 0.75)]
 
 # %%
 import glob
@@ -39,7 +41,8 @@ else:
     with zipfile.ZipFile(bundles[0]) as archive:
         archive.extractall(WORK)
 os.chdir(WORK)
-print(sorted(os.listdir(WORK)))
+assert "--prompt" in open("experiments/llm_pilot.py").read(), "This dataset is an old bundle."
+print("project bundle is the pilot-4 version")
 
 # %%
 # The pinned versions are for the original environment; Kaggle's own versions are used here
@@ -62,14 +65,15 @@ for model in MODELS:
 print(subprocess.run(["ollama", "list"], capture_output=True, text=True).stdout)
 
 # %%
-# Pilot 3: every model with the five agents of a round asked together (pilot 2 showed this
-# is 2-3 times faster and changes only a few replies).
+# Pilot 4: raw tool output, the agent works out its own explanation.
 for domain in DOMAINS:
     for model in MODELS:
-        subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
-                        "--model", model, "--rounds", str(ROUNDS),
-                        "--workers", str(PARALLEL), "--tag", "_p3",
-                        "--output-dir", "/kaggle/working/pilot"], check=True)
+        for label, omega in CONDITIONS:
+            subprocess.run(["python", "-m", "experiments.llm_pilot", "--domain", domain,
+                            "--model", model, "--rounds", str(ROUNDS),
+                            "--workers", str(PARALLEL), "--prompt", "raw",
+                            "--omega", str(omega), "--tag", f"_p4_{label}",
+                            "--output-dir", "/kaggle/working/pilot"], check=True)
 
 # %%
 shutil.copy("/kaggle/working/ollama.log", "/kaggle/working/pilot/ollama.log")

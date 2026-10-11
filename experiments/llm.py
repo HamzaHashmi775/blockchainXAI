@@ -54,7 +54,7 @@ def _ask(client, messages, schema, seed, actions, features):
 
 
 def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1,
-                 malicious=(), colluders=None):
+                 malicious=(), colluders=None, prompt_style="disclosed"):
     """Play `n_rounds` (default: all prepared rounds). Returns (log, call records).
 
     Agents report simultaneously, so with `workers` > 1 the requests of a round are sent
@@ -76,7 +76,7 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1,
     scripted = set(int(i) for i in malicious) | set(int(i) for i in (colluders or ()))
 
     reputation = initial_reputation(n_agents, rep_cfg.get("initial", 0.5))
-    prompts = [system_prompt(domain, name, system, omega) for name in agents]
+    prompts = [system_prompt(domain, name, system, omega, prompt_style) for name in agents]
     schemas = [report_schema(actions, prep["audit"][i]["features"]) for i in range(n_agents)]
     history = [deque(maxlen=HISTORY_LENGTH) for _ in range(n_agents)]
     log = {key: np.zeros((T, n_agents)) for key in
@@ -110,7 +110,8 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1,
             messages = [{"role": "system", "content": prompts[i]},
                         {"role": "user", "content": round_prompt(
                             t + 1, actions, audit["features"], util[i], proba[i],
-                            audit["phi"][t], audit["X"][t], audit["thresholds"], history[i])}]
+                            audit["phi"][t], audit["X"][t], audit["thresholds"], history[i],
+                            prompt_style)}]
             requests.append((client, messages, schemas[i], seed, actions, audit["features"]))
         if workers > 1 and requests:
             with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -181,6 +182,7 @@ def summarise_llm(prep, log, records, window=None):
         return float(log[key][window].mean())
 
     seconds = [r["seconds"] for r in records if r.get("seconds") is not None]
+    prompt_tokens = [r["prompt_tokens"] for r in records if r.get("prompt_tokens") is not None]
     votes = log["votes"][window]
     llm = ~log["scripted"][window].astype(bool)
 
@@ -222,6 +224,7 @@ def summarise_llm(prep, log, records, window=None):
         "calls": {"total": len(records),
                   "unusable_replies": int(sum(not r["valid"] for r in records)),
                   "reports_replaced_by_tool_report": int(log["invalid"][window].sum()),
+                  "max_prompt_tokens": int(max(prompt_tokens)) if prompt_tokens else None,
                   "mean_seconds": float(np.mean(seconds)) if seconds else None,
                   "median_seconds": float(np.median(seconds)) if seconds else None},
         "per_agent": {name: {"fidelity": float(log["F"][window][:, i].mean()),
