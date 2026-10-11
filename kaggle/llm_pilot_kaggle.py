@@ -55,7 +55,14 @@ print(subprocess.run("nvidia-smi --query-gpu=name,memory.total --format=csv,nohe
 
 # %%
 subprocess.run("apt-get install -y -qq zstd pciutils > /dev/null 2>&1", shell=True)
-subprocess.run("curl -fsSL https://ollama.com/install.sh | sh", shell=True, check=True)
+# the download server sometimes answers 504; retry instead of failing on the first error
+for attempt in range(6):
+    subprocess.run("curl -fsSL https://ollama.com/install.sh | sh", shell=True)
+    if shutil.which("ollama"):
+        break
+    print(f"Ollama install failed (attempt {attempt + 1} of 6); retrying in 60 s")
+    time.sleep(60)
+assert shutil.which("ollama"), "Ollama could not be installed; run this cell again later."
 server = subprocess.Popen(["ollama", "serve"], stdout=open("/kaggle/working/ollama.log", "w"),
                           stderr=subprocess.STDOUT,
                           env={**os.environ, "OLLAMA_NUM_PARALLEL": str(PARALLEL)})
