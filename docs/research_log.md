@@ -684,3 +684,31 @@ was restarted and its cause was not established.
   applies to the confidence effect.
 - Next: session 2 (`energy_llm_main`); sessions 3 and 4 after it. Plan at about 8.6 h per
   main run.
+
+## 2026-10-17 — LLM session 2: `energy_llm_main` (amendment 4, ω = 0.5) on test scenarios
+
+- Committed Kaggle version, started 07:10 UTC, finished 15:43 UTC: **8.55 h** for 15,000
+  calls; 29/29 layers on GPU; 0 unusable replies, 0 replaced reports.
+- Files: `results/raw/energy_llm_main/` (git-ignored), log excerpt in `results/raw/llm_logs/`.
+  SHA-256 (first 16 hex): zip 204695da87c768fc; seed_0 890131fa2e5748d9; seed_1
+  2832e26064343d14; seed_2 b24543206f5999d3; seed_3 19c8c39a460b81b1; seed_4 552d2fd497b600d1.
+- Analysis: `statistics/analyze_llm.py --domain energy` → `results/summaries/energy_llm.json`,
+  `tables/energy_llm.md`.
+- **Confirmatory (proposed vs baseline, Holm over F, E, M):** H1 fidelity 0.446 → 0.461,
+  Δ +0.015 [+0.002, +0.029], +3.4 %, p 0.037, Holm 0.073, negligible. H2 evidence support
+  0.521 → 0.519, Δ −0.002 [−0.019, +0.016], Holm 0.81, negligible. H3 manipulation
+  0.276 → 0.241, Δ −0.035 [−0.038, −0.031], −12.6 %, Holm p < 0.001, improved.
+- **Decomposition of ΔM:** confidence inflation −0.144, false attribution −0.015, strategic
+  voting −0.010, collusion −0.007, unsupported evidence +0.002. About 83 % of the reduction
+  comes from confidence inflation.
+- **P1–P3:** P1 holds (confidence 0.873 → 0.734; inflation 0.177 → 0.033). P2 holds by the
+  confirmatory test (fidelity not significant after Holm); note the unadjusted fidelity
+  difference is small and positive here, negative in pharma. P3 holds (evidence support
+  not higher).
+- Ablation vs baseline: same verdicts (F, E negligible; M improved −12.7 %). Proposed ≈
+  ablation again. Collective accuracy unchanged (0.776 → 0.769, n.s.).
+- **H6 (LLM agents, ω = 0.5):** same qualitative verdicts in both domains — H1 negligible,
+  H2 negligible, H3 improved, in each case mainly through stated confidence. Effect on M is
+  smaller in energy (−12.6 %) than in pharma (−22 %), where baseline confidence inflation was
+  higher (0.32 vs 0.18).
+- Next: session 3 (`pharma_llm_main_w075`), then session 4 (robustness).
