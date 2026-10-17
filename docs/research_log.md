@@ -645,3 +645,42 @@ was restarted and its cause was not established.
   cut to an excerpt because it grows by about 65 kB per call).
 - **Not verified:** the run notebook has not been executed on Kaggle; 7.3 h per main run is
   an estimate from 20-round pilots. Nothing was run on test scenarios.
+
+## 2026-10-17 — LLM session 1: `pharma_llm_main` (amendment 4, ω = 0.5) on test scenarios
+
+- Run on Kaggle as a committed version (T4, `qwen2.5:7b`, digest `845dbda0ea48`, 29/29
+  layers on GPU), started 2026-10-11 18:22 UTC, finished 02:59 UTC: **8.6 h** for 15,000
+  calls (about 1.7 h per seed), above the 7.3 h estimate. 0 unusable replies, 0 replaced
+  reports. Notebook output: `FAILURES: none`.
+- Files: `results/raw/pharma_llm_main/` (seed_0–4, manifest; git-ignored like all raw
+  results), server-log excerpt in `results/raw/llm_logs/`. SHA-256 (first 16 hex):
+  zip f06d9ed617fd9e3f; seed_0 d11a3926705f0826; seed_1 0cc47f0515c5e4e4; seed_2
+  a50119fa4bb450c8; seed_3 a307a1ea7edbe1f8; seed_4 0f36f67641c233b0.
+- Analysis: `statistics/analyze_llm.py --domain pharma` → `results/summaries/pharma_llm.json`,
+  `tables/pharma_llm.md` (adversarial runs not yet done, so that part is absent).
+- **Confirmatory (proposed vs baseline, Holm over F, E, M):** H1 fidelity 0.459 → 0.450,
+  Δ −0.009 [−0.020, +0.003], Holm p 0.125, negligible. H2 evidence support 0.599 → 0.593,
+  Δ −0.006 [−0.010, −0.002], Wilcoxon p 0.0625 (the minimum at n = 5), Holm 0.125,
+  negligible. H3 manipulation 0.294 → 0.229, Δ −0.065 [−0.070, −0.059], −22 %, Holm
+  p < 0.001, improved.
+- **Decomposition of ΔM (pre-declared, A4.3):** Δ components: confidence inflation −0.298,
+  strategic voting −0.026, collusion −0.014, false attribution +0.009, unsupported evidence
+  +0.006. About 92 % of the reduction of M comes from confidence inflation; strategic voting
+  and collusion add a small, consistent part (votes against the tool 0.164 → 0.138,
+  p 0.0005 unadjusted). The two components that cannot tell mistakes from manipulation did
+  not improve.
+- **Expectations P1–P3 (written before the run):** P1 holds (mean stated confidence
+  0.830 → 0.534; inflation 0.321 → 0.023). P2 holds (no fidelity difference). P3 holds
+  (evidence support not higher; slightly lower in all 5 seeds).
+- Ablation vs baseline: same pattern; evidence support **worse** (−0.021, −3.5 %, Holm
+  p 0.025) — a result against H2 for the incentive alone. Proposed ≈ ablation everywhere,
+  so reputation adds nothing visible here.
+- Decision quality: collective accuracy 0.581 → 0.600 (+0.019, Wilcoxon p 0.125, higher in
+  all 5 seeds); manipulation success 0.170 → 0.159 (n.s.). No sign that the reduction in M
+  cost decision quality.
+- Interpretation (mine): the incentive changed what the agents *say about certainty* and,
+  slightly, how they vote; it did not change the quality of the explanations they work out.
+  Consistent with A4.5 ("likely outcome"); the instruction-vs-payoff confound of A4.5
+  applies to the confidence effect.
+- Next: session 2 (`energy_llm_main`); sessions 3 and 4 after it. Plan at about 8.6 h per
+  main run.
