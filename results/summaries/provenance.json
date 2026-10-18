@@ -1,0 +1,139 @@
+{
+  "protocol": "amendment 5 (v1.5)",
+  "config": {
+    "name": "provenance",
+    "runs": [
+      "pharma_llm_main",
+      "energy_llm_main"
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "batch_size": 100,
+    "tampering": {
+      "seed": 0,
+      "per_target": 200,
+      "controls": 1000,
+      "below_resolution": 200,
+      "below_delta": 1e-09
+    },
+    "contract_checks": 100,
+    "overhead": {
+      "records": 1000,
+      "batch_sizes": [
+        1,
+        10,
+        100
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "solc": "0.8.28",
+    "node": "anvil (Foundry v1.8.5)"
+  },
+  "records": 30000,
+  "records_on_chain": 30000,
+  "record_transactions": 300,
+  "record_gas_total": 2876842332,
+  "record_seconds_total": 79.32286610000028,
+  "verification": {
+    "decision": {
+      "VALID": 0,
+      "TAMPERED": 200,
+      "MISSING": 0
+    },
+    "explanation": {
+      "VALID": 0,
+      "TAMPERED": 200,
+      "MISSING": 0
+    },
+    "evidence": {
+      "VALID": 0,
+      "TAMPERED": 200,
+      "MISSING": 0
+    },
+    "reward": {
+      "VALID": 0,
+      "TAMPERED": 200,
+      "MISSING": 0
+    },
+    "reputation": {
+      "VALID": 0,
+      "TAMPERED": 200,
+      "MISSING": 0
+    },
+    "control_untouched": {
+      "VALID": 1000,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "control_reserialised": {
+      "VALID": 1000,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "below_resolution": {
+      "VALID": 200,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "all_untouched": {
+      "VALID": 27800,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "never_written": "MISSING",
+    "overwrite_accepted": 0,
+    "foreign_write_accepted": 0,
+    "guard_attempts": 100
+  },
+  "detection_rate": {
+    "decision": 1.0,
+    "explanation": 1.0,
+    "evidence": 1.0,
+    "reward": 1.0,
+    "reputation": 1.0
+  },
+  "detection_rate_all_targets": 1.0,
+  "false_positive_rate": 0.0,
+  "below_resolution_detected": 0,
+  "offchain_bytes_per_record": 401.8641666666667,
+  "onchain_storage_bytes_per_record": 128,
+  "overhead": {
+    "1": {
+      "records": 1000,
+      "transactions": 1000,
+      "deploy_gas": 536073,
+      "gas_per_record": 121429.3,
+      "gas_per_transaction_median": 121417.0,
+      "write_seconds_per_record": 0.131775649899987,
+      "write_seconds_per_transaction_median": 0.1393390499997622,
+      "verify_seconds_per_record": 0.011840758000000277
+    },
+    "10": {
+      "records": 1000,
+      "transactions": 100,
+      "deploy_gas": 536073,
+      "gas_per_record": 98575.4,
+      "gas_per_transaction_median": 985583.0,
+      "write_seconds_per_record": 4.236635087500006,
+      "write_seconds_per_transaction_median": 0.16737130000001343,
+      "verify_seconds_per_record": 0.01252933259999918
+    },
+    "100": {
+      "records": 1000,
+      "transactions": 10,
+      "deploy_gas": 536073,
+      "gas_per_record": 95912.04,
+      "gas_per_transaction_median": 9589494.0,
+      "write_seconds_per_record": 0.00229133560000264,
+      "write_seconds_per_transaction_median": 0.2112976999997045,
+      "verify_seconds_per_record": 0.00845746059999874
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Blockchain provenance experiment (Phase 8, H5) — protocol amendment 5 (v1.5), frozen
+# 2026-10-18 before the run. Records come from the saved LLM main runs; no model is called.
+name: provenance
+runs: [pharma_llm_main, energy_llm_main]
+seeds: [0, 1, 2, 3, 4]
+batch_size: 100
+tampering:
+  seed: 0
+  per_target: 200          # decision, explanation, evidence, reward, reputation
+  controls: 1000           # untouched, and again re-serialised
+  below_resolution: 200    # reward changed by below_delta: a declared limit, not a test
+  below_delta: 1.0e-9
+contract_checks: 100       # overwrite attempts and writes from another account
+overhead:
+  records: 1000            # the first records of pharma seed 0, on a fresh deployment each
+  batch_sizes: [1, 10, 100]

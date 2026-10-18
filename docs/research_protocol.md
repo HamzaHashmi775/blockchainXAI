@@ -701,3 +701,75 @@ unimportant features correctly? No evaluation rule was changed.
 - One model, one quantisation, temperature 0. n = 5 seeds.
 - Not verified: the run notebook has not been executed on Kaggle. One Kaggle session ran
   for an hour without output before pilot 4 succeeded on a restart; the cause is unknown.
+
+### Amendment 5 — 2026-10-18 (protocol v1.5): blockchain provenance (Phase 8, H5)
+
+**Status: FROZEN 2026-10-18, before the provenance experiment was run.** Direction from the
+user (pasted advice, author not stated): a minimal smart contract on a local EVM rather than
+only a simulated hash chain; identifiers and hashes on-chain, full artifacts off-chain; test
+tamper detection and overhead. This replaces the plan of Phase 0 (hash-chain simulator).
+
+#### A5.1 Implementation
+- Contract `blockchain/ProvenanceRegistry.sol`, Solidity 0.8.28, optimiser on (200 runs).
+  Append-only: a record id can be written once; only the deploying account may write.
+  Stored per record: `decisionHash`, `explanationHash`, `evidenceHash` (SHA-256), reward and
+  reputation as unsigned integers ×10⁶, block timestamp.
+- Node: Anvil (Foundry v1.8.5), a local single-node EVM with instant mining, default chain
+  settings. Client: web3.py. Node.js/Hardhat are not installed on this machine.
+- Hashes: SHA-256 of canonical JSON (keys sorted, no whitespace, UTF-8, NaN refused).
+  `record_id` = SHA-256 of {run, seed, system, round, agent}.
+- Off-chain artifacts per (round, agent), built from the saved LLM main runs (no new model
+  output): *decision* = {vote (option index), confidence, collective decision};
+  *explanation* = {feature_1, direction_1, feature_2, direction_2} from the model's reply;
+  *evidence* = {feature_1, level_1, feature_2, level_2} from the model's reply; reward and
+  reputation of that round from the round log.
+- Verification: recompute the three hashes from the off-chain store and compare with the
+  chain; compare reward and reputation after scaling. Any mismatch → TAMPERED; no on-chain
+  record → MISSING; otherwise VALID.
+
+#### A5.2 Provenance experiment
+- Records: `pharma_llm_main` and `energy_llm_main`, seeds 0–4, all three systems, 200
+  rounds × 5 agents → 30,000 records, written in batches of 100.
+- Tampering (RNG seed 0): 1,000 distinct records drawn at random, 200 per target, each
+  modified in exactly one field of the off-chain store: decision (vote changed to another
+  option), explanation (direction_1 reversed), evidence (level_1 changed to another level),
+  reward (+10⁻⁶, one unit of on-chain resolution), reputation (+10⁻⁶).
+- Controls (drawn from the records not tampered): 1,000 untouched records; 1,000 records
+  re-serialised (keys shuffled, different whitespace, values unchanged), which must verify
+  as VALID.
+- Declared resolution limit, tested separately on 200 records: reward changed by 10⁻⁹, which
+  the scaled on-chain value cannot see; reported as a limit, not as a failure of detection.
+- Contract checks: 100 attempts to overwrite an existing record and 100 writes from another
+  account must all revert.
+- H5 outcomes (descriptive, no inferential test, A9): detection rate per target =
+  TAMPERED / attempts; false-positive rate = TAMPERED among controls.
+- Overhead: on a fresh deployment, the first 1,000 records of pharma seed 0 written with
+  batch sizes 1, 10 and 100: gas per record, transactions, wall-clock latency per record
+  (send to receipt), verification latency per record, on-chain storage per record, size of
+  the off-chain artifacts. Local-node figures exclude consensus and network delay and are
+  not production estimates; gas is a property of the EVM and transfers.
+
+#### A5.3 Limits declared now
+- Integrity, not truth: a false explanation recorded faithfully verifies as VALID.
+- One local node controlled by the experimenter: it shows tamper evidence for off-chain
+  artifacts against an on-chain record, not protection against someone who controls the
+  chain itself.
+- Reward and reputation are checked to six decimals only.
+
+#### A5.4 Precision of the procedures (added 2026-10-18, before the run; no design change)
+- Canonical JSON = Python `json.dumps(obj, sort_keys=True, separators=(",", ":"),
+  ensure_ascii=False, allow_nan=False)` encoded as UTF-8; floats in Python's shortest
+  round-trip form; types are significant (0.79 and "0.79" hash differently). The same
+  function (`blockchain/provenance.py::canonical`) is used when recording and when verifying.
+  Key order and whitespace do not change a hash; any change of a key, value or type does.
+- Reward and reputation: stored as `round(x × 10⁶)` (nearest unit; Python's round, ties to
+  even on the binary product) in a uint32. A change of less than half a unit (5 × 10⁻⁷) is
+  invisible; more than half a unit is detected. Verification compares both scaled values as
+  well as the three hashes.
+- What the tests establish: the contract checks show its access rules (append-only,
+  owner-only); the tampering results show detection of changes to the off-chain store when
+  the verifier compares it with the on-chain record. Neither covers an attacker who can
+  replace both the off-chain store and the trusted on-chain reference.
+- The 30,000 records measure detection and overhead; they are not independent replications
+  of the agent experiment, and the provenance results are reported apart from the seed-level
+  statistics.

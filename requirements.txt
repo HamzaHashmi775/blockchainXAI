@@ -10,5 +10,7 @@ PyYAML==6.0.3
 pytest==9.1.1
 openpyxl==3.1.5
 xlrd==2.0.2
-# Blockchain layer (Phase 8): a documented local hash-chain simulator built on
-# hashlib (stdlib) is planned; no extra dependency is pinned until that phase.
+# Blockchain layer (Phase 8, protocol amendment 5): contract on a local EVM.
+# External tools (not pip): Anvil from Foundry v1.8.5, solc 0.8.28 (installed by py-solc-x).
+web3==8.0.0
+py-solc-x==2.0.5

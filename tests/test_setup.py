@@ -11,7 +11,8 @@ from run_experiment import load_config, main
 from utils.seed import model_seed, seed_everything
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIGS = sorted((ROOT / "configs").glob("*.yaml"))
+# agent-experiment configs; provenance.yaml (Phase 8) records saved runs and has no agents
+CONFIGS = sorted(p for p in (ROOT / "configs").glob("*.yaml") if p.stem != "provenance")
 
 
 def test_seed_everything_is_deterministic():

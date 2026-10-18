@@ -87,12 +87,19 @@ Started 2026-10-05 (Phase 2). Updated as phases complete.
   sampling and exploration randomness, not variation across communities.
 - Small-n normality checks have low power; test choice is pre-declared (protocol §9).
 
-## Blockchain layer (Phase 8, not yet built)
+## Blockchain layer (Phase 8, protocol amendment 5)
 
 - Blockchain provides integrity and provenance, **not truth**: a faithfully recorded false
   explanation verifies as valid.
-- A local hash-chain simulator's latency/storage figures may differ from production networks
-  and include no consensus, networking or gas costs.
+- One local Anvil node run by the experimenter, with instant mining: latency figures exclude
+  consensus, block time and network delay and are not production estimates. Gas is a
+  property of the EVM and transfers to other EVM chains; its price does not.
+- The design detects changes to off-chain artifacts after recording. It does not protect
+  against an actor who controls the chain or who records false artifacts in the first place.
+- Reward and reputation are stored with six decimals; smaller changes are invisible by design.
+- Recorded artifacts are the saved LLM runs, recorded after the fact rather than during the
+  game; the hashes and verification are the same either way, but recording latency was not
+  part of the agents' decision loop.
 
 ## Literature
 

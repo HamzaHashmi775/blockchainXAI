@@ -798,3 +798,40 @@ was restarted and its cause was not established.
   property of the reward rule, not a behavioural change of the LLM agents. It does not make
   the collective decision measurably more robust to malicious shares (H4).
 - All four planned LLM sessions of amendment 4 are complete.
+
+## 2026-10-18 — Phase 8: blockchain provenance on a local EVM (protocol amendment 5)
+
+- Direction from the user (pasted advice, author not stated): minimal smart contract on a
+  local EVM instead of only a hash-chain simulator; hashes on-chain, artifacts off-chain.
+  Amendment 5 (v1.5) frozen before the run; A5.4 added before the run after further pasted
+  advice (canonicalisation, precision, scope of the security tests; no design change).
+- Tools: Anvil from Foundry v1.8.5 (zip SHA-256 21f86b56…aa45, anvil.exe 1693305e…d9f6),
+  solc 0.8.28, web3.py 8.0.0, py-solc-x 2.0.5; installed under `D:\xai-incentive-env\tools`
+  (drive C: has about 2 GB free). Node.js/Hardhat not installed. eth-tester could not be
+  installed (safe-pysha3 needs a compiler), so the chain tests use Anvil and are skipped
+  when it is absent.
+- Code: `blockchain/ProvenanceRegistry.sol`, `blockchain/provenance.py`,
+  `experiments/provenance.py`, `configs/provenance.yaml`, `tests/test_blockchain.py`
+  (13 tests). Full suite: 168 passed.
+- **Results** (`results/summaries/provenance.json`, `tables/provenance.md`; tampered
+  off-chain store in `results/raw/provenance/`, git-ignored): 30,000 records written in 300
+  transactions. Detection 200/200 for each of decision, explanation, evidence, reward and
+  reputation (1,000/1,000). False positives 0/1,000 untouched, 0/1,000 re-serialised, and
+  0/27,800 over all untouched records. Below-resolution reward change (10⁻⁹): 0/200
+  detected, as declared. Never-written record → MISSING. Overwrite attempts accepted 0/100;
+  writes from another account accepted 0/100.
+- **Overhead:** deployment 536,073 gas; gas per record 121,429 (batch 1), 98,575 (10),
+  95,912 (100); on-chain storage 128 bytes per record against 402 bytes of off-chain
+  artifact; verification 8–13 ms per record.
+- **Latency anomaly, reported as found:** the batch-10 overhead run averaged 4.24 s per
+  record (declared statistic) although its median transaction took 0.167 s — a few
+  transactions stalled for about 70 minutes in total; per-transaction times were not saved,
+  so the stall cannot be located. The whole experiment took 80 min instead of a few. A
+  diagnostic rerun of that step (not part of the frozen experiment, two repetitions on fresh
+  nodes): median 0.146 s, maximum 0.18 s, total 14.5 s per 1,000 records, no stall. Cause
+  unknown (a pause of the machine is possible). Write latencies are dominated by the
+  client's receipt polling (≈0.1 s per transaction) and say little about a real network;
+  gas is the transferable figure.
+- H5 (descriptive): supported for changes to off-chain artifacts at or above the declared
+  resolution, under the trust assumptions of A5.3/A5.4.
+- Next: prompt-only control — design to be put to the user and frozen before any GPU run.
