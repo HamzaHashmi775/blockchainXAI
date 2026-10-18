@@ -773,3 +773,28 @@ was restarted and its cause was not established.
 - pytest: 154 passed.
 - Next: all four amendment-4 sessions are done. Cross-domain summary of the LLM results
   (H6) and updates to the paper tables / threats to validity.
+
+## 2026-10-18 — LLM session 4: `pharma_llm_adversarial`, `energy_llm_adversarial` (amendment 4)
+
+- Committed Kaggle version: pharma 02:47–07:45 UTC (5.0 h), energy 07:45–12:01 UTC (4.3 h);
+  29/29 layers on GPU; all seeds 0–2 completed in both domains.
+- SHA-256 (first 16 hex): zip c32d6e69a2a1513f; pharma seed_0 de4a02f512f551a1, seed_1
+  a2925b054b1fbc92, seed_2 1951d97d1dcdba1c; energy seed_0 abc11579417e5814, seed_1
+  bd0668f98ea6e853, seed_2 088f01db56f53078.
+- Analysis: `statistics/analyze_llm.py --domain pharma|energy` (now including robustness) →
+  `results/summaries/{pharma,energy}_llm.json`, `tables/{pharma,energy}_llm.md`. Main-run
+  sections unchanged. All robustness results are descriptive (3 seeds, 100 rounds).
+- **H4 (malicious shares 0.2, 0.4; accuracy degradation proposed − baseline):** pharma
+  +0.010 [−0.164, +0.184], p 0.83; energy −0.013 [−0.064, +0.037], p 0.37. No evidence
+  that the proposed system is more robust; intervals are wide.
+- **Collusion (2 scripted colluders + 3 LLM agents):**
+  pharma — colluders' reward 0.468 → 0.090, payoff 0.601 → 0.345, final reputation 0.115;
+  manipulation success 0.353 → 0.177; accuracy with colluders 0.590 → 0.673.
+  energy — colluders' reward 0.383 → 0.071, payoff 0.527 → 0.342, final reputation 0.044;
+  manipulation success 0.127 → 0.080; accuracy with colluders 0.787 → 0.790.
+  The honest LLM agents' reward is higher under the proposed system in both domains.
+- Interpretation (mine): the mechanism penalises *scripted* manipulators strongly through
+  reward and reputation, because their falsified reports are caught by the audit. This is a
+  property of the reward rule, not a behavioural change of the LLM agents. It does not make
+  the collective decision measurably more robust to malicious shares (H4).
+- All four planned LLM sessions of amendment 4 are complete.
