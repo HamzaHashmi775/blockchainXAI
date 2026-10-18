@@ -739,3 +739,37 @@ was restarted and its cause was not established.
   strategic voting by a similar amount at both weights, but does not hold it at the ω = 0.5
   level.
 - Next: session 4 (robustness, both domains).
+
+## 2026-10-18 — LLM session 4: robustness (`pharma_llm_adversarial`, `energy_llm_adversarial`)
+
+- Zip `llm_results (4).zip` (SHA-256 first 16 hex c32d6e69a2a1513f), different from the
+  session 3 zip. Manifests match the frozen configs: seeds 0–2, malicious shares 0.2 and
+  0.4, 2 colluders, 100 rounds, ω = 0.5, raw prompt, `qwen2.5:7b` digest `845dbda0ea48`;
+  status `completed`. 0 unusable replies, 0 replaced reports in every seed, system and
+  condition. The notebook's printed output was not received, only the zip.
+- Run times from manifest start times and file times: pharma 02:47–07:45 UTC (about 5.0 h),
+  energy 07:45–12:02 UTC (about 4.3 h); about 9.3 h in total, above the 6 h estimate.
+- Files: `results/raw/{pharma,energy}_llm_adversarial/` (git-ignored), log excerpt
+  `results/raw/llm_logs/llm_adversarial_ollama_excerpt.txt`. SHA-256 (first 16 hex):
+  pharma seed_0 de4a02f512f551a1, seed_1 a2925b054b1fbc92, seed_2 1951d97d1dcdba1c;
+  energy seed_0 abc11579417e5814, seed_1 bd0668f98ea6e853, seed_2 088f01db56f53078.
+- Analysis: `statistics/analyze_llm.py --domain pharma|energy` re-run; the main-run sections
+  of `results/summaries/{pharma,energy}_llm.json` and `tables/{pharma,energy}_llm.md` are
+  unchanged; robustness sections added. All of it is descriptive (n = 3).
+- **H4 (LLM agents):** degradation from share 0 to 0.4, proposed − baseline: pharma +0.010
+  [−0.164, +0.184], p 0.83; energy −0.013 [−0.064, +0.037], p 0.37. No difference shown;
+  the intervals are wide. Not supported with this sample.
+- Explanation metrics of the LLM agents under attack look like the main run: fidelity and
+  evidence support about the same in both systems; M lower under the proposed system
+  (pharma 0.29 → 0.23, energy 0.28 → 0.24) at both shares.
+- **Collusion (2 scripted colluders + 3 LLM agents):** under the proposed system the
+  colluders' reward is much lower (pharma 0.47 → 0.09, energy 0.38 → 0.07; final
+  reputation 0.12 and 0.04), and manipulation success with collusion is lower (pharma
+  0.35 → 0.18, energy 0.13 → 0.08). Accuracy loss from collusion: pharma baseline −0.087,
+  proposed −0.027; energy −0.026 and −0.030. Caveat: the colluders are scripted, so their
+  low reward shows that the incentive penalises the scripted attack it was built to
+  measure. It does not show anything about LLM behaviour. The lower manipulation success
+  can come from reputation-weighted votes, not from changed LLM behaviour.
+- pytest: 154 passed.
+- Next: all four amendment-4 sessions are done. Cross-domain summary of the LLM results
+  (H6) and updates to the paper tables / threats to validity.

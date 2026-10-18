@@ -63,3 +63,45 @@ With n = 5 a Wilcoxon test cannot give p < 0.0625; rows tested that way are not 
 | manipulation_success (secondary) | -0.004 | [-0.044, +0.036] | -2.4% | paired t-test | 0.7955 | nan | cohen_dz = -0.12 | — |
 
 Verdicts (proposed vs baseline): {'fidelity': 'negligible', 'evidence_support': 'negligible', 'manipulation': 'improved'}
+
+## Robustness (n = 3 seeds, first 100 rounds; descriptive only)
+
+Scripted malicious agents among LLM agents. Share 0 = same rounds of the main run.
+
+| System | acc. at 0.0 | acc. at 0.2 | acc. at 0.4 |
+|---|---|---|---|
+| baseline | 0.677 ± 0.015 | 0.633 ± 0.078 | 0.643 ± 0.103 |
+| proposed | 0.700 ± 0.026 | 0.670 ± 0.061 | 0.633 ± 0.050 |
+
+H4: mean degradation, proposed − baseline = +0.010 (95% CI [-0.164, +0.184], paired t-test, p = 0.8277). Negative = proposed degrades less. Three seeds: no confirmatory claim.
+
+### LLM agents' own reports under attack
+
+| System | Share | Fidelity | Evidence | Manipulation |
+|---|---|---|---|---|
+| baseline | 0.2 | 0.449 ± 0.054 | 0.583 ± 0.011 | 0.294 ± 0.014 |
+| baseline | 0.4 | 0.457 ± 0.064 | 0.612 ± 0.010 | 0.290 ± 0.011 |
+| proposed | 0.2 | 0.439 ± 0.035 | 0.587 ± 0.007 | 0.229 ± 0.007 |
+| proposed | 0.4 | 0.451 ± 0.042 | 0.618 ± 0.015 | 0.229 ± 0.011 |
+
+### Collusion (2 scripted colluders + 3 LLM agents)
+
+| System | Quantity | Value |
+|---|---|---|
+| baseline | accuracy_without | 0.677 ± 0.015 |
+| baseline | accuracy_with | 0.590 ± 0.035 |
+| baseline | manipulation_success_with | 0.353 ± 0.025 |
+| baseline | colluders_reward | 0.468 ± 0.052 |
+| baseline | colluders_payoff | 0.601 ± 0.047 |
+| baseline | colluders_private_utility | 0.734 ± 0.047 |
+| baseline | llm_agents_reward | 0.526 ± 0.029 |
+| baseline | llm_agents_payoff | 0.526 ± 0.014 |
+| proposed | accuracy_without | 0.700 ± 0.026 |
+| proposed | accuracy_with | 0.673 ± 0.012 |
+| proposed | manipulation_success_with | 0.177 ± 0.023 |
+| proposed | colluders_reward | 0.090 ± 0.020 |
+| proposed | colluders_payoff | 0.345 ± 0.020 |
+| proposed | colluders_private_utility | 0.599 ± 0.037 |
+| proposed | llm_agents_reward | 0.696 ± 0.010 |
+| proposed | llm_agents_payoff | 0.667 ± 0.014 |
+| proposed | colluders_final_reputation | 0.115 ± 0.044 |
