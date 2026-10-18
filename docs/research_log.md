@@ -712,3 +712,30 @@ was restarted and its cause was not established.
   smaller in energy (−12.6 %) than in pharma (−22 %), where baseline confidence inflation was
   higher (0.32 vs 0.18).
 - Next: session 3 (`pharma_llm_main_w075`), then session 4 (robustness).
+
+## 2026-10-18 — LLM session 3: `pharma_llm_main_w075` (amendment 4, ω = 0.75) on test scenarios
+
+- First zip received (`llm_results (2).zip`) was a byte-identical copy of the session 2
+  output (same SHA-256); rejected, nothing unpacked. Correct zip: `llm_results (3).zip`.
+- Committed Kaggle version, started 2026-10-17 16:45 UTC, finished 2026-10-18 01:56 UTC:
+  **9.2 h** for 15,000 calls; 29/29 layers on GPU; 0 unusable replies, 0 replaced reports.
+- SHA-256 (first 16 hex): zip eb120310ef8bd45d; seed_0 d8606077a4c26cf8; seed_1
+  ef7b36cf653a3066; seed_2 fc8d67966bbf8b1e; seed_3 fa5b5dfbb3a12a3d; seed_4 ebf33f31c0afdfd2.
+- Analysis: `statistics/analyze_llm.py --domain pharma --run pharma_llm_main_w075` →
+  `results/summaries/pharma_llm_w075.json`, `tables/pharma_llm_w075.md`.
+- **Confirmatory (own Holm family):** H1 fidelity 0.456 → 0.450, Holm 0.31, negligible.
+  H2 evidence support 0.591 → 0.586, Holm 0.31, negligible. H3 manipulation 0.306 → 0.238,
+  Δ −0.068 [−0.072, −0.063], −22.2 %, Holm p < 0.001, improved. ΔM components: confidence
+  inflation −0.309, strategic voting −0.026, collusion −0.015, false attribution +0.007,
+  unsupported evidence +0.005 (about 91 % from confidence).
+- Ablation vs baseline: evidence support worse again (−0.017, −2.9 %, Holm p 0.028), as at
+  ω = 0.5.
+- **Response to ω (descriptive, paired by seed, pre-declared):** under the baseline, votes
+  against the tool rose from 0.164 to 0.186 (higher in all 5 seeds, +0.013 to +0.035) and M
+  from 0.294 to 0.306 — the agents do react to higher private gain. The proposed system
+  rose by the same amount (0.138 → 0.160). Difference between the two conditions' effects
+  per seed: M −0.002, −0.009, +0.001, −0.006, 0.000; votes against tool +0.001, −0.014,
+  −0.002, +0.003, +0.012. So the incentive's effect does not grow under pressure: it lowers
+  strategic voting by a similar amount at both weights, but does not hold it at the ω = 0.5
+  level.
+- Next: session 4 (robustness, both domains).
