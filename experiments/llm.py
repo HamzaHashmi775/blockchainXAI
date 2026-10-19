@@ -10,7 +10,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-from agents.llm_agent import parse_report, report_schema, round_prompt, system_prompt
+from agents.llm_agent import (parse_report, report_schema, round_prompt, shows_audit,
+                              system_prompt)
 from evaluation.metrics import (collective_decision, contributions, evidence_support, fidelity,
                                 observed_level)
 from game.strategies import FALSIFIED, choose_report, collusive_vote
@@ -65,7 +66,7 @@ def simulate_llm(prep, system, seed, client, domain, n_rounds=None, workers=1,
     """
     game = prep["game"]
     weights = validate_weights(system["incentive_weights"])
-    audited = bool(system["components"].get("explanation_aware_incentive"))
+    audited = shows_audit(system)        # audit checks shown in the round history
     use_reputation = bool(system["components"].get("reputation"))
     rep_cfg = system.get("reputation", {})
     rho, omega, k = rep_cfg.get("rho", 0.8), game["omega"], game["top_k"]

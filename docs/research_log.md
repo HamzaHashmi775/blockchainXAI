@@ -835,3 +835,33 @@ was restarted and its cause was not established.
 - H5 (descriptive): supported for changes to off-chain artifacts at or above the declared
   resolution, under the trust assumptions of A5.3/A5.4.
 - Next: prompt-only control — design to be put to the user and frozen before any GPU run.
+
+## 2026-10-19 — Phase 8 table completed; amendment 6 (prompt-only control) frozen
+
+- Pasted advice (author not stated): save the Phase 8 results as a reproducible table, then
+  freeze the three-condition prompt-only control (baseline wording + baseline payoff;
+  proposed wording + baseline payoff; proposed wording + proposed payoff), audit history
+  identical.
+- **Table 6** (`tables/provenance.md`, `experiments/provenance.py --table-only`): set-up
+  (contract source and bytecode SHA-256, solc, optimiser, node, chain id 31337, hard fork,
+  block gas limit, base fee), procedure, sample counts, detection, gas, latency (mean and
+  median) and storage. The contract fingerprint and node settings were not recorded by the
+  run; they were captured afterwards from the same binaries and the table says so. Future
+  runs record them and the per-transaction times.
+- Latency stall: an 8-fold repeat of the blockchain tests took 2.5 h for one repeat while
+  the date changed, which points to the machine sleeping; the 70-minute stall of the
+  provenance run is probably the same (not proven).
+- Fixed a race in `Ledger.try_write`: it did not wait for the receipt, so a check right
+  after an accepted write could see MISSING (the test failed intermittently). The
+  experiment's counts are unaffected: all its guarded writes were refused before sending.
+- **Amendment 6 (v1.6) frozen before the run**: conditions A `baseline_shown`, B
+  `prompt_only`, C `proposed`, audit checks shown in all three; A's baseline sentence
+  changed to stay true ("checked ... but do not affect your reward"); B states the full
+  proposed rules (incl. reputation) that are not applied. Primary outcome mean stated
+  confidence, contrasts B−A, C−B, C−A with Holm; reading rule fixed. Pharma, ω 0.5,
+  seeds 0–4, 200 rounds, one Kaggle session.
+- Code: `agents/llm_agent.py` (`stated_rules`, `show_audit`; all amendment-4 system prompts
+  byte-identical, checked by hash), `experiments/llm.py`,
+  `configs/pharma_llm_prompt_control.yaml`, `statistics/analyze_prompt_control.py`, tests
+  (prompt identity, stub run: B paid exactly like A, checks shown in all three),
+  `kaggle/llm_run_kaggle.py/.ipynb` (session 5, bundle check).

@@ -34,7 +34,24 @@
   "environment": {
     "python": "3.12.10",
     "solc": "0.8.28",
-    "node": "anvil (Foundry v1.8.5)"
+    "node": "anvil (Foundry v1.8.5)",
+    "chain": {
+      "client": "anvil/v1.8.5",
+      "chain_id": 31337,
+      "hardfork": "Bpo1",
+      "block_gas_limit": 30000000,
+      "base_fee_wei": 1000000000,
+      "mining": "instant (a block per transaction)",
+      "accounts": "Anvil defaults"
+    },
+    "contract": {
+      "source": "ProvenanceRegistry.sol",
+      "solc": "0.8.28",
+      "optimizer_runs": 200,
+      "source_sha256": "a61e91c69de598880eeebb482dc0cc969a01962b8633a567cbb31cd8f286cc67",
+      "creation_bytecode_sha256": "a926f4f86b1a146a0d17f10a88dfc3476374cde1382187767db2af6255a50a33"
+    },
+    "captured_after_run": "contract fingerprint and node settings captured on 2026-10-18 after the run, from the same contract source, solc and anvil binaries (the run itself did not record them)"
   },
   "records": 30000,
   "records_on_chain": 30000,
@@ -135,5 +152,8 @@
       "write_seconds_per_transaction_median": 0.2112976999997045,
       "verify_seconds_per_record": 0.00845746059999874
     }
-  }
+  },
+  "notes": [
+    "Batch size 10: the mean write latency (declared statistic, 4237 ms per record) includes a one-off stall of about 70 minutes spread over a few transactions; the median transaction took 167 ms. Per-transaction times were not saved in this run, so the stall cannot be located; cause unknown. A diagnostic rerun of this step (not part of the frozen experiment; two repetitions on fresh nodes) took 14.5 s per 1,000 records, median 146 ms and maximum 180 ms per transaction."
+  ]
 }

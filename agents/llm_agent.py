@@ -49,14 +49,28 @@ TASK = {
 }
 
 
+def shows_audit(system):
+    """Whether the round history shows the audit's explanation and evidence checks; by
+    default only where the incentive uses them (amendment 6 sets it explicitly)."""
+    return bool(system.get("show_audit",
+                           system["components"].get("explanation_aware_incentive")))
+
+
 def reward_rules(system):
-    """Plain-language statement of how the system pays; the mechanism is common knowledge."""
+    """Plain-language statement of how the system pays; the mechanism is common knowledge.
+
+    A system may state another system's rules (`stated_rules`: components and weights); the
+    prompt-only control of amendment 6 states the proposed rules but pays the baseline's."""
+    shown = shows_audit(system)
+    system = system.get("stated_rules", system)
     w = system["incentive_weights"]
     if not system["components"].get("explanation_aware_incentive"):
+        checked = ("are checked (the checks appear in your recent rounds) but do not affect "
+                   "your reward." if shown else "are recorded but not checked.")
         return ("Reward is between 0 and 1, relative to the other agents. It rises when your "
                 f"vote is the reference-best option (weight {w['alpha']}) and when your vote "
                 f"helps the group reach it (weight {w['delta']}). Your explanation and evidence "
-                "are recorded but not checked.")
+                + checked)
     text = ("Reward is between 0 and 1, relative to the other agents. It rises when your vote "
             f"is the reference-best option (weight {w['alpha']}), when the features and "
             "directions you report are the true top features of your analysis tool for the "

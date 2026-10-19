@@ -129,6 +129,24 @@ def compile_contract() -> dict:
     return {"abi": compiled["abi"], "bytecode": compiled["bin"], "solc": SOLC_VERSION}
 
 
+def contract_fingerprint(compiled: dict) -> dict:
+    """Identifies exactly which contract was deployed."""
+    return {"source": CONTRACT.name, "solc": compiled["solc"], "optimizer_runs": 200,
+            "source_sha256": hashlib.sha256(CONTRACT.read_bytes().replace(b"\r\n", b"\n"))
+            .hexdigest(),
+            "creation_bytecode_sha256": hashlib.sha256(
+                bytes.fromhex(compiled["bytecode"])).hexdigest()}
+
+
+def describe_chain(w3) -> dict:
+    """Configuration of the local node, as reported by the node itself."""
+    info = w3.provider.make_request("anvil_nodeInfo", [])["result"]
+    return {"client": w3.client_version, "chain_id": w3.eth.chain_id,
+            "hardfork": info["hardFork"], "block_gas_limit": w3.eth.get_block("latest")[
+                "gasLimit"], "base_fee_wei": int(info["environment"]["baseFee"], 16),
+            "mining": "instant (a block per transaction)", "accounts": "Anvil defaults"}
+
+
 def _free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
@@ -214,9 +232,9 @@ class Ledger:
         """Attempt a single write; False when the contract refuses it (revert)."""
         from web3.exceptions import ContractLogicError
         try:
-            self.contract.functions.record(bytes.fromhex(rid_hex),
-                                           *onchain_values(artifact)).transact(
+            tx = self.contract.functions.record(bytes.fromhex(rid_hex),
+                                                *onchain_values(artifact)).transact(
                 {"from": sender or self.owner})
         except ContractLogicError:
             return False
-        return True
+        return self.w3.eth.wait_for_transaction_receipt(tx)["status"] == 1

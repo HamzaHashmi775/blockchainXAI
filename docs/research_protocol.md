@@ -773,3 +773,69 @@ tamper detection and overhead. This replaces the plan of Phase 0 (hash-chain sim
 - The 30,000 records measure detection and overhead; they are not independent replications
   of the agent experiment, and the provenance results are reported apart from the seed-level
   statistics.
+
+### Amendment 6 — 2026-10-18 (protocol v1.6): prompt-only control (added, post hoc)
+
+**Status: FROZEN 2026-10-18, before the experiment was run.** An added experiment, designed
+after all LLM results of amendment 4 were known; it is reported separately from the
+confirmatory results and its conclusions are qualified accordingly. Direction from the user
+(pasted advice, author not stated): three conditions, the audit history identical in all
+of them, one planned Kaggle session.
+
+**Question.** In amendment 4 the proposed system lowered stated confidence. Its prompt
+differs from the baseline's in (i) the statement of the reward rules and (ii) the audit
+checks shown in the round history, and its payoff differs too. Did confidence fall because
+of what the agents were told, what they were paid, or both?
+
+#### A6.1 Conditions (`configs/pharma_llm_prompt_control.yaml`)
+| | Reward rules stated | Payoff applied | Audit checks in history |
+|---|---|---|---|
+| A `baseline_shown` | baseline | baseline | shown |
+| B `prompt_only` | proposed (incl. reputation) | baseline | shown |
+| C `proposed` | proposed | proposed (incentive + reputation) | shown |
+- Everything else is identical to `pharma_llm_main` (model and digest, raw prompt, scenarios,
+  seeds 0–4, 200 rounds, ω = 0.5, temperature, output schema, history format); a test checks
+  this. C is configured exactly as the proposed system of `pharma_llm_main`.
+- B's system prompt is byte-identical to C's; A's differs from B's only in the reward-rule
+  statement (tested). With a stub model that ignores the wording, A and B pay identical
+  rewards and C does not (tested).
+- Showing the checks in A makes the baseline sentence "Your explanation and evidence are
+  recorded but not checked" false, so A states instead: "... are checked (the checks appear
+  in your recent rounds) but do not affect your reward." A is therefore a new baseline, not
+  the baseline of amendment 4.
+- B tells the agents rules that are not applied (explanation-aware reward, reputation
+  weighting). Its history shows the rewards actually paid (baseline), which an agent could
+  notice do not follow the stated rules. This is the point of the control and is reported.
+- "Wording" means the whole reward-rule statement, including that an auditor sees the
+  tool's output and what counts as manipulation; A and B both know the reports are checked.
+
+#### A6.2 Run
+Pharma only (largest confidence effect in amendment 4), one Kaggle session, 15,000 calls
+(about 9 GPU hours), notebook `kaggle/llm_run_kaggle.ipynb` with
+`RUNS = ["pharma_llm_prompt_control"]`.
+
+#### A6.3 Analysis (`statistics/analyze_prompt_control.py`)
+- Unit = seed, n = 5, paired; tests, intervals and the decision rule as in A3.3/A4.3
+  (Holm p < 0.05 and |relative change| ≥ 5 %); n = 5 limits as before.
+- Primary outcome: mean stated confidence. Contrasts: B − A (wording), C − B (payoff given
+  the proposed wording), C − A (both). Holm over the three contrasts.
+- Reading rule, fixed now: lower confidence in B − A and in C − B → "both"; only B − A →
+  "wording"; only C − B → "payoff"; neither → "neither contrast meets the rule".
+  Descriptive: mean(B − A) / mean(C − A), the share of the combined effect already present
+  with the wording alone.
+- Secondary, unadjusted: confidence inflation, votes against the tool, strategic-voting
+  component, manipulation score, fidelity, evidence support, collective accuracy.
+- Descriptive checks against `pharma_llm_main` (same seeds and rounds): C vs the original
+  proposed system (reproducibility at temperature 0 on a GPU, not guaranteed bit-exact);
+  A vs the original baseline (effect of showing the checks together with A's changed
+  sentence).
+- No expectation is declared; the amendment-4 results are known and suggest a confidence
+  effect in C − A.
+
+#### A6.4 Limits
+- Post hoc and single-domain; one model; n = 5.
+- The payoff reaches the agents only through the rewards shown in their history (three
+  rounds), so C − B measures what the agents can learn from feedback within that window.
+- Code change: `agents/llm_agent.py` gains `stated_rules` and `show_audit` (defaults keep
+  every amendment-4 prompt byte-identical; checked by hashing all system prompts of the
+  existing configs before and after the change).

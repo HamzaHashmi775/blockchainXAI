@@ -163,3 +163,52 @@ def test_analysis_runs_on_saved_results(results, monkeypatch):
     assert set(adv["collusion"]) == {"baseline", "proposed"}
     text = module.to_markdown("pharma", res)
     assert "LLM agents" in text and "Collusion" in text and "no confirmatory claim" in text
+
+
+class SeesHistory(ReadNumbers):
+    """ReadNumbers that also notes whether the round history shows the audit checks."""
+
+    def __init__(self, seen):
+        self.seen = seen
+
+    def chat(self, messages, schema, seed):
+        system, user = messages[0]["content"], messages[1]["content"]
+        if "Your recent rounds" in user:
+            self.seen.append(("explanation check" in user, system))
+        return super().chat(messages, schema, seed)
+
+
+def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path):
+    """Amendment 6 with a stub model whose reports ignore the wording: then B must be paid
+    exactly like A, C differently, and every condition's history shows the audit checks."""
+    seen = []
+    register_llm_domain("pharma", client_factory=lambda llm: (
+        SeesHistory(seen), {"model": llm["model"], "digest": llm["digest"]}))
+    try:
+        cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control.yaml").read_text(
+            encoding="utf-8"))
+        cfg["seeds"] = [0, 1, 2]
+        cfg["model"] = {"n_estimators": 10, "max_depth": 3}
+        cfg["game"] = {**cfg["game"], "n_rounds": 6, "eval_last": 6}
+        cfg["llm"]["workers"] = 1
+        path = tmp_path / "control.yaml"
+        path.write_text(yaml.safe_dump(cfg))
+        assert main(["--config", str(path), "--output-dir", str(tmp_path)]) == 0
+    finally:
+        register_llm_domain("pharma")
+    assert seen and all(shown for shown, _ in seen)
+    assert len({system for _, system in seen}) == 2 * 5      # A's wording, and B = C's wording
+    runs = {s: json.loads((tmp_path / "pharma_llm_prompt_control" / f"seed_{s}.json")
+                          .read_text()) for s in (0, 1, 2)}
+    for run in runs.values():
+        a, b, c = (run["systems"][k]["rounds"] for k in
+                   ("baseline_shown", "prompt_only", "proposed"))
+        assert a["votes"] == b["votes"] == c["votes"] and a["R"] == b["R"] and a["R"] != c["R"]
+    spec = importlib.util.spec_from_file_location(
+        "analyze_prompt_control", ROOT / "statistics" / "analyze_prompt_control.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    res = module.analyse(runs)
+    assert set(res["contrasts"]) == {"B_vs_A", "C_vs_B", "C_vs_A"}
+    assert res["contrasts"]["B_vs_A"]["mean_confidence"]["mean_difference"] == 0.0
+    assert "Reading" in module.to_markdown(res)
