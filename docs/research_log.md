@@ -865,3 +865,31 @@ was restarted and its cause was not established.
   `configs/pharma_llm_prompt_control.yaml`, `statistics/analyze_prompt_control.py`, tests
   (prompt identity, stub run: B paid exactly like A, checks shown in all three),
   `kaggle/llm_run_kaggle.py/.ipynb` (session 5, bundle check).
+
+## 2026-10-20 — Session 5: prompt-only control (amendment 6) results
+
+- Committed Kaggle version, 2026-10-19 14:10–22:26 UTC (**8.3 h**), 15,000 calls, 0 unusable
+  replies, 29/29 layers on GPU. SHA-256 (first 16 hex): zip dee3b802dce4ce13; seed_0
+  095447fa11bbee3b; seed_1 bc0133c754b306b8; seed_2 6cc10a1edfb56470; seed_3
+  5ad33296d1e49f72; seed_4 efa4e5c141ced42a. Raw files in
+  `results/raw/pharma_llm_prompt_control/` (git-ignored).
+- Analysis: `statistics/analyze_prompt_control.py` →
+  `results/summaries/pharma_llm_prompt_control.json`, `tables/pharma_llm_prompt_control.md`.
+- **Primary (mean stated confidence; Holm over three contrasts):** A 0.831, B 0.534, C 0.534.
+  B − A −0.297 [−0.305, −0.288], Holm p < 0.001, lower. C − B −0.001 [−0.002, +0.000],
+  Holm p 0.15, no detectable effect. C − A −0.298, Holm p < 0.001, lower.
+- **Pre-declared reading: wording.** The stated reward rules lower confidence; the payoff
+  adds no detectable effect. Share of the combined effect already present with the wording
+  alone: 1.00.
+- Secondary: the same holds for confidence inflation (−0.300 vs +0.000), votes against the
+  tool (−0.036 vs +0.001) and the manipulation score (−0.073 vs +0.001). Fidelity +0.013
+  with the wording (Wilcoxon p 0.0625, the n = 5 minimum; +3 %), evidence support unchanged,
+  collective accuracy +0.013 (n.s.).
+- Checks against the main run: C reproduces the original proposed system (confidence
+  Δ −0.000); A matches the original baseline (confidence Δ +0.001), so showing the audit
+  checks with A's changed sentence did not change confidence. Fidelity differs slightly in
+  both checks (+0.006, −0.013; p 0.02, 0.01): GPU runs at temperature 0 are not bit-exact.
+- **Consequence for amendment 4 (my interpretation):** the reductions of confidence, of
+  strategic voting and therefore of the manipulation score attributed to the proposed
+  mechanism come from telling the agents the rules, not from the payoff they received. For
+  this 7B model the incentive acts as an instruction. Post hoc, single domain, n = 5.
