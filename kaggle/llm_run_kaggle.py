@@ -1,5 +1,5 @@
 # %% [markdown]
-# # LLM-agent experiments on Kaggle (Ollama) - protocol amendments 4 and 6
+# # LLM-agent experiments on Kaggle (Ollama) - protocol amendments 4, 6 and 7
 #
 # These are the real runs on TEST scenarios. Do not change anything except `RUNS` below.
 #
@@ -12,7 +12,9 @@
 #    - session 3: `["pharma_llm_main_w075"]`   (about 9.2 hours)
 #    - session 4: `["pharma_llm_adversarial", "energy_llm_adversarial"]`  (about 9.5 hours)
 #    - session 5 (amendment 6, prompt-only control): `["pharma_llm_prompt_control"]`
-#      (about 9 hours)
+#      (about 8.3 hours)
+#    - session 6 (amendment 7, condition D): `["pharma_llm_prompt_control_d"]`
+#      (about 3 hours)
 # 4. Click **Save Version -> Save & Run All (Commit)**. Do NOT use Run All in the editor:
 #    an open editor session stops when it is idle. A committed version keeps running with
 #    the browser closed.
@@ -20,7 +22,7 @@
 #    `llm_results.zip` and give it to Claude Code.
 
 # %%
-RUNS = ["pharma_llm_prompt_control"]
+RUNS = ["pharma_llm_prompt_control_d"]
 MODEL = "qwen2.5:7b"        # frozen in the protocol; a different model is refused
 PARALLEL = 5
 
@@ -45,7 +47,7 @@ else:
     with zipfile.ZipFile(bundles[0]) as archive:
         archive.extractall(WORK)
 os.chdir(WORK)
-assert os.path.exists("configs/pharma_llm_prompt_control.yaml"), "This dataset is an old bundle."
+assert os.path.exists("configs/pharma_llm_prompt_control_d.yaml"), "This dataset is an old bundle."
 for run in RUNS:
     assert os.path.exists(f"configs/{run}.yaml"), f"unknown run {run!r}"
 

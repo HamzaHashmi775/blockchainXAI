@@ -893,3 +893,29 @@ was restarted and its cause was not established.
   strategic voting and therefore of the manipulation score attributed to the proposed
   mechanism come from telling the agents the rules, not from the payoff they received. For
   this 7B model the incentive acts as an instruction. Post hoc, single domain, n = 5.
+
+## 2026-10-22 — Amendment 7 (condition D of the 2×2) frozen; calibration of the LLM runs
+
+- Pasted advice (author not stated): run baseline wording + proposed payoff (D) before the
+  cross-domain and sensitivity analyses; estimate main effects and interaction from all four
+  cells; do not equate lower confidence with better calibration without a correctness
+  target; rebuild the paper around five claims (channels, capability limits, verification
+  and sanction, provenance, bounded conclusions); title "Explanation-Aware Incentives for
+  Learning and LLM Agents: Behavioural Effects, Capability Limits, and Blockchain
+  Provenance".
+- Amendment 7 (v1.7) frozen before D was run: `configs/pharma_llm_prompt_control_d.yaml`
+  (D's system prompt byte-identical to A's; D paid like C; both tested with a stub model),
+  `statistics/analyze_factorial.py` (factorial effects with Holm over three, D − A with a
+  pre-declared bound, calibration), notebook set to session 6.
+- **Calibration of existing runs** (declared descriptive in A7.2, computed after freezing;
+  correct = the agent's own vote is reference-best):
+  pharma main: Brier 0.334 → 0.228 (Δ −0.107 [−0.112, −0.101]); overconfidence (mean
+  confidence − share correct) 0.303 → 0.004; share correct 0.527 → 0.530.
+  energy main: Brier 0.218 → 0.181 (Δ −0.036); overconfidence 0.153 → 0.005.
+  pharma ω 0.75: Brier 0.343 → 0.227 (Δ −0.116); overconfidence 0.316 → 0.007.
+  Amendment 6 cells: A Brier 0.339 / overconfidence 0.304; B 0.226 / 0.011; C 0.227 / 0.008.
+- Reading (mine): against this correctness target, the lower confidence under the proposed
+  wording is better calibrated in the large (overconfidence near 0), not merely lower.
+  Discrimination is weak: with about 53 % of votes correct in pharma, a constant forecast of
+  0.53 would score Brier ≈ 0.249, so 0.228 is only slightly better than knowing the base
+  rate. Accuracy of the votes themselves did not change.

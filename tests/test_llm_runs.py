@@ -212,3 +212,47 @@ def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path)
     assert set(res["contrasts"]) == {"B_vs_A", "C_vs_B", "C_vs_A"}
     assert res["contrasts"]["B_vs_A"]["mean_confidence"]["mean_difference"] == 0.0
     assert "Reading" in module.to_markdown(res)
+
+
+def test_condition_d_is_prompted_like_a_and_paid_like_c(tmp_path):
+    """Amendment 7 with a stub model whose reports ignore the wording: D's system prompt is
+    A's, D's rewards are C's; the factorial analysis runs on the four cells."""
+    seen = []
+    register_llm_domain("pharma", client_factory=lambda llm: (
+        SeesHistory(seen), {"model": llm["model"], "digest": llm["digest"]}))
+    control = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control.yaml").read_text(
+        encoding="utf-8"))
+    d_cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control_d.yaml").read_text(
+        encoding="utf-8"))
+    assert {k: v for k, v in d_cfg.items() if k not in ("name", "systems")} == {
+        k: v for k, v in control.items() if k not in ("name", "systems")}
+    try:
+        for cfg in (control, d_cfg):
+            cfg["seeds"] = [0, 1, 2]
+            cfg["model"] = {"n_estimators": 10, "max_depth": 3}
+            cfg["game"] = {**cfg["game"], "n_rounds": 6, "eval_last": 6}
+            cfg["llm"]["workers"] = 1
+            path = tmp_path / f"{cfg['name']}.yaml"
+            path.write_text(yaml.safe_dump(cfg))
+            assert main(["--config", str(path), "--output-dir", str(tmp_path)]) == 0
+    finally:
+        register_llm_domain("pharma")
+    runs = {name: {s: json.loads((tmp_path / name / f"seed_{s}.json").read_text())
+                   for s in (0, 1, 2)}
+            for name in ("pharma_llm_prompt_control", "pharma_llm_prompt_control_d")}
+    for s in (0, 1, 2):
+        c = runs["pharma_llm_prompt_control"][s]["systems"]["proposed"]["rounds"]
+        a = runs["pharma_llm_prompt_control"][s]["systems"]["baseline_shown"]["rounds"]
+        d = runs["pharma_llm_prompt_control_d"][s]["systems"]["payoff_only"]["rounds"]
+        assert d["votes"] == c["votes"] and d["R"] == c["R"] and d["R"] != a["R"]
+    # two distinct wordings per agent across the four cells: A = D, B = C
+    assert len({system for _, system in seen}) == 2 * 5
+    spec = importlib.util.spec_from_file_location(
+        "analyze_factorial", ROOT / "statistics" / "analyze_factorial.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    res = module.analyse(runs)
+    assert set(res["effects"]["mean_confidence"]) == {
+        "wording (main effect)", "payoff (main effect)", "interaction"}
+    assert 0 <= res["descriptive"]["brier"]["A"]["mean"] <= 1
+    assert "Factorial effects" in module.to_markdown(res)

@@ -839,3 +839,55 @@ Pharma only (largest confidence effect in amendment 4), one Kaggle session, 15,0
 - Code change: `agents/llm_agent.py` gains `stated_rules` and `show_audit` (defaults keep
   every amendment-4 prompt byte-identical; checked by hashing all system prompts of the
   existing configs before and after the change).
+
+### Amendment 7 — 2026-10-22 (protocol v1.7): condition D completes the 2×2 design (added, post hoc)
+
+**Status: FROZEN 2026-10-22, before condition D was run.** Added after the results of
+amendment 6 were known; reported with amendment 6, separately from the confirmatory
+results. Direction from the user (pasted advice, author not stated): run baseline wording +
+proposed payoff before the cross-domain and sensitivity analyses; estimate main effects and
+interaction from all four cells; do not read a non-significant result as proof of no
+effect; do not call lower confidence "better calibration" without a correctness target.
+
+#### A7.1 Condition D (`configs/pharma_llm_prompt_control_d.yaml`)
+| Cell | Reward rules stated | Payoff applied | Source |
+|---|---|---|---|
+| A | baseline | baseline | amendment 6 run |
+| B | proposed | baseline | amendment 6 run |
+| C | proposed | proposed | amendment 6 run |
+| D `payoff_only` | baseline (A's text) | proposed (incentive + reputation) | new run |
+- Everything except name and systems is identical to amendment 6 (tested). D's system prompt
+  is byte-identical to A's; with a stub model D is paid exactly as C (tested). Audit checks
+  are shown in D's history as in all cells.
+- D's prompt says the checks "do not affect your reward", which is false under D's payoff;
+  this mirrors B and is the point of the cell. D's history shows the rewards actually paid.
+- One Kaggle session, 5,000 calls (about 3 GPU hours), `RUNS = ["pharma_llm_prompt_control_d"]`.
+- D is run in a later session than A–C. Evidence on cross-session reproducibility so far:
+  mean confidence reproduced within 0.001 (amendment 6 checks); fidelity differed by about
+  0.01. This is a limit of the D comparisons.
+
+#### A7.2 Analysis (`statistics/analyze_factorial.py`)
+- Unit = seed, n = 5, paired across cells; tests and intervals as A3.3.
+- **Confirmatory family of this amendment** (primary outcome mean stated confidence, Holm
+  over three): wording main effect ((B + C) − (A + D))/2; payoff main effect
+  ((C + D) − (A + B))/2; interaction (C − D) − (B − A). Main effects use the decision rule
+  (Holm p < 0.05, |relative change| ≥ 5 %); the interaction is "detected" if Holm p < 0.05.
+- Key simple contrast D − A (payoff under the baseline wording), reported with its 95 % CI.
+  Pre-declared bound: if the whole CI lies within ±10 % of the size of the wording effect
+  B − A, D − A is described as "at most a small fraction of the wording effect"; otherwise
+  the uncertainty is reported as it is. A non-significant D − A is never described as
+  "no effect".
+- Secondary (unadjusted): the four simple contrasts and three factorial effects for
+  confidence inflation, votes against the tool, manipulation score, fidelity, evidence
+  support, collective accuracy.
+- **Calibration** (secondary, new): per agent and round, correct = the agent's own vote is
+  the reference-best option. Per seed and cell: Brier score mean((confidence − correct)²),
+  overconfidence = mean confidence − share correct, share of votes correct. Also computed,
+  descriptively, for the amendment-4 main runs (pharma, energy, pharma ω 0.75; baseline vs
+  proposed). Only these quantities may be called calibration; "lower stated confidence" is
+  reported as such.
+
+#### A7.3 Limits
+Post hoc; pharma only; one model; n = 5; D from a separate session. A null payoff effect in
+this design means the agents did not adapt to rewards seen through a three-round history
+within 200 rounds; it does not show that LLM agents cannot learn from incentives.
