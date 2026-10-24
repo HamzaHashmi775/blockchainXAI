@@ -1,0 +1,1689 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "n_seeds": 5,
+  "descriptive": {
+    "mean_confidence": {
+      "A": {
+        "n": 5,
+        "mean": 0.8312100000000001,
+        "sd": 0.0019980865847104563,
+        "ci_low": 0.8287290478224713,
+        "ci_high": 0.833690952177529
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.534446,
+        "sd": 0.006543281286938477,
+        "ci_low": 0.526321443195888,
+        "ci_high": 0.5425705568041119
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.53368,
+        "sd": 0.005982127547954881,
+        "ci_low": 0.5262522075910415,
+        "ci_high": 0.5411077924089586
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.834236,
+        "sd": 0.0022288292891112288,
+        "ci_low": 0.8314685429135684,
+        "ci_high": 0.8370034570864315
+      }
+    },
+    "confidence_inflation": {
+      "A": {
+        "n": 5,
+        "mean": 0.32267358056122575,
+        "sd": 0.007139082645582515,
+        "ci_low": 0.31380923866000465,
+        "ci_high": 0.33153792246244684
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.02229301214350412,
+        "sd": 0.0007487247832384021,
+        "ci_low": 0.021363347535594077,
+        "ci_high": 0.02322267675141416
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.022378644706866672,
+        "sd": 0.0022064457750650703,
+        "ci_low": 0.019638980423979574,
+        "ci_high": 0.02511830898975377
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.32563571607435315,
+        "sd": 0.0070411785695203505,
+        "ci_low": 0.31689293813965586,
+        "ci_high": 0.33437849400905045
+      }
+    },
+    "votes_against_tool": {
+      "A": {
+        "n": 5,
+        "mean": 0.1694,
+        "sd": 0.0103101891350256,
+        "ci_low": 0.1565982093363671,
+        "ci_high": 0.1822017906636329
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.1332,
+        "sd": 0.01061602562167217,
+        "ci_low": 0.12001846318156095,
+        "ci_high": 0.14638153681843907
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.134,
+        "sd": 0.006519202405202654,
+        "ci_low": 0.12590534107645648,
+        "ci_high": 0.14209465892354353
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.16840000000000002,
+        "sd": 0.010064790112068902,
+        "ci_low": 0.15590291246836685,
+        "ci_high": 0.1808970875316332
+      }
+    },
+    "manipulation": {
+      "A": {
+        "n": 5,
+        "mean": 0.2986479104604214,
+        "sd": 0.005414211231336981,
+        "ci_low": 0.2919252792957998,
+        "ci_high": 0.30537054162504296
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.22533785764630396,
+        "sd": 0.005427526729668709,
+        "ci_low": 0.2185986931067857,
+        "ci_high": 0.2320770221858222
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.22601753835377886,
+        "sd": 0.0051863640221468076,
+        "ci_low": 0.2195778168658999,
+        "ci_high": 0.23245725984165783
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.2992389936516643,
+        "sd": 0.006896651622779142,
+        "ci_low": 0.2906756696235059,
+        "ci_high": 0.3078023176798227
+      }
+    },
+    "fidelity": {
+      "A": {
+        "n": 5,
+        "mean": 0.4452340282591189,
+        "sd": 0.015032691119383542,
+        "ci_low": 0.4265684769000629,
+        "ci_high": 0.4638995796181749
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.45840372391198436,
+        "sd": 0.010295975342707363,
+        "ci_low": 0.445619582002551,
+        "ci_high": 0.47118786582141775
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.4560909529379723,
+        "sd": 0.01094412540001877,
+        "ci_low": 0.44250202643694164,
+        "ci_high": 0.46967987943900297
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.4461407478160318,
+        "sd": 0.016262129344754715,
+        "ci_low": 0.4259486472745169,
+        "ci_high": 0.4663328483575467
+      }
+    },
+    "evidence_support": {
+      "A": {
+        "n": 5,
+        "mean": 0.5984,
+        "sd": 0.010538026380684413,
+        "ci_low": 0.5853153120309826,
+        "ci_high": 0.6114846879690174
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.5974,
+        "sd": 0.010157509537283275,
+        "ci_low": 0.584787786096144,
+        "ci_high": 0.6100122139038561
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.5974,
+        "sd": 0.010382677881933944,
+        "ci_low": 0.5845082026690561,
+        "ci_high": 0.610291797330944
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.5942999999999999,
+        "sd": 0.01380941707676325,
+        "ci_low": 0.5771533439796027,
+        "ci_high": 0.6114466560203972
+      }
+    },
+    "collective_accuracy": {
+      "A": {
+        "n": 5,
+        "mean": 0.576,
+        "sd": 0.018165902124584934,
+        "ci_low": 0.5534440533370095,
+        "ci_high": 0.5985559466629904
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.589,
+        "sd": 0.015165750888103114,
+        "ci_low": 0.5701692331165156,
+        "ci_high": 0.6078307668834844
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.589,
+        "sd": 0.025836021365527612,
+        "ci_low": 0.5569203424136011,
+        "ci_high": 0.6210796575863988
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.5799999999999998,
+        "sd": 0.012247448713915901,
+        "ci_low": 0.5647927838620834,
+        "ci_high": 0.5952072161379163
+      }
+    },
+    "brier": {
+      "A": {
+        "n": 5,
+        "mean": 0.33863906000000005,
+        "sd": 0.004450631148837215,
+        "ci_low": 0.3331128715332046,
+        "ci_high": 0.34416524846679547
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.22642126,
+        "sd": 0.004807568619687077,
+        "ci_low": 0.22045187512604042,
+        "ci_high": 0.2323906448739596
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.22714708,
+        "sd": 0.006508140191867414,
+        "ci_low": 0.2190661566284953,
+        "ci_high": 0.2352280033715047
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.34038084,
+        "sd": 0.0053420572477277375,
+        "ci_low": 0.333747799839153,
+        "ci_high": 0.34701388016084705
+      }
+    },
+    "overconfidence": {
+      "A": {
+        "n": 5,
+        "mean": 0.30401000000000006,
+        "sd": 0.008439333504489572,
+        "ci_low": 0.29353118341864054,
+        "ci_high": 0.3144888165813596
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.010645999999999956,
+        "sd": 0.016221329476957147,
+        "ci_low": -0.009495440814539227,
+        "ci_high": 0.030787440814539137
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.00768000000000002,
+        "sd": 0.014790397222522522,
+        "ci_low": -0.010684703750339142,
+        "ci_high": 0.026044703750339182
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.309236,
+        "sd": 0.01199865325776185,
+        "ci_low": 0.29433770422290684,
+        "ci_high": 0.3241342957770932
+      }
+    },
+    "share_votes_correct": {
+      "A": {
+        "n": 5,
+        "mean": 0.5272,
+        "sd": 0.009418067742376891,
+        "ci_low": 0.5155059243516464,
+        "ci_high": 0.5388940756483536
+      },
+      "B": {
+        "n": 5,
+        "mean": 0.5238,
+        "sd": 0.011077003204838402,
+        "ci_low": 0.5100460839125645,
+        "ci_high": 0.5375539160874356
+      },
+      "C": {
+        "n": 5,
+        "mean": 0.526,
+        "sd": 0.009797958971132722,
+        "ci_low": 0.513834227089667,
+        "ci_high": 0.5381657729103331
+      },
+      "D": {
+        "n": 5,
+        "mean": 0.525,
+        "sd": 0.012509996003196815,
+        "ci_low": 0.5094667883451576,
+        "ci_high": 0.5405332116548425
+      }
+    }
+  },
+  "effects": {
+    "mean_confidence": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.534063,
+        "mean_control": 0.832723,
+        "mean_difference": -0.2986600000000001,
+        "relative_improvement": -0.35865467868667017,
+        "shapiro_p": 0.979389505069592,
+        "test": "paired t-test",
+        "statistic": -105.79423441190558,
+        "p_value": 4.786792595378255e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -47.31261995451367,
+        "ci_low": -0.30649798001590406,
+        "ci_high": -0.2908220199840961,
+        "ci_method": "t-interval",
+        "p_holm": 1.4360377786134765e-07,
+        "verdict": "lower"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.6839580000000001,
+        "mean_control": 0.682828,
+        "mean_difference": 0.001130000000000031,
+        "relative_improvement": 0.0016548823422590688,
+        "shapiro_p": 0.6553177017344126,
+        "test": "paired t-test",
+        "statistic": 2.7951764681186866,
+        "p_value": 0.04905222858439822,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.2500409183642314,
+        "ci_low": 7.5724879420068555e-06,
+        "ci_high": 0.0022524275120580552,
+        "ci_method": "t-interval",
+        "p_holm": 0.09706454997915424,
+        "verdict": "no detectable effect"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.300556,
+        "mean_control": -0.2967640000000001,
+        "mean_difference": -0.0037919999999999287,
+        "relative_improvement": -0.012777830195036815,
+        "shapiro_p": 0.8426258834182896,
+        "test": "paired t-test",
+        "statistic": -2.8056317822575454,
+        "p_value": 0.04853227498957712,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -1.2547166769923521,
+        "ci_low": -0.007544552243487232,
+        "ci_high": -3.9447756512625293e-05,
+        "ci_method": "t-interval",
+        "p_holm": 0.09706454997915424,
+        "verdict": "not detected"
+      }
+    },
+    "confidence_inflation": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.0223358284251854,
+        "mean_control": 0.3241546483177894,
+        "mean_difference": -0.30181881989260406,
+        "relative_improvement": -0.9310951468964032,
+        "shapiro_p": 0.9042995914982375,
+        "test": "paired t-test",
+        "statistic": -108.78645515191066,
+        "p_value": 4.28161230305268e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -48.65078175018089,
+        "ci_low": -0.30952183203669154,
+        "ci_high": -0.2941158077485166,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.1740071803906099,
+        "mean_control": 0.17248329635236492,
+        "mean_difference": 0.001523884038244988,
+        "relative_improvement": 0.008834965880590743,
+        "shapiro_p": 0.812559078166901,
+        "test": "paired t-test",
+        "statistic": 1.7612676408439407,
+        "p_value": 0.1529903046015044,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.7876628342995473,
+        "ci_low": -0.0008783518745473454,
+        "ci_high": 0.003926119951037321,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.3032570713674865,
+        "mean_control": -0.30038056841772154,
+        "mean_difference": -0.002876502949764881,
+        "relative_improvement": -0.009576195174398743,
+        "shapiro_p": 0.21786909191090814,
+        "test": "paired t-test",
+        "statistic": -2.1725131733562772,
+        "p_value": 0.09554106348457495,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.9715774275276844,
+        "ci_low": -0.00655263832740385,
+        "ci_high": 0.0007996324278740888,
+        "ci_method": "t-interval"
+      }
+    },
+    "votes_against_tool": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.1336,
+        "mean_control": 0.1689,
+        "mean_difference": -0.035299999999999984,
+        "relative_improvement": -0.20899940793368857,
+        "shapiro_p": 0.299071485756754,
+        "test": "paired t-test",
+        "statistic": -27.35694431771216,
+        "p_value": 1.0617496867759115e-05,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -12.234397430216198,
+        "ci_low": -0.03888258258214995,
+        "ci_high": -0.031717417417850016,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.15120000000000003,
+        "mean_control": 0.1513,
+        "mean_difference": -9.999999999999454e-05,
+        "relative_improvement": -0.0006609385327162011,
+        "shapiro_p": 0.5511060096202752,
+        "test": "paired t-test",
+        "statistic": -0.043498822829033314,
+        "p_value": 0.967388736836479,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.01945326495738764,
+        "ci_low": -0.006482805153394862,
+        "ci_high": 0.006282805153394874,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.03439999999999999,
+        "mean_control": -0.036199999999999996,
+        "mean_difference": 0.001800000000000007,
+        "relative_improvement": 0.049723756906077436,
+        "shapiro_p": 0.3438000231948015,
+        "test": "paired t-test",
+        "statistic": 0.5166104201372648,
+        "p_value": 0.6326767912702365,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.23103520346233006,
+        "ci_low": -0.0078738296297395,
+        "ci_high": 0.011473829629739514,
+        "ci_method": "t-interval"
+      }
+    },
+    "manipulation": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.2256776980000414,
+        "mean_control": 0.2989434520560429,
+        "mean_difference": -0.07326575405600141,
+        "relative_improvement": -0.24508231758247837,
+        "shapiro_p": 0.9143241650959394,
+        "test": "paired t-test",
+        "statistic": -44.59725610039619,
+        "p_value": 1.5116957037044335e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -19.944499250090615,
+        "ci_low": -0.07782698409601733,
+        "ci_high": -0.0687045240159855,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.26262826600272154,
+        "mean_control": 0.26199288405336263,
+        "mean_difference": 0.0006353819493589042,
+        "relative_improvement": 0.002425187812465551,
+        "shapiro_p": 0.6826676479717998,
+        "test": "paired t-test",
+        "statistic": 0.5823673030356561,
+        "p_value": 0.5915669477507695,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.26044257549218935,
+        "ci_low": -0.002393811300387386,
+        "ci_high": 0.003664575199105194,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.07322145529788539,
+        "mean_control": -0.0733100528141174,
+        "mean_difference": 8.859751623200297e-05,
+        "relative_improvement": 0.0012085316110282485,
+        "shapiro_p": 0.7415571498575275,
+        "test": "paired t-test",
+        "statistic": 0.041391137752626705,
+        "p_value": 0.9689677217650482,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.018510679536186236,
+        "ci_low": -0.0058543688681461665,
+        "ci_high": 0.006031563900610172,
+        "ci_method": "t-interval"
+      }
+    },
+    "fidelity": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.4572473384249783,
+        "mean_control": 0.44568738803757535,
+        "mean_difference": 0.011559950387402951,
+        "relative_improvement": 0.025937351376046396,
+        "shapiro_p": 0.20278713158286138,
+        "test": "paired t-test",
+        "statistic": 4.458056020405146,
+        "p_value": 0.011177035137734383,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.9937032618256187,
+        "ci_low": 0.0043604967415698,
+        "ci_high": 0.0187594040332361,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.451115850377002,
+        "mean_control": 0.4518188760855516,
+        "mean_difference": -0.0007030257085495872,
+        "relative_improvement": -0.0015559901229457679,
+        "shapiro_p": 0.4537679101049322,
+        "test": "paired t-test",
+        "statistic": -0.6179857995173448,
+        "p_value": 0.5700338389632728,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.27637165137006797,
+        "ci_low": -0.003861532407012855,
+        "ci_high": 0.002455480989913681,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": 0.00995020512194047,
+        "mean_control": 0.0131696956528654,
+        "mean_difference": -0.003219490530924929,
+        "relative_improvement": -0.2444620297830837,
+        "shapiro_p": 0.8743573730434958,
+        "test": "paired t-test",
+        "statistic": -0.9886515261961222,
+        "p_value": 0.3788008376590119,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.4421384037266886,
+        "ci_low": -0.012260834714359646,
+        "ci_high": 0.005821853652509788,
+        "ci_method": "t-interval"
+      }
+    },
+    "evidence_support": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.5974,
+        "mean_control": 0.5963499999999999,
+        "mean_difference": 0.0010499999999999954,
+        "relative_improvement": 0.0017607109918673708,
+        "shapiro_p": 0.0774153102330681,
+        "test": "paired t-test",
+        "statistic": 0.1828265584111163,
+        "p_value": 0.8638266334272945,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.0817625225399184,
+        "ci_low": -0.014895535406853753,
+        "ci_high": 0.016995535406853744,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.59585,
+        "mean_control": 0.5979000000000001,
+        "mean_difference": -0.002050000000000063,
+        "relative_improvement": -0.0034286670011709434,
+        "shapiro_p": 0.6754053114922222,
+        "test": "paired t-test",
+        "statistic": -0.826052354508429,
+        "p_value": 0.45519629073184137,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.3694218435309204,
+        "ci_low": -0.008940256331322673,
+        "ci_high": 0.004840256331322547,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": 0.003100000000000036,
+        "mean_control": -0.001000000000000023,
+        "mean_difference": 0.004100000000000059,
+        "relative_improvement": 4.099999999999964,
+        "shapiro_p": 0.39143677330039106,
+        "test": "paired t-test",
+        "statistic": 0.835430894154658,
+        "p_value": 0.45047148530152986,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.37361605396664943,
+        "ci_low": -0.009525812752387543,
+        "ci_high": 0.017725812752387663,
+        "ci_method": "t-interval"
+      }
+    },
+    "collective_accuracy": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.589,
+        "mean_control": 0.578,
+        "mean_difference": 0.01100000000000001,
+        "relative_improvement": 0.019031141868512128,
+        "shapiro_p": 0.7471007621580775,
+        "test": "paired t-test",
+        "statistic": 2.269126741769352,
+        "p_value": 0.0858103784400437,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.0147843288317766,
+        "ci_low": -0.002459317011689466,
+        "ci_high": 0.024459317011689484,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.5845,
+        "mean_control": 0.5824999999999999,
+        "mean_difference": 0.0019999999999999797,
+        "relative_improvement": 0.0034334763948499795,
+        "shapiro_p": 0.8062170583963713,
+        "test": "paired t-test",
+        "statistic": 0.34948162266441046,
+        "p_value": 0.7443512227441722,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.15629293303291059,
+        "ci_low": -0.013888933352377437,
+        "ci_high": 0.017888933352377397,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": 0.00900000000000003,
+        "mean_control": 0.012999999999999989,
+        "mean_difference": -0.003999999999999959,
+        "relative_improvement": -0.30769230769230477,
+        "shapiro_p": 0.07258380628390793,
+        "test": "paired t-test",
+        "statistic": -0.3494816226644119,
+        "p_value": 0.7443512227441712,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.15629293303291125,
+        "ci_low": -0.035777866704754656,
+        "ci_high": 0.027777866704754735,
+        "ci_method": "t-interval"
+      }
+    },
+    "brier": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.22678417,
+        "mean_control": 0.33950995000000006,
+        "mean_difference": -0.11272578000000003,
+        "relative_improvement": -0.33202496716222907,
+        "shapiro_p": 0.04237587291377695,
+        "test": "Wilcoxon signed-rank",
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "effect_size_name": "rank_biserial",
+        "effect_size": -1.0,
+        "ci_low": -0.11778004000000002,
+        "ci_high": -0.10764376000000002,
+        "ci_method": "percentile bootstrap"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.28376396000000004,
+        "mean_control": 0.28253016000000003,
+        "mean_difference": 0.001233799999999985,
+        "relative_improvement": 0.004366967406240831,
+        "shapiro_p": 0.269322821810509,
+        "test": "paired t-test",
+        "statistic": 1.5382644733194089,
+        "p_value": 0.1988092407966189,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.6879327859430221,
+        "ci_low": -0.000993110931252927,
+        "ci_high": 0.003460710931252897,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.11323375999999999,
+        "mean_control": -0.11221780000000003,
+        "mean_difference": -0.0010159599999999547,
+        "relative_improvement": -0.009053465671221093,
+        "shapiro_p": 0.8197647371445587,
+        "test": "paired t-test",
+        "statistic": -0.6878421885293473,
+        "p_value": 0.5293629599920946,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.3076123782687693,
+        "ci_low": -0.005116838393498312,
+        "ci_high": 0.003084918393498403,
+        "ci_method": "t-interval"
+      }
+    },
+    "overconfidence": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.009162999999999987,
+        "mean_control": 0.30662300000000003,
+        "mean_difference": -0.29746000000000006,
+        "relative_improvement": -0.9701163970087046,
+        "shapiro_p": 0.8784431502095416,
+        "test": "paired t-test",
+        "statistic": -111.57008433235309,
+        "p_value": 3.87014865890995e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -49.89565856450515,
+        "ci_low": -0.3048623549048502,
+        "ci_high": -0.2900576450951499,
+        "ci_method": "t-interval"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.15845800000000004,
+        "mean_control": 0.157328,
+        "mean_difference": 0.001130000000000031,
+        "relative_improvement": 0.007182446862605815,
+        "shapiro_p": 0.3444816351125857,
+        "test": "paired t-test",
+        "statistic": 1.0190182152899843,
+        "p_value": 0.36581341110121735,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.45571879993978404,
+        "ci_low": -0.0019488291335702467,
+        "ci_high": 0.004208829133570308,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": -0.301556,
+        "mean_control": -0.29336400000000007,
+        "mean_difference": -0.008191999999999932,
+        "relative_improvement": -0.027924353363057226,
+        "shapiro_p": 0.6178283566682089,
+        "test": "paired t-test",
+        "statistic": -3.208398671868928,
+        "p_value": 0.03263863026097755,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -1.434839505843793,
+        "ci_low": -0.01528109354102522,
+        "ci_high": -0.0011029064589746429,
+        "ci_method": "t-interval"
+      }
+    },
+    "share_votes_correct": {
+      "wording (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.5249,
+        "mean_control": 0.5261000000000001,
+        "mean_difference": -0.0012000000000000233,
+        "relative_improvement": -0.0022809351834253747,
+        "shapiro_p": 0.017791456907905564,
+        "test": "Wilcoxon signed-rank",
+        "statistic": 1.0,
+        "p_value": 0.125,
+        "effect_size_name": "rank_biserial",
+        "effect_size": -0.8666666666666667,
+        "ci_low": -0.0018000000000000017,
+        "ci_high": -0.00030000000000005576,
+        "ci_method": "percentile bootstrap"
+      },
+      "payoff (main effect)": {
+        "n": 5,
+        "mean_treatment": 0.5255,
+        "mean_control": 0.5255000000000001,
+        "mean_difference": 0.0,
+        "relative_improvement": -2.1126984293532947e-16,
+        "shapiro_p": 0.6249942881102054,
+        "test": "paired t-test",
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.0,
+        "ci_low": -0.003104159995509413,
+        "ci_high": 0.003104159995509413,
+        "ci_method": "t-interval"
+      },
+      "interaction": {
+        "n": 5,
+        "mean_treatment": 0.0010000000000000009,
+        "mean_control": -0.003400000000000003,
+        "mean_difference": 0.004400000000000004,
+        "relative_improvement": 1.2941176470588236,
+        "shapiro_p": 0.5781750660382763,
+        "test": "paired t-test",
+        "statistic": 1.6002645283972774,
+        "p_value": 0.1847915543605436,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.7156600534955909,
+        "ci_low": -0.003233961914475114,
+        "ci_high": 0.012033961914475122,
+        "ci_method": "t-interval"
+      }
+    }
+  },
+  "simple_contrasts": {
+    "mean_confidence": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.834236,
+        "mean_control": 0.8312100000000001,
+        "mean_difference": 0.0030259999999999953,
+        "relative_improvement": 0.003640475932676293,
+        "shapiro_p": 0.5819965584503337,
+        "test": "paired t-test",
+        "statistic": 2.947917869268161,
+        "p_value": 0.042056361194419314,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.3183489495539895,
+        "ci_low": 0.000176014599825248,
+        "ci_high": 0.0058759854001747425,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.53368,
+        "mean_control": 0.534446,
+        "mean_difference": -0.0007659999999999334,
+        "relative_improvement": -0.0014332598616135837,
+        "shapiro_p": 0.3480127361276118,
+        "test": "paired t-test",
+        "statistic": -1.7734712765619172,
+        "p_value": 0.1508278033356198,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.7931204661071553,
+        "ci_low": -0.001965205749023562,
+        "ci_high": 0.0004332057490236954,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.534446,
+        "mean_control": 0.8312100000000001,
+        "mean_difference": -0.2967640000000001,
+        "relative_improvement": -0.3570265035309971,
+        "shapiro_p": 0.9562951607387766,
+        "test": "paired t-test",
+        "statistic": -96.55329712690357,
+        "p_value": 6.898780221939223e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -43.179947165498305,
+        "ci_low": -0.30529761800908756,
+        "ci_high": -0.2882303819909126,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.53368,
+        "mean_control": 0.834236,
+        "mean_difference": -0.300556,
+        "relative_improvement": -0.3602769480099156,
+        "shapiro_p": 0.36012292840419635,
+        "test": "paired t-test",
+        "statistic": -110.44587475866528,
+        "p_value": 4.0301010711343e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -49.392896758960745,
+        "ci_low": -0.3081115310405322,
+        "ci_high": -0.2930004689594678,
+        "ci_method": "t-interval"
+      }
+    },
+    "confidence_inflation": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.32563571607435315,
+        "mean_control": 0.32267358056122575,
+        "mean_difference": 0.0029621355131274284,
+        "relative_improvement": 0.009179975342187507,
+        "shapiro_p": 0.4365777827500503,
+        "test": "paired t-test",
+        "statistic": 2.2313447222187124,
+        "p_value": 0.08947720821695598,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.9978876960232852,
+        "ci_low": -0.0007236269620572917,
+        "ci_high": 0.006647897988312149,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.022378644706866672,
+        "mean_control": 0.02229301214350412,
+        "mean_difference": 8.563256336255112e-05,
+        "relative_improvement": 0.0038412289380780414,
+        "shapiro_p": 0.6800712282272048,
+        "test": "paired t-test",
+        "statistic": 0.1095092901806666,
+        "p_value": 0.9180725863778474,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.04897404340234415,
+        "ci_low": -0.0020854536613883552,
+        "ci_high": 0.0022567187881134573,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.02229301214350412,
+        "mean_control": 0.32267358056122575,
+        "mean_difference": -0.30038056841772154,
+        "relative_improvement": -0.9309115667147899,
+        "shapiro_p": 0.9600972093738169,
+        "test": "paired t-test",
+        "statistic": -93.92628689917592,
+        "p_value": 7.703259357894773e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -42.00511247614106,
+        "ci_low": -0.30925976705755653,
+        "ci_high": -0.29150136977788654,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.022378644706866672,
+        "mean_control": 0.32563571607435315,
+        "mean_difference": -0.3032570713674865,
+        "relative_improvement": -0.9312770571464067,
+        "shapiro_p": 0.4240210881592931,
+        "test": "paired t-test",
+        "statistic": -123.35464087573779,
+        "p_value": 2.5902341577400766e-08,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -55.165872467644775,
+        "ci_low": -0.31008272953030375,
+        "ci_high": -0.2964314132046692,
+        "ci_method": "t-interval"
+      }
+    },
+    "votes_against_tool": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.16840000000000002,
+        "mean_control": 0.1694,
+        "mean_difference": -0.0010000000000000009,
+        "relative_improvement": -0.005903187721369381,
+        "shapiro_p": 0.09024663778842645,
+        "test": "paired t-test",
+        "statistic": -0.4343722427630706,
+        "p_value": 0.6864228692054342,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.19425717247145338,
+        "ci_low": -0.00739185664244254,
+        "ci_high": 0.005391856642442538,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.134,
+        "mean_control": 0.1332,
+        "mean_difference": 0.0008000000000000062,
+        "relative_improvement": 0.006006006006005969,
+        "shapiro_p": 0.31403955710943904,
+        "test": "paired t-test",
+        "statistic": 0.23756554836660143,
+        "p_value": 0.8238901991527232,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.10624254305194698,
+        "ci_low": -0.008549655703152099,
+        "ci_high": 0.01014965570315211,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.1332,
+        "mean_control": 0.1694,
+        "mean_difference": -0.036199999999999996,
+        "relative_improvement": -0.21369539551357725,
+        "shapiro_p": 0.8989039826541304,
+        "test": "paired t-test",
+        "statistic": -33.90440637925736,
+        "p_value": 4.514525765620557e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -15.162511480159393,
+        "ci_low": -0.039164432165066605,
+        "ci_high": -0.03323556783493339,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.134,
+        "mean_control": 0.16840000000000002,
+        "mean_difference": -0.03439999999999999,
+        "relative_improvement": -0.2042755344418053,
+        "shapiro_p": 0.09003073824933394,
+        "test": "paired t-test",
+        "statistic": -11.969290810994604,
+        "p_value": 0.0002792116798819225,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -5.352829579169505,
+        "ci_low": -0.042379563127589136,
+        "ci_high": -0.02642043687241085,
+        "ci_method": "t-interval"
+      }
+    },
+    "manipulation": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.2992389936516643,
+        "mean_control": 0.2986479104604214,
+        "mean_difference": 0.0005910831912429027,
+        "relative_improvement": 0.001979197478166306,
+        "shapiro_p": 0.36884502123808127,
+        "test": "paired t-test",
+        "statistic": 0.48175179927904777,
+        "p_value": 0.6551540276633551,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.215445954294157,
+        "ci_low": -0.002815463573184352,
+        "ci_high": 0.003997629955670157,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.22601753835377886,
+        "mean_control": 0.22533785764630396,
+        "mean_difference": 0.0006796807074749056,
+        "relative_improvement": 0.003016273938939032,
+        "shapiro_p": 0.8547763575638091,
+        "test": "paired t-test",
+        "statistic": 0.38197754716491206,
+        "p_value": 0.7219041555662246,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.17082555226787507,
+        "ci_low": -0.0042606520093885665,
+        "ci_high": 0.005620013424338377,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.22533785764630396,
+        "mean_control": 0.2986479104604214,
+        "mean_difference": -0.0733100528141174,
+        "relative_improvement": -0.2454731817848527,
+        "shapiro_p": 0.05152332614431622,
+        "test": "paired t-test",
+        "statistic": -48.9256850461854,
+        "p_value": 1.0442272434329121e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -21.8802315218031,
+        "ci_low": -0.07747026716993903,
+        "ci_high": -0.06914983845829577,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.22601753835377886,
+        "mean_control": 0.2992389936516643,
+        "mean_difference": -0.07322145529788539,
+        "relative_improvement": -0.24469222544946956,
+        "shapiro_p": 0.33661028790730685,
+        "test": "paired t-test",
+        "statistic": -31.38347375229046,
+        "p_value": 6.143463547107893e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -14.035116136040374,
+        "ci_low": -0.07969923888430037,
+        "ci_high": -0.0667436717114704,
+        "ci_method": "t-interval"
+      }
+    },
+    "fidelity": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.4461407478160318,
+        "mean_control": 0.4452340282591189,
+        "mean_difference": 0.0009067195569128939,
+        "relative_improvement": 0.0020365010294882695,
+        "shapiro_p": 0.7395030191021883,
+        "test": "paired t-test",
+        "statistic": 0.35923986419872994,
+        "p_value": 0.7375768224282181,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.16065695131523064,
+        "ci_low": -0.006101013510777137,
+        "ci_high": 0.007914452624602926,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.4560909529379723,
+        "mean_control": 0.45840372391198436,
+        "mean_difference": -0.002312770974012035,
+        "relative_improvement": -0.0050452709115777605,
+        "shapiro_p": 0.6284510475166882,
+        "test": "paired t-test",
+        "statistic": -1.8759198105039154,
+        "p_value": 0.133911269453328,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.8389368433250558,
+        "ci_low": -0.005735775312621979,
+        "ci_high": 0.0011102333645979091,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.45840372391198436,
+        "mean_control": 0.4452340282591189,
+        "mean_difference": 0.0131696956528654,
+        "relative_improvement": 0.029579265772563364,
+        "shapiro_p": 0.01856092899887502,
+        "test": "Wilcoxon signed-rank",
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "effect_size_name": "rank_biserial",
+        "effect_size": 1.0,
+        "ci_low": 0.009415791770899618,
+        "ci_high": 0.019034476063902205,
+        "ci_method": "percentile bootstrap"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.4560909529379723,
+        "mean_control": 0.4461407478160318,
+        "mean_difference": 0.00995020512194047,
+        "relative_improvement": 0.022302838668400483,
+        "shapiro_p": 0.3435220868391529,
+        "test": "paired t-test",
+        "statistic": 3.0835647352202264,
+        "p_value": 0.03680377267103307,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.3790120721947132,
+        "ci_low": 0.0009910294020402406,
+        "ci_high": 0.018909380841840698,
+        "ci_method": "t-interval"
+      }
+    },
+    "evidence_support": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.5942999999999999,
+        "mean_control": 0.5984,
+        "mean_difference": -0.004100000000000037,
+        "relative_improvement": -0.0068516042780750385,
+        "shapiro_p": 0.2733051163686593,
+        "test": "paired t-test",
+        "statistic": -1.0419053111630578,
+        "p_value": 0.35628472923067134,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.4659542203757334,
+        "ci_low": -0.015025584896581446,
+        "ci_high": 0.006825584896581372,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.5974,
+        "mean_control": 0.5974,
+        "mean_difference": 2.2204460492503132e-17,
+        "relative_improvement": 0.0,
+        "shapiro_p": 0.5846143482692383,
+        "test": "paired t-test",
+        "statistic": 7.453427726537565e-15,
+        "p_value": 0.9999999999999944,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 3.333274212383942e-15,
+        "ci_low": -0.00827129045988707,
+        "ci_high": 0.008271290459887115,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.5974,
+        "mean_control": 0.5984,
+        "mean_difference": -0.001000000000000023,
+        "relative_improvement": -0.0016711229946524077,
+        "shapiro_p": 0.6546501559055093,
+        "test": "paired t-test",
+        "statistic": -0.17996850826634264,
+        "p_value": 0.8659267138006301,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.08048436365855499,
+        "ci_low": -0.01642739411435743,
+        "ci_high": 0.014427394114357386,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.5974,
+        "mean_control": 0.5942999999999999,
+        "mean_difference": 0.003100000000000036,
+        "relative_improvement": 0.005216220763924117,
+        "shapiro_p": 0.24330126932763058,
+        "test": "paired t-test",
+        "statistic": 0.4515334597340107,
+        "p_value": 0.6750042725265221,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.2019319020161824,
+        "ci_low": -0.01596166562093414,
+        "ci_high": 0.022161665620934214,
+        "ci_method": "t-interval"
+      }
+    },
+    "collective_accuracy": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.5799999999999998,
+        "mean_control": 0.576,
+        "mean_difference": 0.003999999999999981,
+        "relative_improvement": 0.0069444444444442584,
+        "shapiro_p": 0.6870760235481677,
+        "test": "paired t-test",
+        "statistic": 0.48329767466413925,
+        "p_value": 0.654147539678928,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.21613729078331864,
+        "ci_low": -0.01897917205686729,
+        "ci_high": 0.026979172056867257,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.589,
+        "mean_control": 0.589,
+        "mean_difference": 2.2204460492503132e-17,
+        "relative_improvement": 0.0,
+        "shapiro_p": 0.8441148168006405,
+        "test": "paired t-test",
+        "statistic": 2.8086667748613606e-15,
+        "p_value": 0.9999999999999979,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.25607396694702e-15,
+        "ci_low": -0.021949725827127054,
+        "ci_high": 0.021949725827127096,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.589,
+        "mean_control": 0.576,
+        "mean_difference": 0.012999999999999989,
+        "relative_improvement": 0.022569444444444465,
+        "shapiro_p": 0.7772534022848969,
+        "test": "paired t-test",
+        "statistic": 1.9598237397554594,
+        "p_value": 0.1215792096564024,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.8764598212022129,
+        "ci_low": -0.005416853329919849,
+        "ci_high": 0.03141685332991983,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.589,
+        "mean_control": 0.5799999999999998,
+        "mean_difference": 0.00900000000000003,
+        "relative_improvement": 0.015517241379310555,
+        "shapiro_p": 0.6870760235481648,
+        "test": "paired t-test",
+        "statistic": 1.0874197679943236,
+        "p_value": 0.3379891876904283,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.4863089042624715,
+        "ci_low": -0.013979172056867219,
+        "ci_high": 0.03197917205686728,
+        "ci_method": "t-interval"
+      }
+    },
+    "brier": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.34038084,
+        "mean_control": 0.33863906000000005,
+        "mean_difference": 0.0017417799999999595,
+        "relative_improvement": 0.005143470454943887,
+        "shapiro_p": 0.36644250636368125,
+        "test": "paired t-test",
+        "statistic": 1.4850584607977806,
+        "p_value": 0.2117051184681168,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.6641383337810088,
+        "ci_low": -0.0015146282041143754,
+        "ci_high": 0.004998188204114295,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.22714708,
+        "mean_control": 0.22642126,
+        "mean_difference": 0.0007258200000000048,
+        "relative_improvement": 0.0032056177056871255,
+        "shapiro_p": 0.7692586048794792,
+        "test": "paired t-test",
+        "statistic": 0.7251606463548577,
+        "p_value": 0.5085034608106125,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.3243016999714294,
+        "ci_low": -0.002053149592992135,
+        "ci_high": 0.0035047895929921444,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.22642126,
+        "mean_control": 0.33863906000000005,
+        "mean_difference": -0.11221780000000003,
+        "relative_improvement": -0.3313787842430227,
+        "shapiro_p": 0.49671057791107076,
+        "test": "paired t-test",
+        "statistic": -43.339197951073224,
+        "p_value": 1.694680706070593e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -19.38187854178387,
+        "ci_low": -0.11940682463026202,
+        "ci_high": -0.10502877536973805,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.22714708,
+        "mean_control": 0.34038084,
+        "mean_difference": -0.11323375999999999,
+        "relative_improvement": -0.33266784346615985,
+        "shapiro_p": 0.04087234139272076,
+        "test": "Wilcoxon signed-rank",
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "effect_size_name": "rank_biserial",
+        "effect_size": -1.0,
+        "ci_low": -0.11918442,
+        "ci_high": -0.10705873999999997,
+        "ci_method": "percentile bootstrap"
+      }
+    },
+    "overconfidence": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.309236,
+        "mean_control": 0.30401000000000006,
+        "mean_difference": 0.005225999999999997,
+        "relative_improvement": 0.017190224005789127,
+        "shapiro_p": 0.5368513209623879,
+        "test": "paired t-test",
+        "statistic": 2.4728988395277782,
+        "p_value": 0.0687325817875771,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 1.1059139813328913,
+        "ci_low": -0.0006414871320391024,
+        "ci_high": 0.011093487132039098,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.00768000000000002,
+        "mean_control": 0.010645999999999956,
+        "mean_difference": -0.0029659999999999353,
+        "relative_improvement": -0.2786022919406301,
+        "shapiro_p": 0.631421906219916,
+        "test": "paired t-test",
+        "statistic": -2.6497398461852435,
+        "p_value": 0.05699727222182967,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -1.1849996837520083,
+        "ci_low": -0.006073828186933865,
+        "ci_high": 0.00014182818693399442,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.010645999999999956,
+        "mean_control": 0.30401000000000006,
+        "mean_difference": -0.29336400000000007,
+        "relative_improvement": -0.9649814150850303,
+        "shapiro_p": 0.8754840375634649,
+        "test": "paired t-test",
+        "statistic": -74.85900805344173,
+        "p_value": 1.908352045574839e-07,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -33.47796614713998,
+        "ci_low": -0.30424457487029183,
+        "ci_high": -0.2824834251297083,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.00768000000000002,
+        "mean_control": 0.309236,
+        "mean_difference": -0.301556,
+        "relative_improvement": -0.9751645992057845,
+        "shapiro_p": 0.9259581615426331,
+        "test": "paired t-test",
+        "statistic": -207.18497145533908,
+        "p_value": 3.25574816745525e-09,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -92.65593601809834,
+        "ci_low": -0.30559709272145497,
+        "ci_high": -0.297514907278545,
+        "ci_method": "t-interval"
+      }
+    },
+    "share_votes_correct": {
+      "D_vs_A (payoff, baseline wording)": {
+        "n": 5,
+        "mean_treatment": 0.525,
+        "mean_control": 0.5272,
+        "mean_difference": -0.002200000000000002,
+        "relative_improvement": -0.004172989377845182,
+        "shapiro_p": 0.7868775755018541,
+        "test": "paired t-test",
+        "statistic": -1.0213243599737851,
+        "p_value": 0.3648432138158312,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -0.4567501391955698,
+        "ci_low": -0.008180645787780813,
+        "ci_high": 0.003780645787780809,
+        "ci_method": "t-interval"
+      },
+      "C_vs_B (payoff, proposed wording)": {
+        "n": 5,
+        "mean_treatment": 0.526,
+        "mean_control": 0.5238,
+        "mean_difference": 0.002200000000000002,
+        "relative_improvement": 0.00420007636502478,
+        "shapiro_p": 0.6799018517994609,
+        "test": "paired t-test",
+        "statistic": 1.7179113807746667,
+        "p_value": 0.16094301069703293,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.768273325346536,
+        "ci_low": -0.0013555845893987585,
+        "ci_high": 0.005755584589398762,
+        "ci_method": "t-interval"
+      },
+      "B_vs_A (wording, baseline payoff)": {
+        "n": 5,
+        "mean_treatment": 0.5238,
+        "mean_control": 0.5272,
+        "mean_difference": -0.003400000000000003,
+        "relative_improvement": -0.006449165402124353,
+        "shapiro_p": 0.7772534022848914,
+        "test": "paired t-test",
+        "statistic": -2.5628464289109907,
+        "p_value": 0.062449600206163025,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -1.1461397661875115,
+        "ci_low": -0.007083370665983969,
+        "ci_high": 0.0002833706659839631,
+        "ci_method": "t-interval"
+      },
+      "C_vs_D (wording, proposed payoff)": {
+        "n": 5,
+        "mean_treatment": 0.526,
+        "mean_control": 0.525,
+        "mean_difference": 0.0010000000000000009,
+        "relative_improvement": 0.0019047619047619063,
+        "shapiro_p": 0.3407669830681448,
+        "test": "paired t-test",
+        "statistic": 0.6454972243679028,
+        "p_value": 0.5537667547526959,
+        "effect_size_name": "cohen_dz",
+        "effect_size": 0.28867513459481287,
+        "ci_low": -0.003301250261636064,
+        "ci_high": 0.005301250261636066,
+        "ci_method": "t-interval"
+      }
+    }
+  },
+  "d_vs_a_bound": {
+    "bound": 0.02967640000000001,
+    "ci": [
+      0.000176014599825248,
+      0.0058759854001747425
+    ],
+    "within_bound": true
+  },
+  "calls": {
+    "total": 20000,
+    "unusable_replies": 0,
+    "reports_replaced_by_tool_report": 0
+  },
+  "calibration_main_runs": {
+    "pharma_llm_main": {
+      "baseline": {
+        "brier": {
+          "n": 5,
+          "mean": 0.3341962000000001,
+          "sd": 0.0062976471411948535,
+          "ci_low": 0.32637663827138763,
+          "ci_high": 0.3420157617286126
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.3028080000000001,
+          "sd": 0.009130315985769648,
+          "ci_low": 0.2914712153482456,
+          "ci_high": 0.31414478465175455
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.527,
+          "sd": 0.009055385138137424,
+          "ci_low": 0.5157562542841053,
+          "ci_high": 0.5382437457158947
+        }
+      },
+      "proposed": {
+        "brier": {
+          "n": 5,
+          "mean": 0.22750811999999998,
+          "sd": 0.00510231895484789,
+          "ci_low": 0.2211727542464127,
+          "ci_high": 0.23384348575358727
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.004351999999999956,
+          "sd": 0.011597994223140501,
+          "ci_low": -0.01004881187824884,
+          "ci_high": 0.01875281187824875
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.5296000000000001,
+          "sd": 0.007536577472566716,
+          "ci_low": 0.5202421030826405,
+          "ci_high": 0.5389578969173596
+        }
+      },
+      "brier_proposed_vs_baseline": {
+        "n": 5,
+        "mean_treatment": 0.22750811999999998,
+        "mean_control": 0.3341962000000001,
+        "mean_difference": -0.10668808000000007,
+        "relative_improvement": -0.31923786087334355,
+        "shapiro_p": 0.4889461240973312,
+        "test": "paired t-test",
+        "statistic": -56.84663143289842,
+        "p_value": 5.733725438296889e-07,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -25.422586435167428,
+        "ci_low": -0.11189883022446324,
+        "ci_high": -0.1014773297755369,
+        "ci_method": "t-interval"
+      }
+    },
+    "energy_llm_main": {
+      "baseline": {
+        "brier": {
+          "n": 5,
+          "mean": 0.21755874,
+          "sd": 0.014636608471329695,
+          "ci_low": 0.1993849902053457,
+          "ci_high": 0.2357324897946543
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.15319800000000022,
+          "sd": 0.019077831899878005,
+          "ci_low": 0.12950974296613837,
+          "ci_high": 0.17688625703386207
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.72,
+          "sd": 0.020346989949375824,
+          "ci_low": 0.6947358751080461,
+          "ci_high": 0.7452641248919538
+        }
+      },
+      "proposed": {
+        "brier": {
+          "n": 5,
+          "mean": 0.18130380000000001,
+          "sd": 0.015382525174690917,
+          "ci_low": 0.16220387228912322,
+          "ci_high": 0.2004037277108768
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.0047800000000000065,
+          "sd": 0.028374740527448025,
+          "ci_low": -0.030451893771305492,
+          "ci_high": 0.040011893771305505
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.7287999999999999,
+          "sd": 0.029072323608545662,
+          "ci_low": 0.6927019424311394,
+          "ci_high": 0.7648980575688604
+        }
+      },
+      "brier_proposed_vs_baseline": {
+        "n": 5,
+        "mean_treatment": 0.18130380000000001,
+        "mean_control": 0.21755874,
+        "mean_difference": -0.03625493999999999,
+        "relative_improvement": -0.16664437383669342,
+        "shapiro_p": 0.7290292628030812,
+        "test": "paired t-test",
+        "statistic": -21.42498377270175,
+        "p_value": 2.8066483773166406e-05,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -9.581544026518204,
+        "ci_low": -0.040953186298346954,
+        "ci_high": -0.03155669370165303,
+        "ci_method": "t-interval"
+      }
+    },
+    "pharma_llm_main_w075": {
+      "baseline": {
+        "brier": {
+          "n": 5,
+          "mean": 0.34321142000000004,
+          "sd": 0.007462130980289758,
+          "ci_low": 0.3339459606118933,
+          "ci_high": 0.3524768793881068
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.31557400000000013,
+          "sd": 0.010934332627097122,
+          "ci_low": 0.30199723283254887,
+          "ci_high": 0.3291507671674514
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.526,
+          "sd": 0.01029563014098701,
+          "ci_low": 0.5132162867151149,
+          "ci_high": 0.5387837132848852
+        }
+      },
+      "proposed": {
+        "brier": {
+          "n": 5,
+          "mean": 0.22745186,
+          "sd": 0.006178419692202866,
+          "ci_low": 0.21978033870239852,
+          "ci_high": 0.2351233812976015
+        },
+        "overconfidence": {
+          "n": 5,
+          "mean": 0.007353999999999905,
+          "sd": 0.017288763113652756,
+          "ci_low": -0.014112834731695934,
+          "ci_high": 0.028820834731695746
+        },
+        "share_votes_correct": {
+          "n": 5,
+          "mean": 0.5274000000000001,
+          "sd": 0.01203328716519307,
+          "ci_low": 0.5124587005469324,
+          "ci_high": 0.5423412994530677
+        }
+      },
+      "brier_proposed_vs_baseline": {
+        "n": 5,
+        "mean_treatment": 0.22745186,
+        "mean_control": 0.34321142000000004,
+        "mean_difference": -0.11575956000000005,
+        "relative_improvement": -0.33728353211556894,
+        "shapiro_p": 0.8358676466071504,
+        "test": "paired t-test",
+        "statistic": -29.336620020032548,
+        "p_value": 8.038116305260643e-06,
+        "effect_size_name": "cohen_dz",
+        "effect_size": -13.119735318974804,
+        "ci_low": -0.12671515282297632,
+        "ci_high": -0.10480396717702378,
+        "ci_method": "t-interval"
+      }
+    }
+  }
+}

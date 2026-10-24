@@ -919,3 +919,40 @@ was restarted and its cause was not established.
   Discrimination is weak: with about 53 % of votes correct in pharma, a constant forecast of
   0.53 would score Brier ≈ 0.249, so 0.228 is only slightly better than knowing the base
   rate. Accuracy of the votes themselves did not change.
+
+## 2026-10-24 — Session 6: condition D (amendment 7) and the 2×2 wording × payoff analysis
+
+- First attempt (Kaggle, 2026-10-21) produced no results: the session ran without a GPU
+  (Ollama log: `library=cpu`, `total_vram="0 B"`); every model call timed out after 10 min
+  and no seed file was written. Not an experimental result; nothing kept. Rerun on
+  2026-10-24 with GPU T4 ×2 (29/29 layers offloaded, 0 HTTP errors).
+- Checks: manifest config identical to `configs/pharma_llm_prompt_control_d.yaml`; dataset
+  SHA-256 and model digest (845dbda0…) as in sessions 1–5; 5 seeds, status completed.
+  All four cells: 20,000 model calls, 0 unusable replies. Raw files in
+  `results/raw/pharma_llm_prompt_control_d/`, log in
+  `results/raw/llm_logs/prompt_control_d_ollama_excerpt.txt` (git-ignored).
+- `statistics/analyze_factorial.py` as frozen → `results/summaries/pharma_llm_factorial.json`,
+  `tables/pharma_llm_factorial.md`. (Printing the table to the Windows console failed on
+  "ω" under cp1252; rerun with PYTHONIOENCODING=utf-8, outputs unchanged by this.)
+- **Confirmatory family (mean stated confidence, Holm over three):**
+  wording main effect −0.299 [−0.306, −0.291], Holm p < 0.0001 → lower;
+  payoff main effect +0.001 [+0.000, +0.002], Holm p 0.097 → no detectable effect;
+  interaction −0.004 [−0.008, −0.000], Holm p 0.097 → not detected.
+- **D − A** (payoff under the baseline wording): +0.003 [+0.000, +0.006] (unadjusted p 0.042,
+  direction *higher*, not lower). The whole CI lies within the pre-declared bound ±0.030, so
+  by A7.2 the payoff effect is "at most a small fraction of the wording effect". Not
+  described as "no effect".
+- Secondary (unadjusted): the same pattern for confidence inflation, votes against the tool
+  and the manipulation score (wording −0.073; payoff +0.001; D 0.299 = A 0.299). Fidelity:
+  wording +0.012 [+0.004, +0.019], payoff −0.001. Evidence support and collective accuracy:
+  no detectable effect of either factor.
+- Calibration: Brier A 0.339, B 0.226, C 0.227, D 0.340; overconfidence A 0.304, D 0.309,
+  B 0.011, C 0.008; share of votes correct 0.524–0.527 in all cells. Calibration improves
+  with the wording only; vote correctness does not change with either factor.
+- **Reading (mine):** the 2×2 confirms with both payoffs what amendment 6 showed with one:
+  for qwen2.5:7b in pharma, the behavioural changes credited to the proposed mechanism
+  are caused by stating the rules, and paying the agents by those rules, without stating
+  them, changes nothing measurable within 200 rounds (A7.3: rewards seen only through a
+  three-round history). Post hoc, pharma only, one model, n = 5, D from a separate session.
+- Next: decide with the user whether to start the cross-domain and sensitivity analyses
+  (Phase 10) now, or first add an energy replication of the 2×2.
