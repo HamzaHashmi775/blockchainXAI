@@ -178,14 +178,15 @@ class SeesHistory(ReadNumbers):
         return super().chat(messages, schema, seed)
 
 
-def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path):
-    """Amendment 6 with a stub model whose reports ignore the wording: then B must be paid
-    exactly like A, C differently, and every condition's history shows the audit checks."""
+@pytest.mark.parametrize("domain", ["pharma", "energy"])
+def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path, domain):
+    """Amendments 6 and 8 with a stub model whose reports ignore the wording: then B must be
+    paid exactly like A, C differently, and every condition's history shows the checks."""
     seen = []
-    register_llm_domain("pharma", client_factory=lambda llm: (
+    register_llm_domain(domain, client_factory=lambda llm: (
         SeesHistory(seen), {"model": llm["model"], "digest": llm["digest"]}))
     try:
-        cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control.yaml").read_text(
+        cfg = yaml.safe_load((ROOT / "configs" / f"{domain}_llm_prompt_control.yaml").read_text(
             encoding="utf-8"))
         cfg["seeds"] = [0, 1, 2]
         cfg["model"] = {"n_estimators": 10, "max_depth": 3}
@@ -195,10 +196,10 @@ def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path)
         path.write_text(yaml.safe_dump(cfg))
         assert main(["--config", str(path), "--output-dir", str(tmp_path)]) == 0
     finally:
-        register_llm_domain("pharma")
+        register_llm_domain(domain)
     assert seen and all(shown for shown, _ in seen)
     assert len({system for _, system in seen}) == 2 * 5      # A's wording, and B = C's wording
-    runs = {s: json.loads((tmp_path / "pharma_llm_prompt_control" / f"seed_{s}.json")
+    runs = {s: json.loads((tmp_path / f"{domain}_llm_prompt_control" / f"seed_{s}.json")
                           .read_text()) for s in (0, 1, 2)}
     for run in runs.values():
         a, b, c = (run["systems"][k]["rounds"] for k in
@@ -214,15 +215,16 @@ def test_prompt_only_control_pays_b_like_a_and_shows_checks_everywhere(tmp_path)
     assert "Reading" in module.to_markdown(res)
 
 
-def test_condition_d_is_prompted_like_a_and_paid_like_c(tmp_path):
-    """Amendment 7 with a stub model whose reports ignore the wording: D's system prompt is
-    A's, D's rewards are C's; the factorial analysis runs on the four cells."""
+@pytest.mark.parametrize("domain", ["pharma", "energy"])
+def test_condition_d_is_prompted_like_a_and_paid_like_c(tmp_path, domain):
+    """Amendments 7 and 8 with a stub model whose reports ignore the wording: D's system
+    prompt is A's, D's rewards are C's; the factorial analysis runs on the four cells."""
     seen = []
-    register_llm_domain("pharma", client_factory=lambda llm: (
+    register_llm_domain(domain, client_factory=lambda llm: (
         SeesHistory(seen), {"model": llm["model"], "digest": llm["digest"]}))
-    control = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control.yaml").read_text(
+    control = yaml.safe_load((ROOT / "configs" / f"{domain}_llm_prompt_control.yaml").read_text(
         encoding="utf-8"))
-    d_cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control_d.yaml").read_text(
+    d_cfg = yaml.safe_load((ROOT / "configs" / f"{domain}_llm_prompt_control_d.yaml").read_text(
         encoding="utf-8"))
     assert {k: v for k, v in d_cfg.items() if k not in ("name", "systems")} == {
         k: v for k, v in control.items() if k not in ("name", "systems")}
@@ -236,14 +238,14 @@ def test_condition_d_is_prompted_like_a_and_paid_like_c(tmp_path):
             path.write_text(yaml.safe_dump(cfg))
             assert main(["--config", str(path), "--output-dir", str(tmp_path)]) == 0
     finally:
-        register_llm_domain("pharma")
+        register_llm_domain(domain)
     runs = {name: {s: json.loads((tmp_path / name / f"seed_{s}.json").read_text())
                    for s in (0, 1, 2)}
-            for name in ("pharma_llm_prompt_control", "pharma_llm_prompt_control_d")}
+            for name in (f"{domain}_llm_prompt_control", f"{domain}_llm_prompt_control_d")}
     for s in (0, 1, 2):
-        c = runs["pharma_llm_prompt_control"][s]["systems"]["proposed"]["rounds"]
-        a = runs["pharma_llm_prompt_control"][s]["systems"]["baseline_shown"]["rounds"]
-        d = runs["pharma_llm_prompt_control_d"][s]["systems"]["payoff_only"]["rounds"]
+        c = runs[f"{domain}_llm_prompt_control"][s]["systems"]["proposed"]["rounds"]
+        a = runs[f"{domain}_llm_prompt_control"][s]["systems"]["baseline_shown"]["rounds"]
+        d = runs[f"{domain}_llm_prompt_control_d"][s]["systems"]["payoff_only"]["rounds"]
         assert d["votes"] == c["votes"] and d["R"] == c["R"] and d["R"] != a["R"]
     # two distinct wordings per agent across the four cells: A = D, B = C
     assert len({system for _, system in seen}) == 2 * 5
@@ -251,8 +253,10 @@ def test_condition_d_is_prompted_like_a_and_paid_like_c(tmp_path):
         "analyze_factorial", ROOT / "statistics" / "analyze_factorial.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    res = module.analyse(runs)
+    res = module.analyse(runs, domain)
     assert set(res["effects"]["mean_confidence"]) == {
         "wording (main effect)", "payoff (main effect)", "interaction"}
     assert 0 <= res["descriptive"]["brier"]["A"]["mean"] <= 1
     assert "Factorial effects" in module.to_markdown(res)
+    # the replication rule of amendment 8 is evaluated for energy only
+    assert ("replication" in res) == (domain == "energy")

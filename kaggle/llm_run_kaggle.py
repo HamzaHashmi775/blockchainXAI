@@ -1,5 +1,5 @@
 # %% [markdown]
-# # LLM-agent experiments on Kaggle (Ollama) - protocol amendments 4, 6 and 7
+# # LLM-agent experiments on Kaggle (Ollama) - protocol amendments 4, 6, 7 and 8
 #
 # These are the real runs on TEST scenarios. Do not change anything except `RUNS` below.
 #
@@ -15,6 +15,10 @@
 #      (about 8.3 hours)
 #    - session 6 (amendment 7, condition D): `["pharma_llm_prompt_control_d"]`
 #      (about 3 hours)
+#    - session 7 (amendment 8, energy A-C): `["energy_llm_prompt_control"]`  (about 8.6 hours)
+#    - session 8 (amendment 8, energy D): `["energy_llm_prompt_control_d"]`  (about 3 hours)
+#    The notebook stops at once if no GPU is attached (session 6 first ran on a CPU and
+#    produced nothing).
 # 4. Click **Save Version -> Save & Run All (Commit)**. Do NOT use Run All in the editor:
 #    an open editor session stops when it is idle. A committed version keeps running with
 #    the browser closed.
@@ -22,7 +26,7 @@
 #    `llm_results.zip` and give it to Claude Code.
 
 # %%
-RUNS = ["pharma_llm_prompt_control_d"]
+RUNS = ["energy_llm_prompt_control"]
 MODEL = "qwen2.5:7b"        # frozen in the protocol; a different model is refused
 PARALLEL = 5
 
@@ -47,11 +51,16 @@ else:
     with zipfile.ZipFile(bundles[0]) as archive:
         archive.extractall(WORK)
 os.chdir(WORK)
-assert os.path.exists("configs/pharma_llm_prompt_control_d.yaml"), "This dataset is an old bundle."
+assert os.path.exists("configs/energy_llm_prompt_control_d.yaml"), "This dataset is an old bundle."
 for run in RUNS:
     assert os.path.exists(f"configs/{run}.yaml"), f"unknown run {run!r}"
 
 # %%
+# without a GPU every model call times out after 10 min and nothing is saved
+gpu = subprocess.run("nvidia-smi -L", shell=True, capture_output=True, text=True)
+print(gpu.stdout)
+assert gpu.returncode == 0 and "GPU" in gpu.stdout, (
+    "No GPU found: set Settings -> Accelerator -> GPU T4 x2, then save and run again.")
 subprocess.run("apt-get install -y -qq zstd pciutils > /dev/null 2>&1", shell=True)
 # the download server sometimes answers 504; retry instead of failing on the first error
 for attempt in range(6):

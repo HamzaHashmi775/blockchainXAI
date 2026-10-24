@@ -891,3 +891,54 @@ effect; do not call lower confidence "better calibration" without a correctness 
 Post hoc; pharma only; one model; n = 5; D from a separate session. A null payoff effect in
 this design means the agents did not adapt to rewards seen through a three-round history
 within 200 rounds; it does not show that LLM agents cannot learn from incentives.
+
+### Amendment 8 — 2026-10-24 (protocol v1.8): energy replication of the 2×2 design (added, post hoc)
+
+**Status: FROZEN 2026-10-24, before any cell of it was run.** Direction from the user:
+replicate the 2×2 in energy before the cross-domain and sensitivity analyses (Phase 10).
+Known when this was written: all pharma results of amendments 6–7 (wording main effect on
+mean stated confidence −0.299, payoff main effect +0.001, D − A within its bound) and the
+energy results of amendment 4 (proposed − baseline confidence −0.140). No energy run of this
+design exists.
+
+#### A8.1 Cells and runs
+| Cell | Reward rules stated | Payoff applied | Config | Session |
+|---|---|---|---|---|
+| A `baseline_shown` | baseline (A6 text) | baseline | `energy_llm_prompt_control.yaml` | 7 |
+| B `prompt_only` | proposed (incl. reputation) | baseline | same | 7 |
+| C `proposed` | proposed | proposed (incentive + reputation) | same | 7 |
+| D `payoff_only` | baseline (A's text) | proposed | `energy_llm_prompt_control_d.yaml` | 8 |
+- Everything except `name` and `systems` is identical to `energy_llm_main.yaml` (model and
+  digest, raw prompt, scenarios, seeds 0–4, 200 rounds, ω = 0.5, temperature 0); `systems`
+  is identical to the pharma configs of amendments 6 and 7; C equals the proposed system of
+  `energy_llm_main`. Tested, together with the prompt identities of A6.1/A7.1 for the five
+  energy agents (B = C, D = A, A differs from B only in the reward-rule statement) and,
+  with a stub model, the payoffs (B paid as A, D paid as C, checks shown in every cell).
+- Session 7: 15,000 calls (about 8.6 GPU hours); session 8: 5,000 calls (about 3 hours).
+  All four cells in one session (about 11.5 hours) would be too close to Kaggle's 12-hour
+  limit, so A–C and D are split as in pharma. The notebook now stops at once without a GPU
+  (setup only; no effect on any result).
+
+#### A8.2 Analysis (`statistics/analyze_factorial.py --domain energy`)
+- Identical to A7.2: unit = seed, n = 5, paired; confirmatory family = wording main effect,
+  payoff main effect and interaction on mean stated confidence, Holm over three, decision
+  rule as A7.2; D − A with its 95 % CI against the bound ±10 % of the energy wording effect
+  |B − A| (computed from the energy cells, so it scales with the energy effect); the same
+  secondary outcomes and calibration quantities.
+- **Replication rule, fixed now:** the pharma pattern "replicates" in energy if (i) the
+  wording main effect is "lower", (ii) the payoff main effect is "no detectable effect" and
+  (iii) the CI of D − A lies within the bound. Otherwise the result is reported as "does not
+  replicate" with the parts not met named; a payoff effect in either direction is reported
+  as found. A non-detected payoff effect is never described as "no effect".
+- Descriptive checks against `energy_llm_main` (same seeds and rounds): C vs its proposed
+  and A vs its baseline system, for mean confidence and fidelity.
+- The two domains are reported side by side; they are not pooled and no correction across
+  domains is applied (each family is its own amendment).
+- Outputs: `results/summaries/energy_llm_factorial.json`, `tables/energy_llm_factorial.md`.
+  The `--domain` option leaves the pharma outputs byte-identical (checked).
+
+#### A8.3 Limits
+Post hoc; same model, code and prompts as pharma, so this tests whether the pattern holds in
+a second domain, not an independent replication. Energy's confidence effect in amendment 4
+was half of pharma's, so the absolute bound for D − A is tighter. n = 5; D from a separate
+session; the A7.3 limit on what a null payoff effect means applies unchanged.

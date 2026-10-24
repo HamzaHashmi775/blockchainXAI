@@ -956,3 +956,20 @@ was restarted and its cause was not established.
   three-round history). Post hoc, pharma only, one model, n = 5, D from a separate session.
 - Next: decide with the user whether to start the cross-domain and sensitivity analyses
   (Phase 10) now, or first add an energy replication of the 2×2.
+
+## 2026-10-24 — Amendment 8 (energy replication of the 2×2) frozen
+
+- Direction from the user: run the 2×2 in energy before Phase 10.
+- Amendment 8 (v1.8) frozen before any energy cell was run:
+  `configs/energy_llm_prompt_control.yaml` (A–C, session 7, ≈8.6 h) and
+  `configs/energy_llm_prompt_control_d.yaml` (D, session 8, ≈3 h): `energy_llm_main`
+  settings with the pharma `systems` blocks unchanged. Split into two sessions because all
+  four cells (≈11.5 h) are too close to Kaggle's 12-hour limit.
+- Replication rule fixed in A8.2: wording main effect "lower", payoff main effect "no
+  detectable effect", and D − A within ±10 % of the energy |B − A|; otherwise the parts not
+  met are named.
+- Code: `statistics/analyze_factorial.py --domain` (pharma outputs byte-identical, checked by
+  rerunning; also prints UTF-8 now), replication rule and checks against `energy_llm_main`
+  for energy; prompt-control tests parametrized over pharma and energy (stub runs: B paid as
+  A, D paid as C, B = C and D = A wordings for the five energy agents). Kaggle notebook set
+  to session 7 and now stops at once if `nvidia-smi` finds no GPU. Full suite: 177 passed.

@@ -309,14 +309,15 @@ def test_history_reaches_the_next_prompt_and_hides_audit_in_baseline(prep):
     assert "explanation check" in seen[5]
 
 
-def test_prompt_only_control_states_the_proposed_rules_with_the_baseline_payoff():
-    """Amendment 6: B has exactly C's wording, A differs from B only in the reward rules,
-    and all three show the audit checks in the round history."""
+@pytest.mark.parametrize("domain", ["pharma", "energy"])
+def test_prompt_only_control_states_the_proposed_rules_with_the_baseline_payoff(domain):
+    """Amendments 6 (pharma) and 8 (energy): B has exactly C's wording, A differs from B
+    only in the reward rules, and all three show the audit checks in the round history."""
     import yaml
-    cfg = yaml.safe_load((ROOT / "configs" / "pharma_llm_prompt_control.yaml").read_text(
+    cfg = yaml.safe_load((ROOT / "configs" / f"{domain}_llm_prompt_control.yaml").read_text(
         encoding="utf-8"))
     a, b, c = (cfg["systems"][k] for k in ("baseline_shown", "prompt_only", "proposed"))
-    main = yaml.safe_load((ROOT / "configs" / "pharma_llm_main.yaml").read_text(
+    main = yaml.safe_load((ROOT / "configs" / f"{domain}_llm_main.yaml").read_text(
         encoding="utf-8"))
     assert {k: v for k, v in cfg.items() if k not in ("name", "systems")} == {
         k: v for k, v in main.items() if k not in ("name", "systems")}
@@ -326,8 +327,8 @@ def test_prompt_only_control_states_the_proposed_rules_with_the_baseline_payoff(
     assert {k: v for k, v in b.items() if k not in strip} == main["systems"]["baseline"]
     assert {k: v for k, v in a.items() if k not in strip} == main["systems"]["baseline"]
     assert all(shows_audit(s) for s in (a, b, c)) and not shows_audit(BASELINE)
-    for agent in OBJECTIVES["pharma"]:
-        pa, pb, pc = (system_prompt("pharma", agent, s, 0.5, style="raw") for s in (a, b, c))
+    for agent in OBJECTIVES[domain]:
+        pa, pb, pc = (system_prompt(domain, agent, s, 0.5, style="raw") for s in (a, b, c))
         assert pb == pc
         assert pa.replace(reward_rules(a), "") == pb.replace(reward_rules(b), "")
     assert "checked (the checks appear in your recent rounds) but do not affect" in \

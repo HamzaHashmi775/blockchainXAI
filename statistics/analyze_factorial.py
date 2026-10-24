@@ -1,18 +1,20 @@
 """2x2 wording x payoff design for LLM agents (protocol amendment 7).
 
-    python statistics/analyze_factorial.py
+    python statistics/analyze_factorial.py [--domain pharma|energy]
 
-Cells (pharma, omega 0.5, seeds 0-4, audit checks shown in the history in all four):
+Cells (omega 0.5, seeds 0-4, audit checks shown in the history in all four):
 A = baseline wording, baseline payoff; B = proposed wording, baseline payoff;
-C = proposed wording, proposed payoff (all three from results/raw/pharma_llm_prompt_control);
-D = baseline wording, proposed payoff (results/raw/pharma_llm_prompt_control_d, run in a
-later Kaggle session). Writes results/summaries/pharma_llm_factorial.json and
-tables/pharma_llm_factorial.md. Added, post hoc experiment.
+C = proposed wording, proposed payoff (all three from results/raw/<domain>_llm_prompt_control);
+D = baseline wording, proposed payoff (results/raw/<domain>_llm_prompt_control_d, run in a
+later Kaggle session). Writes results/summaries/<domain>_llm_factorial.json and
+tables/<domain>_llm_factorial.md. Added, post hoc experiment: pharma is amendment 7, the
+energy replication amendment 8 (which also fixes the replication rule below).
 
 Calibration: stated confidence is compared with whether the agent's own vote was the
 reference-best option (Brier score; mean confidence minus share correct). This is the
 target against which "lower confidence" can be called better or worse calibrated.
 """
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -26,10 +28,17 @@ sys.path.insert(0, str(ROOT / "statistics"))
 from analyze_llm import _get, load  # noqa: E402
 from evaluation.stats import checkpoint_verdict, describe, holm, paired_comparison  # noqa: E402
 
-CELLS = {"A": ("pharma_llm_prompt_control", "baseline_shown"),
-         "B": ("pharma_llm_prompt_control", "prompt_only"),
-         "C": ("pharma_llm_prompt_control", "proposed"),
-         "D": ("pharma_llm_prompt_control_d", "payoff_only")}
+SYSTEMS = {"A": "baseline_shown", "B": "prompt_only", "C": "proposed", "D": "payoff_only"}
+AMENDMENT = {"pharma": 7, "energy": 8}
+
+
+def cells(domain):
+    """{cell: (run, system)}; A-C share one run, D is a separate run."""
+    return {c: (f"{domain}_llm_prompt_control" + ("_d" if c == "D" else ""), system)
+            for c, system in SYSTEMS.items()}
+
+
+CELLS = cells("pharma")
 PRIMARY = "mean_confidence"
 METRICS = {"mean_confidence": ("behaviour", "mean_confidence"),
            "confidence_inflation": ("behaviour", "confidence_inflation"),
@@ -54,10 +63,10 @@ def calibration(rounds):
             "share_votes_correct": float(correct.mean())}
 
 
-def cell_series(runs, seeds, metric):
+def cell_series(runs, seeds, metric, domain="pharma"):
     """{cell: array over seeds} for a metric or a calibration quantity."""
     out = {}
-    for cell, (run, system) in CELLS.items():
+    for cell, (run, system) in cells(domain).items():
         values = []
         for s in seeds:
             data = runs[run][s]["systems"][system]
@@ -67,13 +76,13 @@ def cell_series(runs, seeds, metric):
     return out
 
 
-def analyse(runs):
-    seeds = sorted(set(runs["pharma_llm_prompt_control"]) & set(
-        runs["pharma_llm_prompt_control_d"]))
+def analyse(runs, domain="pharma"):
+    names = cells(domain)
+    seeds = sorted(set(runs[names["A"][0]]) & set(runs[names["D"][0]]))
     out = {"seeds": seeds, "n_seeds": len(seeds), "descriptive": {}, "effects": {},
            "simple_contrasts": {}}
     for metric in (*METRICS, *CALIBRATION):
-        x = cell_series(runs, seeds, metric)
+        x = cell_series(runs, seeds, metric, domain)
         out["descriptive"][metric] = {c: describe(v) for c, v in x.items()}
         # factorial effects as paired comparisons over seeds
         effects = {
@@ -101,9 +110,46 @@ def analyse(runs):
         "bound": bound, "ci": [d_a["ci_low"], d_a["ci_high"]],
         "within_bound": bool(-bound < d_a["ci_low"] and d_a["ci_high"] < bound)}
     calls = [runs[run][s]["systems"][system]["metrics"]["calls"] for run, system in
-             CELLS.values() for s in seeds]
+             names.values() for s in seeds]
     out["calls"] = {k: int(sum(c[k] for c in calls))
                     for k in ("total", "unusable_replies", "reports_replaced_by_tool_report")}
+    if domain != "pharma":
+        out["domain"] = domain
+        out["replication"] = replication(out)
+    return out
+
+
+def replication(res):
+    """Amendment 8, fixed before the energy run: the pharma pattern replicates if the
+    wording main effect is 'lower', the payoff main effect is 'no detectable effect' and the
+    CI of D - A lies within the pre-declared bound; otherwise each part not met is named."""
+    primary = res["effects"][PRIMARY]
+    parts = {"wording main effect lower":
+             primary["wording (main effect)"]["verdict"] == "lower",
+             "payoff main effect not detected":
+             primary["payoff (main effect)"]["verdict"] == "no detectable effect",
+             "D - A within the bound": res["d_vs_a_bound"]["within_bound"]}
+    unmet = [k for k, ok in parts.items() if not ok]
+    return {"parts": parts, "replicated": not unmet,
+            "reading": ("the pharma pattern replicates" if not unmet else
+                        "the pharma pattern does not replicate; not met: " + "; ".join(unmet))}
+
+
+def checks_against_main_run(runs, domain, seeds):
+    """Descriptive: A and C against the baseline and proposed systems of the amendment-4
+    main run of the same domain (same seeds and rounds; GPU runs at temperature 0 are not
+    bit-exact)."""
+    original = load(f"{domain}_llm_main")
+    if not original:
+        return None
+    run = cells(domain)["A"][0]
+    out = {}
+    for cell, system in (("C", "proposed"), ("A", "baseline")):
+        out[f"{cell}_vs_original_{system}"] = {m: paired_comparison(
+            np.array([_get(runs[run][s]["systems"][SYSTEMS[cell]]["metrics"], METRICS[m])
+                      for s in seeds], dtype=float),
+            np.array([_get(original[s]["systems"][system]["metrics"], METRICS[m])
+                      for s in seeds], dtype=float)) for m in ("mean_confidence", "fidelity")}
     return out
 
 
@@ -131,11 +177,13 @@ def _cell(d):
 
 
 def to_markdown(res):
+    domain = res.get("domain", "pharma")
     lines = [
-        "# 2×2 wording × payoff (pharma, LLM agents) — added, post hoc experiment",
+        f"# 2×2 wording × payoff ({domain}, LLM agents) — added, post hoc experiment",
         "",
         f"n = {res['n_seeds']} paired seeds; ω = 0.5; audit checks shown in all cells. "
-        "A, B, C from one Kaggle session; D from a later session (amendment 7). "
+        "A, B, C from one Kaggle session; D from a later session "
+        f"(amendment {AMENDMENT[domain]}). "
         f"Model calls: {res['calls']['total']}; unusable replies: "
         f"{res['calls']['unusable_replies']}.",
         "",
@@ -146,7 +194,8 @@ def to_markdown(res):
     for m, by in res["descriptive"].items():
         lines.append(f"| {m} | {_cell(by['A'])} | {_cell(by['B'])} | {_cell(by['C'])} | "
                      f"{_cell(by['D'])} |")
-    lines += ["", f"## Factorial effects on {PRIMARY} (confirmatory family of amendment 7)", "",
+    lines += ["", f"## Factorial effects on {PRIMARY} (confirmatory family of amendment "
+              f"{AMENDMENT[domain]})", "",
               "| Effect | Δ | 95% CI | Test | p | p (Holm) | Verdict |",
               "|---|---|---|---|---|---|---|"]
     for name, c in res["effects"][PRIMARY].items():
@@ -157,7 +206,17 @@ def to_markdown(res):
     lines += ["", f"D − A on {PRIMARY}: 95% CI [{b['ci'][0]:+.3f}, {b['ci'][1]:+.3f}]; "
               f"pre-declared bound ±{b['bound']:.3f} (10 % of the wording effect B − A): "
               + ("CI within the bound" if b["within_bound"] else "CI not within the bound")
-              + ".", "",
+              + "."]
+    if "replication" in res:
+        lines += ["", "Replication of the pharma pattern (rule of amendment 8): **"
+                  + res["replication"]["reading"] + "**."]
+    if res.get("checks_against_main_run"):
+        lines += ["", f"Descriptive checks against {domain}_llm_main (same seeds and rounds):"]
+        for name, by in res["checks_against_main_run"].items():
+            lines.append(f"- {name}: " + "; ".join(
+                f"{m} Δ {c['mean_difference']:+.3f} (p {c['p_value']:.3f})"
+                for m, c in by.items()))
+    lines += ["",
               "## Simple contrasts and factorial effects, all outcomes (secondary, unadjusted)",
               "", "| Outcome | Contrast | Δ | 95% CI | p |", "|---|---|---|---|---|"]
     for m in res["simple_contrasts"]:
@@ -181,17 +240,24 @@ def to_markdown(res):
     return "\n".join(lines) + "\n"
 
 
-def main():
-    runs = {run: load(run) for run, _ in CELLS.values()}
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="2x2 wording x payoff analysis")
+    parser.add_argument("--domain", choices=sorted(AMENDMENT), default="pharma")
+    domain = parser.parse_args(argv).domain
+    runs = {run: load(run) for run, _ in cells(domain).values()}
     missing = [r for r, d in runs.items() if not d]
     if missing:
         raise SystemExit(f"no results in results/raw/ for {missing}")
-    res = analyse(runs)
-    res["calibration_main_runs"] = calibration_of_main_runs()
-    (ROOT / "results" / "summaries" / "pharma_llm_factorial.json").write_text(
+    res = analyse(runs, domain)
+    if domain == "pharma":
+        res["calibration_main_runs"] = calibration_of_main_runs()
+    else:
+        res["checks_against_main_run"] = checks_against_main_run(runs, domain, res["seeds"])
+    (ROOT / "results" / "summaries" / f"{domain}_llm_factorial.json").write_text(
         json.dumps(res, indent=2), encoding="utf-8")
     text = to_markdown(res)
-    (ROOT / "tables" / "pharma_llm_factorial.md").write_text(text, encoding="utf-8")
+    (ROOT / "tables" / f"{domain}_llm_factorial.md").write_text(text, encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     print(text)
 
 
