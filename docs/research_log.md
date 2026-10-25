@@ -995,3 +995,7 @@ was restarted and its cause was not established.
   descriptive and does not enter the 2×2 contrasts, all of which use A.
 - With B − A ≈ −0.168, the pre-declared D − A bound will be about ±0.017.
 - Next: session 8 (cell D, ≈3 h).
+- Session 8 (cell D) started 2026-10-25 by me through Chrome at the user's request:
+  `notebook70fb218ad3` version 2 (scriptVersionId 362164456), notebook re-imported from
+  commit 5c6992d with `RUNS = ["energy_llm_prompt_control_d"]`, input `dataset9` only,
+  GPU T4 ×2 (both T4s listed by the GPU check), Internet on.
