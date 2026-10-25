@@ -26,7 +26,7 @@
 #    `llm_results.zip` and give it to Claude Code.
 
 # %%
-RUNS = ["energy_llm_prompt_control"]
+RUNS = ["energy_llm_prompt_control_d"]
 MODEL = "qwen2.5:7b"        # frozen in the protocol; a different model is refused
 PARALLEL = 5
 
