@@ -973,3 +973,25 @@ was restarted and its cause was not established.
   for energy; prompt-control tests parametrized over pharma and energy (stub runs: B paid as
   A, D paid as C, B = C and D = A wordings for the five energy agents). Kaggle notebook set
   to session 7 and now stops at once if `nvidia-smi` finds no GPU. Full suite: 177 passed.
+
+## 2026-10-25 — Session 7: energy cells A–C (amendment 8)
+
+- Kaggle `notebook70fb218ad3` version 1 (started by me through Chrome at the user's request,
+  accelerator set from None to GPU T4 ×2 before the run). 2 × T4, 29/29 layers offloaded,
+  0 HTTP errors; started 04:34 UTC, finished 13:58 (≈9.4 h). Manifest config identical to
+  `configs/energy_llm_prompt_control.yaml`; dataset SHA-256 as `energy_llm_main`; model
+  digest 845dbda0…; 5 seeds; 0 unusable replies. Raw in
+  `results/raw/energy_llm_prompt_control/` (git-ignored).
+- The confirmatory analysis (A8.2) needs cell D (session 8) and has not been run.
+  Descriptive cell means only, seeds 0–4: mean confidence A 0.898, B 0.730, C 0.734;
+  confidence inflation 0.203 / 0.031 / 0.032; manipulation 0.281 / 0.243 / 0.241;
+  fidelity 0.459 / 0.457 / 0.458; collective accuracy 0.782 / 0.782 / 0.772; Brier 0.229 /
+  0.179 / 0.181; overconfidence 0.181 / 0.000 / 0.003; share of votes correct 0.717 / 0.730 /
+  0.731.
+- Declared checks against `energy_llm_main`: C vs its proposed system, confidence Δ −0.000
+  (p 0.98), fidelity −0.003. A vs its baseline: confidence **+0.025 (p < 0.001)**, fidelity
+  +0.013 (p 0.03). Unlike pharma (+0.001), showing the checks with A's changed sentence
+  raised stated confidence in energy. A is a new baseline by design (A6.1); this check is
+  descriptive and does not enter the 2×2 contrasts, all of which use A.
+- With B − A ≈ −0.168, the pre-declared D − A bound will be about ±0.017.
+- Next: session 8 (cell D, ≈3 h).
