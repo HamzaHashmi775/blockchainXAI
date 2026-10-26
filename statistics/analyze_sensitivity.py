@@ -15,7 +15,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from evaluation.stats import describe, holm, paired_comparison  # noqa: E402
+from evaluation.stats import checkpoint_verdict, describe, holm, paired_comparison  # noqa: E402
 
 METRICS = ("fidelity", "evidence_support", "manipulation", "collective_accuracy",
            "manipulation_success")
@@ -49,6 +49,7 @@ def analyse(name):
                     for m in METRICS}
             for m, p in zip(CONFIRMATORY, holm([comp[m]["p_value"] for m in CONFIRMATORY])):
                 comp[m]["p_holm"] = float(p)
+                comp[m]["verdict"] = checkpoint_verdict(comp[m], p, m != "manipulation")
             entry["proposed_vs_baseline"] = comp
         deviation = {}
         for system in systems:
@@ -88,15 +89,15 @@ def to_markdown(res):
                 f"{source[sy]['mean']:.3f} ± {source[sy]['sd']:.3f}" for sy in systems) + " |")
         lines.append("")
     lines += ["## Proposed − baseline", "",
-              "| Value | Metric | Δ | 95% CI | Rel. | test | p | p (Holm) |",
-              "|---|---|---|---|---|---|---|---|"]
+              "| Value | Metric | Δ | 95% CI | Rel. | test | p | p (Holm) | Verdict |",
+              "|---|---|---|---|---|---|---|---|---|"]
     for value, entry in res["by_value"].items():
         for metric in CONFIRMATORY:
             c = entry["proposed_vs_baseline"][metric]
             lines.append(f"| {value} | {metric} | {c['mean_difference']:+.3f} | "
                          f"[{c['ci_low']:+.3f}, {c['ci_high']:+.3f}] | "
                          f"{c['relative_improvement']:+.1%} | {c['test']} | {c['p_value']:.4f} | "
-                         f"{c['p_holm']:.4f} |")
+                         f"{c['p_holm']:.4f} | {c['verdict']} |")
     lines += ["", "## Unilateral deviation from all-honest: gain of the best deviation "
               "(positive = deviating pays)", "",
               "| Value | System | Agent | honest payoff | best deviation | gain | honest best in seeds |",

@@ -75,3 +75,58 @@ def test_checkpoint_verdict_rule():
     assert checkpoint_verdict(worse, 0.01, higher_is_better=True) == "worse"
     assert checkpoint_verdict(worse, 0.01, higher_is_better=False) == "improved"
     assert checkpoint_verdict(better, float("nan"), higher_is_better=True) == "negligible"
+
+
+def _cross_domain_module():
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "statistics" / "analyze_cross_domain.py"
+    spec = importlib.util.spec_from_file_location("analyze_cross_domain", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _write_summaries(folder, verdicts):
+    import json
+
+    def cmp(verdict):
+        return {"mean_control": 0.5, "mean_treatment": 0.6, "mean_difference": 0.1,
+                "ci_low": 0.05, "ci_high": 0.15, "relative_improvement": 0.2,
+                "p_value": 0.01, "p_holm": 0.02, "test": "paired t-test", "verdict": verdict}
+
+    for domain, by_outcome in verdicts.items():
+        comparisons = {c: {o: cmp(by_outcome.get(o)) for o in
+                           ("fidelity", "evidence_support", "manipulation",
+                            "collective_accuracy", "manipulation_success")}
+                       for c in ("proposed_vs_baseline", "ablation_vs_baseline")}
+        main = {"n_seeds": 10, "comparisons": comparisons}
+        (folder / f"{domain}_main.json").write_text(json.dumps(main))
+        (folder / f"{domain}_llm.json").write_text(json.dumps({"main": main}))
+
+
+def test_cross_domain_h6_compares_verdicts_and_never_pools(tmp_path):
+    module = _cross_domain_module()
+    _write_summaries(tmp_path, {
+        "pharma": {"fidelity": "improved", "evidence_support": "improved",
+                   "manipulation": "improved"},
+        "energy": {"fidelity": "negligible", "evidence_support": "improved",
+                   "manipulation": "improved"}})
+    res = module.analyse(tmp_path)
+    c = res["arms"]["classical"]["comparisons"]["proposed_vs_baseline"]
+    assert c["h6_holds_for"] == ["evidence_support", "manipulation"]
+    assert c["h6"]["fidelity"] == {"verdicts": {"pharma": "improved", "energy": "negligible"},
+                                   "same_verdict": False}
+    # secondary outcomes are reported but carry no H6 verdict
+    assert "collective_accuracy" in c["outcomes"] and "collective_accuracy" not in c["h6"]
+    assert "H6 holds for: evidence_support, manipulation (2 of 3)" in module.to_markdown(res)
+
+
+def test_cross_domain_refuses_a_missing_verdict(tmp_path):
+    module = _cross_domain_module()
+    _write_summaries(tmp_path, {
+        "pharma": {"fidelity": "improved", "evidence_support": "improved",
+                   "manipulation": "improved"},
+        "energy": {"fidelity": "improved", "evidence_support": "improved"}})
+    with pytest.raises(ValueError, match="verdict missing"):
+        module.analyse(tmp_path)

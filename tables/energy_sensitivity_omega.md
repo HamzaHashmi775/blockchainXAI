@@ -58,20 +58,20 @@ n = 10 seeds; mean ± SD. Exploratory (not pre-declared) values: ['0.9'].
 
 ## Proposed − baseline
 
-| Value | Metric | Δ | 95% CI | Rel. | test | p | p (Holm) |
-|---|---|---|---|---|---|---|---|
-| 0.25 | fidelity | +0.031 | [+0.020, +0.047] | +3.3% | Wilcoxon signed-rank | 0.0020 | 0.0039 |
-| 0.25 | evidence_support | +0.034 | [+0.015, +0.054] | +3.7% | paired t-test | 0.0031 | 0.0039 |
-| 0.25 | manipulation | -0.022 | [-0.032, -0.012] | -41.2% | paired t-test | 0.0007 | 0.0021 |
-| 0.5 | fidelity | +0.034 | [+0.021, +0.050] | +3.6% | Wilcoxon signed-rank | 0.0020 | 0.0039 |
-| 0.5 | evidence_support | +0.040 | [+0.017, +0.063] | +4.3% | paired t-test | 0.0033 | 0.0039 |
-| 0.5 | manipulation | -0.029 | [-0.043, -0.016] | -44.4% | paired t-test | 0.0009 | 0.0026 |
-| 0.75 | fidelity | +0.207 | [+0.160, +0.269] | +27.8% | Wilcoxon signed-rank | 0.0020 | 0.0020 |
-| 0.75 | evidence_support | +0.209 | [+0.145, +0.274] | +28.6% | paired t-test | 0.0000 | 0.0001 |
-| 0.75 | manipulation | -0.175 | [-0.220, -0.130] | -71.0% | paired t-test | 0.0000 | 0.0000 |
-| 0.9 | fidelity | +0.273 | [+0.214, +0.333] | +50.0% | paired t-test | 0.0000 | 0.0000 |
-| 0.9 | evidence_support | +0.297 | [+0.254, +0.340] | +57.2% | paired t-test | 0.0000 | 0.0000 |
-| 0.9 | manipulation | -0.202 | [-0.263, -0.142] | -44.5% | paired t-test | 0.0000 | 0.0000 |
+| Value | Metric | Δ | 95% CI | Rel. | test | p | p (Holm) | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| 0.25 | fidelity | +0.031 | [+0.020, +0.047] | +3.3% | Wilcoxon signed-rank | 0.0020 | 0.0039 | negligible |
+| 0.25 | evidence_support | +0.034 | [+0.015, +0.054] | +3.7% | paired t-test | 0.0031 | 0.0039 | negligible |
+| 0.25 | manipulation | -0.022 | [-0.032, -0.012] | -41.2% | paired t-test | 0.0007 | 0.0021 | improved |
+| 0.5 | fidelity | +0.034 | [+0.021, +0.050] | +3.6% | Wilcoxon signed-rank | 0.0020 | 0.0039 | negligible |
+| 0.5 | evidence_support | +0.040 | [+0.017, +0.063] | +4.3% | paired t-test | 0.0033 | 0.0039 | negligible |
+| 0.5 | manipulation | -0.029 | [-0.043, -0.016] | -44.4% | paired t-test | 0.0009 | 0.0026 | improved |
+| 0.75 | fidelity | +0.207 | [+0.160, +0.269] | +27.8% | Wilcoxon signed-rank | 0.0020 | 0.0020 | improved |
+| 0.75 | evidence_support | +0.209 | [+0.145, +0.274] | +28.6% | paired t-test | 0.0000 | 0.0001 | improved |
+| 0.75 | manipulation | -0.175 | [-0.220, -0.130] | -71.0% | paired t-test | 0.0000 | 0.0000 | improved |
+| 0.9 | fidelity | +0.273 | [+0.214, +0.333] | +50.0% | paired t-test | 0.0000 | 0.0000 | improved |
+| 0.9 | evidence_support | +0.297 | [+0.254, +0.340] | +57.2% | paired t-test | 0.0000 | 0.0000 | improved |
+| 0.9 | manipulation | -0.202 | [-0.263, -0.142] | -44.5% | paired t-test | 0.0000 | 0.0000 | improved |
 
 ## Unilateral deviation from all-honest: gain of the best deviation (positive = deviating pays)
 

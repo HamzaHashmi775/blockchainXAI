@@ -178,7 +178,8 @@
           "relative_improvement": 0.036811786624408385,
           "shapiro_p": 0.13590544040810537,
           "statistic": 4.008178913187503,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "negligible"
         },
         "fidelity": {
           "ci_high": 0.0468998997783378,
@@ -195,7 +196,8 @@
           "relative_improvement": 0.03332970626730235,
           "shapiro_p": 0.003673724380103336,
           "statistic": 0.0,
-          "test": "Wilcoxon signed-rank"
+          "test": "Wilcoxon signed-rank",
+          "verdict": "negligible"
         },
         "manipulation": {
           "ci_high": -0.012261545504844118,
@@ -212,7 +214,8 @@
           "relative_improvement": -0.4124421097908899,
           "shapiro_p": 0.0543253813340905,
           "statistic": -5.051408505684074,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "manipulation_success": {
           "ci_high": -0.009280339168287292,
@@ -523,7 +526,8 @@
           "relative_improvement": 0.043144961022695376,
           "shapiro_p": 0.15417746666605553,
           "statistic": 3.9550306594245783,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "negligible"
         },
         "fidelity": {
           "ci_high": 0.04983741788280634,
@@ -540,7 +544,8 @@
           "relative_improvement": 0.036342576466377834,
           "shapiro_p": 0.03574905945076139,
           "statistic": 0.0,
-          "test": "Wilcoxon signed-rank"
+          "test": "Wilcoxon signed-rank",
+          "verdict": "negligible"
         },
         "manipulation": {
           "ci_high": -0.015643006557224434,
@@ -557,7 +562,8 @@
           "relative_improvement": -0.4444698922265581,
           "shapiro_p": 0.8147971135801402,
           "statistic": -4.887932071005582,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "manipulation_success": {
           "ci_high": -0.012323679705611292,
@@ -868,7 +874,8 @@
           "relative_improvement": 0.28609354900511813,
           "shapiro_p": 0.0544212839413688,
           "statistic": 7.3258292499934985,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "fidelity": {
           "ci_high": 0.26933997778222135,
@@ -885,7 +892,8 @@
           "relative_improvement": 0.2777945953812957,
           "shapiro_p": 0.01773020895947894,
           "statistic": 0.0,
-          "test": "Wilcoxon signed-rank"
+          "test": "Wilcoxon signed-rank",
+          "verdict": "improved"
         },
         "manipulation": {
           "ci_high": -0.12968118501852582,
@@ -902,7 +910,8 @@
           "relative_improvement": -0.7097625409053434,
           "shapiro_p": 0.7267083221061442,
           "statistic": -8.728223351096464,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "manipulation_success": {
           "ci_high": -0.09524030661699534,
@@ -1213,7 +1222,8 @@
           "relative_improvement": 0.5719019728729965,
           "shapiro_p": 0.16636997218034988,
           "statistic": 15.724269304932267,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "fidelity": {
           "ci_high": 0.3331006570729867,
@@ -1230,7 +1240,8 @@
           "relative_improvement": 0.49986728474808084,
           "shapiro_p": 0.8365922152474954,
           "statistic": 10.364594423427658,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "manipulation": {
           "ci_high": -0.1419459101836183,
@@ -1247,7 +1258,8 @@
           "relative_improvement": -0.44538217743167474,
           "shapiro_p": 0.3747747709201832,
           "statistic": -7.565010226006881,
-          "test": "paired t-test"
+          "test": "paired t-test",
+          "verdict": "improved"
         },
         "manipulation_success": {
           "ci_high": -0.19781872879500587,

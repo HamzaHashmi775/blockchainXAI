@@ -1035,3 +1035,26 @@ was restarted and its cause was not established.
   −0.000; A vs baseline +0.025, p < 0.001).
 - Outputs: `results/summaries/energy_llm_factorial.json`, `tables/energy_llm_factorial.md`.
 - Next: Phase 10 (cross-domain comparison, β and ρ sensitivity), then Phase 11.
+
+## 2026-10-26 — Phase 10, Step 32: cross-domain comparison (H6)
+
+- New `statistics/analyze_cross_domain.py`: reads the saved summaries (`{domain}_main.json`,
+  `{domain}_llm.json`); runs no new tests and pools nothing. H6 per outcome = same §9 verdict
+  in both domains (§11.5; A4.3 for LLM agents at ω = 0.5). Outputs
+  `results/summaries/cross_domain.json`, `tables/cross_domain.md`. Tests: H6 logic, secondary
+  outcomes carry no H6 verdict, a missing verdict is refused.
+- **Classical agents, proposed vs baseline: H6 holds for manipulation only (1 of 3).**
+  Pharma F +83.5 %, E +75.7 %, M −69.7 % (all improved); energy F +3.6 %, E +4.3 %
+  (significant but < 5 % → negligible), M −44.4 % (improved). The energy baseline is
+  already at F 0.94 / E 0.93, leaving < 7 % headroom, so the 5 % threshold is hard to reach
+  there (ceiling; stated, not used to change any verdict). Ablation vs baseline: same pattern.
+- **LLM agents, proposed vs baseline: H6 holds for all three outcomes** (F and E negligible,
+  M improved in both domains; M −22.0 % pharma, −12.6 % energy). Ablation vs baseline: 2 of 3,
+  because pharma evidence support is "worse" (−3.5 %, Holm-significant; the §9 rule has no
+  size threshold for "worse") and energy's is negligible.
+- `statistics/analyze_sensitivity.py` now also reports the §9 verdict per parameter value
+  (same `checkpoint_verdict`, Holm over F, E, M), so Step 33 can compare verdicts with the
+  main runs. Rerun on `energy_sensitivity_omega`: numbers unchanged; at ω = 0.5 the verdicts
+  equal `energy_main`.
+- Step 33 started: `pharma_sensitivity_{beta,rho,omega}` and `energy_sensitivity_{beta,rho}`
+  running locally in parallel (10 seeds each, configs as frozen).
