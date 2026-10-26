@@ -999,3 +999,39 @@ was restarted and its cause was not established.
   `notebook70fb218ad3` version 2 (scriptVersionId 362164456), notebook re-imported from
   commit 5c6992d with `RUNS = ["energy_llm_prompt_control_d"]`, input `dataset9` only,
   GPU T4 ×2 (both T4s listed by the GPU check), Internet on.
+
+## 2026-10-26 — Session 8: energy cell D and the energy 2×2 analysis (amendment 8)
+
+- Kaggle `notebook70fb218ad3` version 2: Tesla T4 (CUDA backend, model on GPU), 0 HTTP 500
+  replies in the Ollama log; run started 14:38 UTC, last seed 17:11 (≈2.6 h). Manifest
+  config identical to `configs/energy_llm_prompt_control_d.yaml`; dataset SHA-256 as
+  `energy_llm_main`; digest 845dbda0…; seeds 0–4; status completed. Raw in
+  `results/raw/energy_llm_prompt_control_d/`, log excerpt in
+  `results/raw/llm_logs/energy_prompt_control_d_ollama_excerpt.txt` (git-ignored).
+- `statistics/analyze_factorial.py --domain energy`, run as frozen in A8.2. 20,000 model
+  calls over the four cells, 0 unusable replies. Confirmatory family (mean stated
+  confidence, n = 5 seeds, paired t, Holm over three):
+  - wording main effect −0.164 [−0.167, −0.161], Holm p < 0.0001 → **lower**;
+  - payoff main effect −0.000 [−0.002, +0.002], Holm p 0.99 → **no detectable effect**;
+  - interaction +0.006 [+0.004, +0.009], Holm p 0.0046 → **detected** (not detected in
+    pharma: −0.004, Holm 0.097).
+  - D − A −0.003, 95 % CI [−0.005, −0.002]: within the pre-declared bound ±0.017, but
+    the CI excludes 0 (pharma: +0.003 [+0.000, +0.006]).
+- **Replication rule (A8.2): the pharma pattern replicates** in energy; all three parts are
+  met. The rule does not include the interaction, so it is reported here as a difference
+  from pharma, not as a failure to replicate. What it shows: the payoff's effect on
+  confidence depends slightly on the wording (−0.003 with baseline wording, +0.003 with
+  proposed wording; unadjusted p 0.003 and 0.025). Both simple payoff effects are about
+  2 % of the wording effect (−0.167). They are significant because the seed-to-seed
+  variance is very small at temperature 0, not because they are large. The payoff main
+  effect is non-detected, which is not proof that it has no effect (A7.3).
+- Secondary (unadjusted): wording lowers confidence inflation (−0.170), manipulation
+  (−0.037), Brier (−0.047) and overconfidence (−0.176), and raises the share of correct
+  votes slightly (+0.012). Cell means for fidelity, evidence and accuracy differ by at most
+  0.01 (accuracy −0.010 under the proposed payoff, p 0.028 unadjusted). As in pharma, the
+  confidence/calibration change comes from the wording of the stated reward rules, not
+  from the payoff applied.
+- Descriptive checks against `energy_llm_main` unchanged from session 7 (C vs proposed Δ
+  −0.000; A vs baseline +0.025, p < 0.001).
+- Outputs: `results/summaries/energy_llm_factorial.json`, `tables/energy_llm_factorial.md`.
+- Next: Phase 10 (cross-domain comparison, β and ρ sensitivity), then Phase 11.
