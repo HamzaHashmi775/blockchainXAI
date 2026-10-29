@@ -1058,3 +1058,28 @@ was restarted and its cause was not established.
   equal `energy_main`.
 - Step 33 started: `pharma_sensitivity_{beta,rho,omega}` and `energy_sensitivity_{beta,rho}`
   running locally in parallel (10 seeds each, configs as frozen).
+
+## 2026-10-29 — Phase 10, Step 33: sensitivity analysis complete
+
+- Runs (configs as frozen, 10 seeds per value, one parameter at a time, local CPU):
+  `pharma_sensitivity_{beta,rho,omega}`, `energy_sensitivity_{beta,rho}` (energy ω done
+  2026-10-06). The first `energy_sensitivity_beta` process died at 8/10 seeds when the
+  Claude Code session ended; rerun from scratch; its seeds 0–7 were byte-identical to the
+  killed run's (determinism check), the partial copy was then deleted.
+- New `statistics/summarize_sensitivity.py` → `tables/sensitivity_robustness.md`,
+  `results/summaries/sensitivity_robustness.json`: §9 verdict (proposed vs baseline) at
+  each value vs the main run; "robust" = same verdict at every pre-declared value;
+  exploratory ω = 0.9 shown but not counted. At every default value the numbers equal the
+  main runs exactly.
+- **Pharma:** β ∈ {0, 0.1, 0.25, 0.4}, ρ ∈ {0.5, 0.8, 0.95}, ω ∈ {0.25, 0.5, 0.75}: F, E, M
+  "improved" at every value → robust. F improves +74.7 % even at β = 0: the fidelity gain
+  does not need the β term (the γ and λ terms suffice), so it must not be attributed to β.
+- **Energy:** β and ρ: verdicts unchanged at every value (F, E negligible; M improved) →
+  robust. ω: **not robust for F and E**: negligible at 0.25 and 0.5, improved at 0.75
+  (+27.8 %, +28.6 %) and at the exploratory 0.9; M improved throughout. The change is
+  towards more improvement: as ω (the private weight on steering the decision) rises, the
+  baseline's F and E fall and the mechanism's advantage appears.
+- Unilateral deviation: pharma, honest is the best response for 2 of 5 agents in the
+  proposed system at every β and ρ value; energy, 5 of 5 in all systems.
+- Full suite: 180 passed.
+- Next: Step 34 (final statistics) and Phase 11.

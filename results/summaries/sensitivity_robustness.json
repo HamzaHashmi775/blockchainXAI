@@ -1,0 +1,497 @@
+{
+  "missing": [],
+  "runs": {
+    "energy_sensitivity_beta": {
+      "domain": "energy",
+      "main_verdicts": {
+        "evidence_support": "negligible",
+        "fidelity": "negligible",
+        "manipulation": "improved"
+      },
+      "parameter": "incentive_weights.beta",
+      "robust": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "values": {
+        "0.0": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.04433263512492183,
+            "fidelity": 0.03361035749953597,
+            "manipulation": -0.43030609175510076
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.1": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.04353365436524221,
+            "fidelity": 0.03685174035966918,
+            "manipulation": -0.4625336267202743
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.25": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.043144961022695376,
+            "fidelity": 0.036342576466377834,
+            "manipulation": -0.4444698922265581
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.4": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.04297220842600785,
+            "fidelity": 0.03735610532994729,
+            "manipulation": -0.4438312970064555
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        }
+      }
+    },
+    "energy_sensitivity_omega": {
+      "domain": "energy",
+      "main_verdicts": {
+        "evidence_support": "negligible",
+        "fidelity": "negligible",
+        "manipulation": "improved"
+      },
+      "parameter": "game.omega",
+      "robust": {
+        "evidence_support": false,
+        "fidelity": false,
+        "manipulation": true
+      },
+      "values": {
+        "0.25": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.036811786624408385,
+            "fidelity": 0.03332970626730235,
+            "manipulation": -0.4124421097908899
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.5": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.043144961022695376,
+            "fidelity": 0.036342576466377834,
+            "manipulation": -0.4444698922265581
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.75": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.28609354900511813,
+            "fidelity": 0.2777945953812957,
+            "manipulation": -0.7097625409053434
+          },
+          "same_as_main": {
+            "evidence_support": false,
+            "fidelity": false,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.9": {
+          "exploratory": true,
+          "relative_improvement": {
+            "evidence_support": 0.5719019728729965,
+            "fidelity": 0.49986728474808084,
+            "manipulation": -0.44538217743167474
+          },
+          "same_as_main": {
+            "evidence_support": false,
+            "fidelity": false,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        }
+      }
+    },
+    "energy_sensitivity_rho": {
+      "domain": "energy",
+      "main_verdicts": {
+        "evidence_support": "negligible",
+        "fidelity": "negligible",
+        "manipulation": "improved"
+      },
+      "parameter": "reputation.rho",
+      "robust": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "values": {
+        "0.5": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.044051912155304775,
+            "fidelity": 0.03682559339408987,
+            "manipulation": -0.44076352119743384
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.8": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.043144961022695376,
+            "fidelity": 0.036342576466377834,
+            "manipulation": -0.4444698922265581
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        },
+        "0.95": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.0423027921138442,
+            "fidelity": 0.03632720363600404,
+            "manipulation": -0.4276035647451937
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "negligible",
+            "fidelity": "negligible",
+            "manipulation": "improved"
+          }
+        }
+      }
+    },
+    "pharma_sensitivity_beta": {
+      "domain": "pharma",
+      "main_verdicts": {
+        "evidence_support": "improved",
+        "fidelity": "improved",
+        "manipulation": "improved"
+      },
+      "parameter": "incentive_weights.beta",
+      "robust": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "values": {
+        "0.0": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7550146927302925,
+            "fidelity": 0.7472182272263347,
+            "manipulation": -0.6538624429861067
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.1": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7622332950044713,
+            "fidelity": 0.7734645273441065,
+            "manipulation": -0.6463869341012097
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.25": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7569311358119326,
+            "fidelity": 0.8349901578578569,
+            "manipulation": -0.6965531258896815
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.4": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7448575443975979,
+            "fidelity": 0.8600642775341737,
+            "manipulation": -0.6729817582595636
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        }
+      }
+    },
+    "pharma_sensitivity_omega": {
+      "domain": "pharma",
+      "main_verdicts": {
+        "evidence_support": "improved",
+        "fidelity": "improved",
+        "manipulation": "improved"
+      },
+      "parameter": "game.omega",
+      "robust": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "values": {
+        "0.25": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.4466615892358463,
+            "fidelity": 0.36979072137922825,
+            "manipulation": -0.7200265152095744
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.5": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7569311358119326,
+            "fidelity": 0.8349901578578569,
+            "manipulation": -0.6965531258896815
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.75": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 1.276680206794682,
+            "fidelity": 1.1503468371753192,
+            "manipulation": -0.5446399228040372
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.9": {
+          "exploratory": true,
+          "relative_improvement": {
+            "evidence_support": 0.8031829814459371,
+            "fidelity": 0.7600954373583655,
+            "manipulation": -0.41334289691920634
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        }
+      }
+    },
+    "pharma_sensitivity_rho": {
+      "domain": "pharma",
+      "main_verdicts": {
+        "evidence_support": "improved",
+        "fidelity": "improved",
+        "manipulation": "improved"
+      },
+      "parameter": "reputation.rho",
+      "robust": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "values": {
+        "0.5": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7871470550657973,
+            "fidelity": 0.8519236625482262,
+            "manipulation": -0.7194645338884965
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.8": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7569311358119326,
+            "fidelity": 0.8349901578578569,
+            "manipulation": -0.6965531258896815
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        },
+        "0.95": {
+          "exploratory": false,
+          "relative_improvement": {
+            "evidence_support": 0.7400664366934966,
+            "fidelity": 0.8443895615582633,
+            "manipulation": -0.6701526011643069
+          },
+          "same_as_main": {
+            "evidence_support": true,
+            "fidelity": true,
+            "manipulation": true
+          },
+          "verdicts": {
+            "evidence_support": "improved",
+            "fidelity": "improved",
+            "manipulation": "improved"
+          }
+        }
+      }
+    }
+  }
+}

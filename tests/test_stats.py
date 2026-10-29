@@ -130,3 +130,35 @@ def test_cross_domain_refuses_a_missing_verdict(tmp_path):
         "energy": {"fidelity": "improved", "evidence_support": "improved"}})
     with pytest.raises(ValueError, match="verdict missing"):
         module.analyse(tmp_path)
+
+
+def test_sensitivity_robustness_ignores_exploratory_values(tmp_path):
+    import importlib.util
+    import json
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "statistics" / "summarize_sensitivity.py"
+    spec = importlib.util.spec_from_file_location("summarize_sensitivity", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    def comp(verdict):
+        return {"verdict": verdict, "relative_improvement": 0.1}
+
+    main = {"comparisons": {"proposed_vs_baseline": {
+        "fidelity": comp("improved"), "evidence_support": comp("negligible"),
+        "manipulation": comp("improved")}}}
+    (tmp_path / "pharma_main.json").write_text(json.dumps(main))
+    (tmp_path / "energy_main.json").write_text(json.dumps(main))
+    by_value = {
+        "0.5": {"proposed_vs_baseline": main["comparisons"]["proposed_vs_baseline"]},
+        "0.9": {"proposed_vs_baseline": {"fidelity": comp("worse"),
+                                         "evidence_support": comp("negligible"),
+                                         "manipulation": comp("improved")}}}
+    (tmp_path / "pharma_sensitivity_omega.json").write_text(json.dumps(
+        {"parameter": "game.omega", "exploratory_values": ["0.9"], "by_value": by_value}))
+    (tmp_path / "energy_sensitivity_omega.json").write_text(json.dumps(
+        {"parameter": "game.omega", "exploratory_values": [], "by_value": by_value}))
+    res = module.analyse(tmp_path)
+    assert res["runs"]["pharma_sensitivity_omega"]["robust"]["fidelity"] is True
+    assert res["runs"]["energy_sensitivity_omega"]["robust"]["fidelity"] is False
+    assert "pharma_sensitivity_beta" in res["missing"]
