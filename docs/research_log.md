@@ -1083,3 +1083,19 @@ was restarted and its cause was not established.
   proposed system at every β and ρ value; energy, 5 of 5 in all systems.
 - Full suite: 180 passed.
 - Next: Step 34 (final statistics) and Phase 11.
+
+## 2026-10-30 — Phase 10, Step 34: final statistics; GATE 10 met
+
+- New `statistics/final_summary.py` → `tables/final_statistics.md`,
+  `results/summaries/final_statistics.json`. Runs no test; assembles H1–H6 and the
+  sensitivity verdicts from the saved summaries.
+- H4 had no stored verdict: the script applies the §7 primary comparison as declared
+  (paired, two-sided, α 0.05): "supported" if p < 0.05 and proposed degrades less,
+  "opposite" if p < 0.05 the other way, else "not supported". LLM H4 (3 seeds) carries no
+  confirmatory claim (A4.3).
+- Overall: H1/H2 improved in pharma (classical), negligible in energy and for LLM agents;
+  H3 improved in all four arm × domain cells; H4 not supported (pharma Δ +0.039, p 0.10;
+  energy Δ −0.020, p 0.07); H5 detection 1.000, false positives 0 of 29,800; H6 classical
+  1 of 3, LLM 3 of 3; sensitivity robust except energy ω for F and E.
+- GATE 10 (cross-domain, sensitivity, final stats saved to `results/summaries/`): met.
+- Next: Phase 11 (tables 1–7, figures, reproducibility check, claim–evidence map, paper).

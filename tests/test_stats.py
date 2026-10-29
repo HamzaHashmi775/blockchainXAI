@@ -162,3 +162,18 @@ def test_sensitivity_robustness_ignores_exploratory_values(tmp_path):
     assert res["runs"]["pharma_sensitivity_omega"]["robust"]["fidelity"] is True
     assert res["runs"]["energy_sensitivity_omega"]["robust"]["fidelity"] is False
     assert "pharma_sensitivity_beta" in res["missing"]
+
+
+def test_final_summary_h4_rule():
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "statistics" / "final_summary.py"
+    spec = importlib.util.spec_from_file_location("final_summary", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.h4_verdict({"p_value": 0.01, "mean_difference": -0.05}) == "supported"
+    assert module.h4_verdict({"p_value": 0.01, "mean_difference": 0.05}) == "opposite"
+    assert module.h4_verdict({"p_value": 0.20, "mean_difference": -0.05}) == "not supported"
+    # runs on the committed summaries
+    res = module.analyse()
+    assert set(res["H1_H3"]) == {"classical", "llm"} and res["H5"]["records"] > 0

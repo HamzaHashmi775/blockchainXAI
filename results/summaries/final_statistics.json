@@ -1,0 +1,319 @@
+{
+  "H1_H3": {
+    "classical": {
+      "energy": {
+        "H1": {
+          "ci_high": 0.04983741788280634,
+          "ci_low": 0.021041987095211764,
+          "mean_control": 0.9364644152955099,
+          "mean_difference": 0.034033529620918525,
+          "mean_treatment": 0.9704979449164288,
+          "outcome": "fidelity",
+          "p_holm": 0.00390625,
+          "relative_improvement": 0.036342576466377834,
+          "test": "Wilcoxon signed-rank",
+          "verdict": "negligible"
+        },
+        "H2": {
+          "ci_high": 0.06281590378674029,
+          "ci_low": 0.017104096213259676,
+          "mean_control": 0.9261799999999999,
+          "mean_difference": 0.03995999999999998,
+          "mean_treatment": 0.9661399999999999,
+          "outcome": "evidence_support",
+          "p_holm": 0.00390625,
+          "relative_improvement": 0.043144961022695376,
+          "test": "paired t-test",
+          "verdict": "negligible"
+        },
+        "H3": {
+          "ci_high": -0.015643006557224434,
+          "ci_low": -0.04259652737922305,
+          "mean_control": 0.0655157244112738,
+          "mean_difference": -0.029119766968223743,
+          "mean_treatment": 0.036395957443050055,
+          "outcome": "manipulation",
+          "p_holm": 0.0025856526455840904,
+          "relative_improvement": -0.4444698922265581,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "n_seeds": 10
+      },
+      "pharma": {
+        "H1": {
+          "ci_high": 0.48215700313688625,
+          "ci_low": 0.3698323337431002,
+          "mean_control": 0.5101792690980578,
+          "mean_difference": 0.42599466843999323,
+          "mean_treatment": 0.9361739375380511,
+          "outcome": "fidelity",
+          "p_holm": 4.4818616683834576e-08,
+          "relative_improvement": 0.8349901578578569,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "H2": {
+          "ci_high": 0.4444703255576988,
+          "ci_low": 0.3454630077756345,
+          "mean_control": 0.5218,
+          "mean_difference": 0.39496666666666663,
+          "mean_treatment": 0.9167666666666665,
+          "outcome": "evidence_support",
+          "p_holm": 4.4818616683834576e-08,
+          "relative_improvement": 0.7569311358119326,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "H3": {
+          "ci_high": -0.24333494667825353,
+          "ci_low": -0.30238546553406254,
+          "mean_control": 0.39172921054319254,
+          "mean_difference": -0.272860206106158,
+          "mean_treatment": 0.11886900443703459,
+          "outcome": "manipulation",
+          "p_holm": 1.8422551795493446e-08,
+          "relative_improvement": -0.6965531258896815,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "n_seeds": 10
+      }
+    },
+    "llm": {
+      "energy": {
+        "H1": {
+          "ci_high": 0.028939370118119624,
+          "ci_low": 0.0015535672270321696,
+          "mean_control": 0.4458658297326643,
+          "mean_difference": 0.015246468672575897,
+          "mean_treatment": 0.46111229840524015,
+          "outcome": "fidelity",
+          "p_holm": 0.07304539737540496,
+          "relative_improvement": 0.03419519428460673,
+          "test": "paired t-test",
+          "verdict": "negligible"
+        },
+        "H2": {
+          "ci_high": 0.015907022062753833,
+          "ci_low": -0.019107022062753835,
+          "mean_control": 0.521,
+          "mean_difference": -0.0016000000000000014,
+          "mean_treatment": 0.5194000000000001,
+          "outcome": "evidence_support",
+          "p_holm": 0.8122019048079165,
+          "relative_improvement": -0.0030710172744720437,
+          "test": "paired t-test",
+          "verdict": "negligible"
+        },
+        "H3": {
+          "ci_high": -0.03129220124948969,
+          "ci_low": -0.03829423054161927,
+          "mean_control": 0.27598678285331396,
+          "mean_difference": -0.03479321589555448,
+          "mean_treatment": 0.24119356695775948,
+          "outcome": "manipulation",
+          "p_holm": 3.078365729583303e-05,
+          "relative_improvement": -0.12606841362416604,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "n_seeds": 5
+      },
+      "pharma": {
+        "H1": {
+          "ci_high": 0.002541420227241742,
+          "ci_low": -0.019823968505065903,
+          "mean_control": 0.4587169922348909,
+          "mean_difference": -0.00864127413891208,
+          "mean_treatment": 0.4500757180959788,
+          "outcome": "fidelity",
+          "p_holm": 0.125,
+          "relative_improvement": -0.01883792029767937,
+          "test": "paired t-test",
+          "verdict": "negligible"
+        },
+        "H2": {
+          "ci_high": -0.001599999999999957,
+          "ci_low": -0.010499999999999999,
+          "mean_control": 0.5992,
+          "mean_difference": -0.005999999999999983,
+          "mean_treatment": 0.5932000000000001,
+          "outcome": "evidence_support",
+          "p_holm": 0.125,
+          "relative_improvement": -0.010013351134846287,
+          "test": "Wilcoxon signed-rank",
+          "verdict": "negligible"
+        },
+        "H3": {
+          "ci_high": -0.05913336984199493,
+          "ci_low": -0.0701027142408155,
+          "mean_control": 0.29394660836410436,
+          "mean_difference": -0.06461804204140521,
+          "mean_treatment": 0.2293285663226991,
+          "outcome": "manipulation",
+          "p_holm": 1.562437385638595e-05,
+          "relative_improvement": -0.2198291805475248,
+          "test": "paired t-test",
+          "verdict": "improved"
+        },
+        "n_seeds": 5
+      }
+    }
+  },
+  "H4": {
+    "classical": {
+      "energy": {
+        "ci_high": 0.0018901037499777784,
+        "ci_low": -0.042590103749977765,
+        "mean_difference": -0.020349999999999993,
+        "n": 10,
+        "p_value": 0.06837457309576124,
+        "test": "paired t-test",
+        "verdict": "not supported"
+      },
+      "pharma": {
+        "ci_high": 0.08748025194682353,
+        "ci_low": -0.0094802519468236,
+        "mean_difference": 0.038999999999999965,
+        "n": 10,
+        "p_value": 0.10213643412417285,
+        "test": "paired t-test",
+        "verdict": "not supported"
+      }
+    },
+    "llm": {
+      "energy": {
+        "ci_high": 0.03686428184707717,
+        "ci_low": -0.06353094851374383,
+        "mean_difference": -0.013333333333333327,
+        "n": 3,
+        "p_value": 0.37146063894529213,
+        "test": "paired t-test",
+        "verdict": "no confirmatory claim (3 seeds)"
+      },
+      "pharma": {
+        "ci_high": 0.18388963982252293,
+        "ci_low": -0.16388963982252297,
+        "mean_difference": 0.00999999999999999,
+        "n": 3,
+        "p_value": 0.8276545031135722,
+        "test": "paired t-test",
+        "verdict": "no confirmatory claim (3 seeds)"
+      }
+    }
+  },
+  "H5": {
+    "below_resolution_detected": 0,
+    "detection_rate": {
+      "decision": 1.0,
+      "evidence": 1.0,
+      "explanation": 1.0,
+      "reputation": 1.0,
+      "reward": 1.0
+    },
+    "detection_rate_all_targets": 1.0,
+    "false_positive_rate": 0.0,
+    "records": 30000,
+    "verification": {
+      "all_untouched": {
+        "MISSING": 0,
+        "TAMPERED": 0,
+        "VALID": 27800
+      },
+      "below_resolution": {
+        "MISSING": 0,
+        "TAMPERED": 0,
+        "VALID": 200
+      },
+      "control_reserialised": {
+        "MISSING": 0,
+        "TAMPERED": 0,
+        "VALID": 1000
+      },
+      "control_untouched": {
+        "MISSING": 0,
+        "TAMPERED": 0,
+        "VALID": 1000
+      },
+      "decision": {
+        "MISSING": 0,
+        "TAMPERED": 200,
+        "VALID": 0
+      },
+      "evidence": {
+        "MISSING": 0,
+        "TAMPERED": 200,
+        "VALID": 0
+      },
+      "explanation": {
+        "MISSING": 0,
+        "TAMPERED": 200,
+        "VALID": 0
+      },
+      "foreign_write_accepted": 0,
+      "guard_attempts": 100,
+      "never_written": "MISSING",
+      "overwrite_accepted": 0,
+      "reputation": {
+        "MISSING": 0,
+        "TAMPERED": 200,
+        "VALID": 0
+      },
+      "reward": {
+        "MISSING": 0,
+        "TAMPERED": 200,
+        "VALID": 0
+      }
+    }
+  },
+  "H6": {
+    "classical": {
+      "holds_for": [
+        "manipulation"
+      ]
+    },
+    "llm": {
+      "holds_for": [
+        "fidelity",
+        "evidence_support",
+        "manipulation"
+      ]
+    }
+  },
+  "sensitivity": {
+    "missing": [],
+    "robust": {
+      "energy_sensitivity_beta": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "energy_sensitivity_omega": {
+        "evidence_support": false,
+        "fidelity": false,
+        "manipulation": true
+      },
+      "energy_sensitivity_rho": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "pharma_sensitivity_beta": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "pharma_sensitivity_omega": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      },
+      "pharma_sensitivity_rho": {
+        "evidence_support": true,
+        "fidelity": true,
+        "manipulation": true
+      }
+    }
+  }
+}
