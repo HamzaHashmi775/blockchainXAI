@@ -9,11 +9,6 @@ The core contribution is the incentive. The blockchain is only a provenance and 
 layer: it shows that a record was not changed after it was written, **not** that the
 explanation was true.
 
-- Execution plan: [`CLAUDE.md`](CLAUDE.md)
-- Pre-registered protocol and its dated amendments (v1.0 to v1.8): [`docs/research_protocol.md`](docs/research_protocol.md)
-- Day-by-day decisions and deviations: [`docs/research_log.md`](docs/research_log.md)
-- Limitations: [`docs/threats_to_validity.md`](docs/threats_to_validity.md)
-
 ## Status
 
 | Phase | Content | Status |
