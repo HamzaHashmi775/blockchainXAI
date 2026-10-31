@@ -28,6 +28,7 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 | M5 | The energy baseline leaves little headroom (context, not a change of verdict) | Table 2 | baseline F 0.936, E 0.926 |
 | M6 | Decision accuracy did not change detectably | Table 2 (secondary, unadjusted) | pharma +0.029 (p 0.20); energy +0.009 (p 0.054) |
 | M7 | Manipulation success fell in both domains (secondary) | Table 2 | pharma −33.9 % (p 0.0002); energy −49.4 % (p 0.0015), unadjusted |
+| M9 | Energy baseline is already near-honest; in pharma the incentive removes the profit of false explanations without making all-honest an equilibrium | `tables/energy_main.md`, `tables/pharma_main.md` (unilateral deviation) | energy: honest best response for 5/5 agents in every system; pharma: 0/5 baseline, 2/5 proposed, the other three best off with *strategic* (truthful explanation) |
 | M8 | Explanation consistency rose (secondary) | Table 2, `tables/table3_*` | pharma +28.6 %; energy +8.6 %, unadjusted |
 
 ## Ablation and reputation (Table 4, Figure 6)
@@ -41,7 +42,7 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 
 | # | Claim | Evidence | Numbers |
 |---|---|---|---|
-| R1 | **H4 not supported**: the proposed system does not degrade less as malicious agents rise from 10 to 40 % | `tables/table5_malicious_agents.md`, `figures/fig5_*`, `tables/final_statistics.md` | pharma Δ +0.039 [−0.010, +0.088], p 0.10; energy Δ −0.020 [−0.043, +0.002], p 0.068 |
+| R1 | **H4 not supported**: the proposed system does not degrade less as malicious agents rise from 10 to 40 % | `tables/table5_malicious_agents.md`, `figures/fig5_*`, `tables/final_statistics.md` | pharma Δ +0.039 [−0.009, +0.087], p 0.10; energy Δ −0.020 [−0.043, +0.002], p 0.068 |
 | R2 | Under attack, the proposed system keeps higher fidelity and evidence support than the baseline at every share (descriptive) | Table 5, `figures/fig4_*` | pharma at 40 %: F 0.556 vs 0.304 |
 | R3 | Under collusion, the proposed reward takes the colluders' reward away and raises the honest agents' payoff (unadjusted) | Table 5 | colluders' reward −0.458 (pharma), −0.501 (energy); honest payoff +0.181, +0.216 |
 | R4 | Collusion still raises manipulation success under the proposed system, but less than under the baseline | Table 5 | pharma +0.126 vs +0.380; energy +0.047 vs +0.155 |
@@ -73,7 +74,8 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 | L1 | With LLM agents, manipulation fell in both domains; fidelity and evidence did not change | `tables/pharma_llm.md`, `tables/energy_llm.md`, Table 7 | M −22.0 % and −12.6 % (Holm p < 0.0001); F, E negligible |
 | L2 | The LLMs' lower stated confidence comes from the wording of the reward rules, not from the payoff applied (post hoc 2×2) | `tables/pharma_llm_factorial.md`, `tables/energy_llm_factorial.md` | wording −0.299 / −0.164 (Holm p < 0.0001); payoff not detected in either domain |
 | L3 | The energy 2×2 replicates the pharma pattern under the rule frozen beforehand (amendment 8) | `tables/energy_llm_factorial.md` | replication rule met; interaction +0.006 detected in energy only |
-| L4 | LLM fidelity is low in every system | Table 3 | 0.446–0.461 |
+| L4 | LLM fidelity is low in every system; sample replies show misread signs and levels | Table 3; `docs/research_log.md` (amendment 4 notes) | 0.446–0.461 |
+| L5 | The LLM manipulation drop comes mostly from lower stated confidence | `results/summaries/{pharma,energy}_llm.json` (component comparisons) | confidence-inflation component −0.298/5 = −0.060 of ΔM −0.065 (pharma); −0.144/5 = −0.029 of −0.035 (energy) |
 
 ## Reproducibility
 

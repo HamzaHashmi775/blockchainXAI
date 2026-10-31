@@ -1115,3 +1115,25 @@ was restarted and its cause was not established.
   and a double-inverted shared axis were fixed.
 - Smoke tests build all tables and figures into a temporary folder. Full suite: 183 passed.
 - Next: Step 36 (one command to rebuild everything, README, clean-rerun check).
+
+## 2026-10-31 — Phase 11, Steps 36–38: reproducibility package, claim map, manuscript draft
+
+- **Step 36.** `reproduce.py`: one command rebuilds every analysis, summary, table, figure
+  and the manuscript tables (`--experiments` reruns the 14 classical configs first;
+  `--compare` checks per-seed byte identity with another checkout). Rebuilding from the
+  saved raw results gave byte-identical summaries, tables and figures (PDFs after removing
+  matplotlib's creation date). Subprocesses use UTF-8 output so it runs on a Windows console.
+  In a fresh clone on D:, the processed scenario files of both domains were regenerated
+  byte-identically. Clean rerun of the 14 classical experiments in that clone: running.
+- **Step 37.** `docs/claim_evidence_map.md`: every claim with its file and numbers, and the
+  claims the evidence does not allow.
+- **Step 38.** Target journal (user, 2026-10-31): Journal of King Saud University – Computer
+  and Information Sciences (Springer Nature); author Hamza Hashmi. Requirements read from the
+  journal page: double-anonymous review, abstract 150–250 words, 4–6 keywords, ~6,000-word
+  guidance, Springer Nature template, mandatory declarations, generative-AI use documented in
+  Methods. Draft in `paper/`: blinded `main.tex`, separate `title_page.tex` (author fields left
+  in brackets for the author), `references.bib` (30 entries fetched by identifier from
+  Crossref/DataCite/arXiv; Holm 1979 has no DOI and was checked against independent records;
+  one wrong DOI I had typed for it was caught and removed), LaTeX tables generated from the
+  summaries. Checks: abstract 220 words, 6 keywords, all citations resolved, no identifying
+  strings. No LaTeX on this machine: compile in the official Overleaf template.

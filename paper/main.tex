@@ -1,0 +1,525 @@
+%% Manuscript for the Journal of King Saud University - Computer and Information Sciences
+%% (Springer Nature). Compile inside the official "Springer Nature LaTeX Template"
+%% (v3.1, Overleaf) - it provides sn-jnl.cls and sn-basic.bst. Upload this file,
+%% references.bib, tables/ and the PDF figures from ../figures/ into a folder figures/.
+%% BLINDED VERSION for double-anonymous review: no author names, affiliations or links that
+%% identify the authors. Author details are in title_page.tex.
+\documentclass[pdflatex,sn-basic]{sn-jnl}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{url}
+
+\begin{document}
+
+\title[Explanation-aware incentives for multi-agent AI]{Explanation-Aware Incentives for
+Trustworthy Multi-Agent AI with Blockchain Provenance: Evidence from Pharmaceutical Supplier
+Selection and Peer-to-Peer Energy}
+
+\author{Anonymous}
+\affil{Anonymised for double-anonymous review}
+
+\abstract{When several AI agents decide together, each with its own objective, an agent can
+steer the group by attaching a misleading explanation to its vote, and ordinary payoffs
+neither reward faithful explanations nor penalise false ones. We propose an
+explanation-aware incentive in which explanation fidelity, measured against SHAP
+attributions of the agent's own model, evidence support, measured against observed data,
+and an audited manipulation score enter each agent's utility; a reputation score weights
+votes; and hashes of decisions, explanations, evidence, rewards and reputation are recorded
+on a local blockchain. We tested the mechanism under a pre-registered protocol on two real
+datasets: USAID/PEPFAR pharmaceutical deliveries (supplier selection) and an energy
+community with peer-to-peer trading, with five learning agents per domain and ten paired
+seeds. Manipulation fell in both domains ($-69.7\%$ and $-44.4\%$). Explanation fidelity and
+evidence support improved strongly in the pharmaceutical case ($+83.5\%$, $+75.7\%$) but
+only negligibly in energy, where the baseline was already near its ceiling. The mechanism
+did not make the system more robust to a growing share of malicious agents. The provenance
+layer detected all 1{,}000 tampered records with no false positive in 29{,}800 unchanged
+ones. With open LLM agents, manipulation also fell, but a factorial experiment showed that
+their lower stated confidence followed the wording of the reward rules rather than the
+payoff applied. Explanation-aware incentives reduce strategic manipulation; their effect on
+explanation quality depends on the domain.}
+
+\keywords{Multi-agent systems, Explainable AI, Mechanism design, Explanation fidelity,
+Reputation, Blockchain provenance}
+
+\maketitle
+
+%% ---------------------------------------------------------------------------------------
+\section{Introduction}\label{sec:intro}
+
+Decisions that used to be taken by one model are increasingly split among several
+specialised AI agents, each responsible for one criterion: cost, reliability, grid
+stability, price. Their outputs are combined by a vote or a market, and each agent attaches
+an explanation to its contribution so that humans can audit the result. This arrangement
+creates an incentive problem that single-model explainability does not face. An agent whose
+private objective favours one option can vote for it and attach an explanation that sounds
+convincing but does not reflect what its model actually computed, or that cites evidence the
+data do not support. Explanation methods are known to be manipulable
+\citep{slack2020,dombrowski2019,heo2019}, and plausible but unfaithful rationalisations can be
+constructed on purpose \citep{aivodji2019}. In a multi-agent decision, nothing in the usual
+payoff, which rewards only the decision, makes a faithful explanation worth more to the agent
+than a misleading one.
+
+Mechanism design offers a way to make truthful reporting individually rational, from peer
+prediction \citep{miller2005} to the Bayesian truth serum \citep{prelec2004}, and incentive
+mechanisms are widely used to steer self-interested learners \citep{zhan2021}. Reputation
+systems give persistent weight to agents that behaved well \citep{josang2007,kamvar2003}, and
+blockchains can make records of AI decisions tamper-evident \citep{liang2017,nassar2019}.
+Recent work combines blockchain with incentives for multi-agent learning \citep{tian2025} or
+LLM agent collaboration \citep{kumala2026}, and rewards agents for faithful explanations of a
+model \citep{cheng2026}. To our knowledge, however, no study puts explanation fidelity and
+evidence support, measured against the agent's own model and the observed data, directly into
+the utility of strategic agents that jointly take a decision, and tests the result on real
+operational data in more than one domain.
+
+This paper does so. Our contributions are:
+\begin{enumerate}
+\item An explanation-aware incentive for multi-agent decisions in which each agent's utility
+combines decision quality, explanation fidelity, evidence support, cooperation and an
+audited manipulation score; a reputation term turns past rewards into voting weight; and a
+provenance layer records hashes of decisions, explanations, evidence, rewards and reputation
+on a blockchain (Section~\ref{sec:method}).
+\item A pre-registered evaluation on two real datasets, pharmaceutical supplier selection and
+peer-to-peer energy, with a baseline, an ablation without reputation, malicious-agent and
+collusion experiments, a tampering experiment, cross-domain comparison and sensitivity
+analysis (Sections~\ref{sec:setup}--\ref{sec:results}).
+\item Evidence on what the mechanism does and does not achieve: it reduces manipulation in
+both domains; it improves explanation quality strongly in one domain and negligibly in the
+other; it does not improve robustness to malicious agents; and, with LLM agents, the
+behavioural change it produces is explained by the wording of the stated rules rather than by
+the payoff (Section~\ref{sec:discussion}).
+\end{enumerate}
+
+%% ---------------------------------------------------------------------------------------
+\section{Related work}\label{sec:related}
+
+\paragraph{Explanation fidelity.} SHAP attributes a prediction to features with Shapley
+values \citep{lundberg2017}, and TreeSHAP computes them exactly for tree ensembles
+\citep{lundberg2020}. Whether an explanation reflects the model is its fidelity; evaluation
+frameworks and metrics are surveyed by \citet{doshivelez2017} and \citet{zhou2021}, and
+\citet{yeh2019} formalise infidelity and sensitivity. \citet{miller2019} argues that
+explanations for people must also be selective and contrastive, which is why our agents report
+only their top features. We use SHAP of each agent's own model as the reference against which
+a reported explanation is scored.
+
+\paragraph{Explanation manipulation.} Post-hoc explainers can be fooled: a model can hide its
+reliance on a sensitive feature from LIME and SHAP \citep{slack2020}, saliency maps can be
+changed arbitrarily without changing predictions \citep{dombrowski2019,heo2019}, and an
+interpretable surrogate can rationalise an unfair model \citep{aivodji2019}. These works study
+an adversary who manipulates the explainer; we study agents who misreport their own
+explanation, and ask whether incentives can make that unprofitable.
+
+\paragraph{Incentives and reputation.} Peer prediction \citep{miller2005} and the Bayesian truth
+serum \citep{prelec2004} reward truthful reports without ground truth; incentive mechanisms for
+federated learning reward contributions of self-interested participants \citep{zhan2021}.
+Reputation systems aggregate past behaviour into trust \citep{josang2007}, and EigenTrust
+does so in peer-to-peer networks \citep{kamvar2003}. Our mechanism has ground truth of a
+particular kind available, the agent's own model and the observed data, and rewards agreement
+with it.
+
+\paragraph{Blockchain for provenance and trustworthy AI.} ProvChain records data provenance on
+a blockchain \citep{liang2017}; \citet{nassar2019} argue for blockchain in explainable and
+trustworthy AI. \citet{tian2025} combine blockchain with incentive-compatible multi-agent
+reinforcement learning, \citet{kumala2026} propose blockchain-based reputation and incentives
+for LLM multi-agent collaboration, and \citet{cheng2026} reward agents for faithful
+explanations. None of these puts the fidelity and evidence support of each agent's explanation
+into the utility of agents that vote on a shared decision and evaluates it on real data in two
+domains.
+
+\paragraph{Application domains.} Supplier selection in pharmaceutical supply chains is a
+multi-criteria problem \citep{forghani2018}. Peer-to-peer energy trading and community markets
+are reviewed by \citet{tushar2020}, \citet{sousa2019} and \citet{tushar2018}, the latter for
+game-theoretic approaches; the Brooklyn Microgrid is a field case \citep{mengelkamp2018}. Our
+energy data come from the study of \citet{garciamunoz2025}.
+
+%% ---------------------------------------------------------------------------------------
+\section{Method}\label{sec:method}
+
+Figure~\ref{fig:architecture} shows the pipeline and Figure~\ref{fig:mechanism} the
+mechanism. All parameters below were fixed in a protocol frozen before the experiments; later
+changes were logged as dated amendments.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_architecture.pdf}
+\caption{Pipeline. Shaded blue: components that only the proposed system has (the ablation
+keeps the explanation-aware utility only). The provenance layer records integrity, not truth}
+\label{fig:architecture}
+\end{figure*}
+
+\subsection{Agents, actions and the game}\label{sec:game}
+
+Each domain has five agents $N=\{1,\dots,5\}$ and a finite action set per scenario: three
+candidate manufacturing sites in the pharmaceutical case and \{idle, charge, discharge\} for a
+community battery in the energy case. Agent $i$ has a private objective $u_i(a)$, a
+closed-form function of real or derived variables (for example, the cost agent prefers the
+lowest expected unit price and the grid agent the smallest absolute grid exchange), normalised
+to $\tilde u_i(a)\in[0,1]$ over the actions of the scenario. Each agent also has a model, a
+random forest \citep{breiman2001} with 100 trees of depth 6 trained on its own feature view
+to predict the reference decision (Section~\ref{sec:setup}); the model's argmax is the
+agent's \emph{model vote}.
+
+In every round an agent submits a report: a vote, a confidence, an explanation of $k=2$
+(feature, sign) pairs, and one evidence claim per explained feature stating its level
+(low, mid or high by training-set terciles). The strategy set has five elements.
+\emph{Honest} reports the model vote, the model's probability, the top-$k$ SHAP features with
+their true signs and true levels. \emph{Strategic} switches to its privately preferred action
+when that gains at least 0.25 in $\tilde u_i$ and then inflates its confidence by 0.3, but
+explains truthfully. \emph{Misattributing} and \emph{overclaiming} vote like strategic but
+replace one explained feature by an unimportant one with a flipped sign, or one evidence
+level by a false one. \emph{Manipulative} always votes for its preferred action with
+confidence 1 and reports the $k$ least important features with flipped signs and false
+levels. These attacks change reports only; the observations are never altered.
+
+The collective decision is a weighted confidence vote,
+$\arg\max_a \sum_i w_i\, c_i\, \mathbb{1}[v_i=a]$, with $w_i=1$ in the baseline and ablation
+and $w_i=\mathrm{Rep}_i$ in the proposed system. Agents choose strategies with a stateless
+$\varepsilon$-greedy bandit ($\varepsilon=0.1$, learning rate 0.1) on the payoff
+\begin{equation}
+\pi_i=\omega\,\tilde u_i(a^{\ast})+(1-\omega)\,R_i,\qquad \omega=0.5,\label{eq:payoff}
+\end{equation}
+where $a^{\ast}$ is the collective action and $R_i$ the mechanism's reward. The first term is
+what an agent gains privately by steering the decision; $\omega$ sets how much that matters.
+We do not claim that the learning dynamics reach a Nash equilibrium; instead we report, for
+the all-honest profile, the payoff of every unilateral deviation.
+
+\subsection{Auditing explanations}\label{sec:metrics}
+
+The auditor has white-box access to each agent's model and computes exact TreeSHAP
+attributions $\phi$ for the voted action \citep{lundberg2020}. Three per-round scores follow.
+
+\emph{Fidelity} is the share of the true top-$k$ attribution mass that the agent reported with
+the correct sign,
+\begin{equation}
+F_i=\frac{\sum_{f\in \mathcal{E}_i,\ \mathrm{sign}\ \mathrm{correct}}|\phi_f|}
+{\sum_{f\in \mathrm{top}\text{-}k(|\phi|)}|\phi_f|}\in[0,1],
+\end{equation}
+with $F_i=0$ for an empty explanation and $F_i=1$ when all attributions are zero.
+\emph{Evidence support} $E_i$ is the share of the agent's claims whose stated level matches
+the observed value. \emph{Manipulation} $M_i$ is the mean of five audited components: false
+attribution $1-F_i$; confidence inflation $\max(0, c_i-p_i)$, where $p_i$ is the model's
+probability of the vote; unsupported evidence $1-E_i$; strategic voting
+$\mathbb{1}[v_i\neq \text{model vote}]$; and collusion, flagged when an agent deviates from
+its model and another deviating agent casts the same vote. $M_i$ is computed from reports and
+the audit only, never from knowledge of the strategy played. As secondary outcomes we report
+explanation consistency (Jaccard similarity of explanations across the five most similar
+scenarios), collective accuracy and manipulation success (the collective action is wrong and
+equals the vote of an agent that deviated from its model).
+
+\subsection{Explanation-aware utility, reward and reputation}\label{sec:incentive}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig2_mechanism.pdf}
+\caption{The explanation-aware incentive. The utility combines five audited components; the
+reward is the utility rescaled across agents; reputation accumulates rewards and weights the
+next votes; the agent's payoff mixes its private utility of the collective action with the
+reward}
+\label{fig:mechanism}
+\end{figure*}
+
+The utility of agent $i$ in a round is
+\begin{equation}
+U_i=\alpha D_i+\beta F_i+\gamma E_i+\delta C_i-\lambda M_i,\label{eq:utility}
+\end{equation}
+with $D_i=\mathbb{1}[v_i$ equals the reference decision$]$ and $C_i\in\{0,0.5,1\}$ the
+agent's pivotal contribution (1 if removing it would turn a correct collective decision into
+a wrong one, 0 for the reverse, 0.5 otherwise). The weights $\alpha=0.30$, $\beta=0.25$,
+$\gamma=0.15$, $\delta=0.10$ and $\lambda=0.20$ were set a priori. The baseline uses
+$U_i=0.75D_i+0.25C_i$, the same ratio of decision to cooperation with no explanation terms.
+The reward rescales utilities across the agents of the round,
+$R_i=(U_i-U_{\min})/(U_{\max}-U_{\min})$, with $R_i=0.5$ when all utilities are equal.
+Reputation starts at 0.5 and is updated as
+$\mathrm{Rep}_i\leftarrow\rho\,\mathrm{Rep}_i+(1-\rho)R_i$ with $\rho=0.8$, an effective
+memory of about five rounds.
+
+We compare three systems on identical scenarios and seeds: the \emph{baseline} (game and
+explanations, decision-only utility, equal votes), the \emph{ablation} (explanation-aware
+utility, equal votes) and the \emph{proposed} system (explanation-aware utility and
+reputation-weighted votes).
+
+\subsection{Provenance layer}\label{sec:provenance}
+
+For every agent and round, the provenance layer stores on chain the SHA-256 hashes of the
+canonically serialised decision, explanation and evidence, together with the reward and
+reputation scaled to integers ($\times10^{6}$) and a block timestamp; the artefacts
+themselves stay off chain. A Solidity contract makes records append-only and writable only
+by the deploying account. Verification recomputes the hashes from the off-chain store and
+reports each record as valid, tampered or missing. The chain establishes that a record has
+not changed since it was written; it does not establish that the explanation was truthful.
+
+\subsection{LLM agents}\label{sec:llm}
+
+As an extension, we replaced the five classical agents with an open LLM, Qwen2.5-7B
+\citep{qwen2024}, served locally with Ollama at temperature 0. Each LLM agent receives the
+scenario, the output of its model (prediction and SHAP attributions) and the reward rules, and
+must write its own report in the fixed format above, which is audited exactly as before.
+
+\subsection{Use of generative AI}\label{sec:ai}
+
+The experiment code, analysis scripts and a first draft of this manuscript were produced with
+an AI coding assistant (Anthropic's Claude, used through Claude Code) under the author's
+direction. All reported numbers are generated by that code from the saved results; tables and
+figures are produced by scripts from the result files; every reference was retrieved from
+Crossref, DataCite or arXiv by its identifier. The author reviewed the design, the protocol
+amendments and the text. Qwen2.5-7B served as the experimental subject in
+Section~\ref{sec:llm}, not as a writing aid.
+
+%% ---------------------------------------------------------------------------------------
+\section{Experimental setup}\label{sec:setup}
+
+\input{tables/tab_datasets}
+
+\paragraph{Pharmaceutical supplier selection.} We use the USAID/PEPFAR Supply Chain Management
+System delivery history \citep{scmsdata2015}, 10{,}324 shipment line items of antiretroviral
+drugs and HIV test kits delivered between 2006 and 2015 (Table~\ref{tab:data}). Only
+direct-from-supplier lines are used, so that delivery performance is the manufacturer's. A
+scenario is one purchase order for one product with three candidate manufacturing sites,
+the three that most recently delivered the product; the data contain no competing offers, so
+the candidate set is an experimental construction. Everything known about a site is computed
+from deliveries completed before the order date, and the split is chronological. The
+reference decision is the candidate with the highest equal-weight sum of five min--max
+normalised criteria (cost, delivery reliability, lead time, freight cost per kilogram, supply
+continuity), in the spirit of multi-criteria supplier selection \citep{forghani2018}. It is a
+constructed reference: where the site actually used is a candidate, the reference picks it in
+35\% of scenarios, close to chance (33\%). Agents correspond to the five criteria.
+
+\paragraph{Peer-to-peer energy.} We use one year of hourly operational data of a 55-user energy
+community under peer-to-peer trading and flexibility markets
+\citep{optirecdata2025,garciamunoz2025}. A scenario is one hour; the action concerns a
+community battery whose capacity is taken from the data and whose C-rate (0.5), round-trip
+efficiency (0.9) and state-of-charge window (10--90\%) are simulated assumptions. The
+reference action is the solution of a daily perfect-foresight linear programme. Agents
+represent the producer, consumer, market, grid and storage perspectives. Splits use whole
+weeks in five-week cycles to avoid temporal leakage.
+
+\paragraph{Runs and statistics.} Each system is run with seeds 0--9 on identical scenarios
+(paired design): 600 rounds with evaluation on the last 300 in pharma, 1{,}000 and 500 in
+energy. The confirmatory family is fidelity (H1), evidence support (H2) and manipulation (H3),
+proposed versus baseline, tested per domain with a paired $t$-test or, when Shapiro--Wilk
+rejects normality, a Wilcoxon signed-rank test, with Holm correction \citep{holm1979} across the
+three. The pre-registered decision rule calls an outcome \emph{improved} if the Holm-adjusted
+$p<0.05$ in the hypothesised direction and the relative change
+$(\text{proposed}-\text{baseline})/|\text{baseline}|$ is at least 5\%, \emph{worse} if
+significant in the opposite direction, and \emph{negligible} otherwise. Robustness (H4) uses
+malicious shares of 0--40\% (malicious agents always play manipulative) and compares the mean
+accuracy degradation over 10--40\% between systems; collusion uses two colluding agents and
+three honest ones. Tamper detection (H5) is descriptive. Cross-domain generalisation (H6)
+holds for an outcome when both domains give the same verdict; domains are never pooled. The
+sensitivity analysis varies one parameter at a time: $\beta\in\{0,0.1,0.25,0.4\}$,
+$\rho\in\{0.5,0.8,0.95\}$ and $\omega\in\{0.25,0.5,0.75\}$. LLM agents were run for 200
+rounds with seeds 0--4.
+
+%% ---------------------------------------------------------------------------------------
+\section{Results}\label{sec:results}
+
+\subsection{Explanation quality and manipulation}\label{sec:main}
+
+\input{tables/tab_main}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_explanation_quality.pdf}
+\caption{Fidelity, evidence support and manipulation by system and domain, for classical
+(top) and LLM agents (bottom); points are means, bars 95\% confidence intervals}
+\label{fig:quality}
+\end{figure*}
+
+Table~\ref{tab:main} and Figure~\ref{fig:quality} show the main comparison. In the
+pharmaceutical case the incentive raised fidelity from 0.510 to 0.936 ($+83.5\%$) and
+evidence support from 0.522 to 0.917 ($+75.7\%$), and cut manipulation from 0.392 to 0.119
+($-69.7\%$); all three are improved under the decision rule (Holm $p<0.0001$). In energy,
+manipulation fell from 0.066 to 0.036 ($-44.4\%$, improved), while fidelity ($+3.6\%$) and
+evidence support ($+4.3\%$) rose significantly but below the 5\% threshold, so both are
+negligible. The energy baseline already reached $F=0.936$ and $E=0.926$, leaving little room
+to improve; we report this as context and do not change the verdict. Collective accuracy did
+not change detectably in either domain, while manipulation success fell by a third in pharma
+and by half in energy (secondary outcomes). Explanation consistency rose by 28.6\% and 8.6\%.
+
+The unilateral-deviation analysis qualifies these results. In energy, honesty is the best
+response for all five agents in every system, so the baseline is already close to honest. In
+the pharmaceutical case, honesty is the best response for no agent under the baseline and for
+two of five under the proposed system; the other three gain most from strategic voting with a
+truthful explanation. The incentive therefore removes the profit of false explanations
+without making the all-honest profile an equilibrium.
+
+\subsection{Ablation: incentive versus reputation}\label{sec:ablation}
+
+\input{tables/tab_ablation}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig6_ablation.pdf}
+\caption{Difference from the baseline for the ablation (incentive only) and the proposed
+system (incentive and reputation), with 95\% confidence intervals and verdicts}
+\label{fig:ablation}
+\end{figure*}
+
+The explanation-aware utility alone produces most of the effect (Table~\ref{tab:ablation},
+Figure~\ref{fig:ablation}): the ablation reaches the same verdicts as the proposed system in
+both domains, with relative changes in pharma of $+74.9\%$ (fidelity), $+70.9\%$ (evidence)
+and $-61.0\%$ (manipulation). Reputation-weighted voting adds a small further gain in pharma
+(fidelity $+0.044$, manipulation $-0.034$) and none in energy; this comparison is descriptive.
+
+\subsection{Robustness to malicious agents and collusion}\label{sec:robust}
+
+\input{tables/tab_robust}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_quality_vs_malicious.pdf}
+\caption{Fidelity and evidence support as the share of malicious agents rises (means and 95\%
+confidence bands)}
+\label{fig:malicious_quality}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig5_decision_vs_malicious.pdf}
+\caption{Collective accuracy as the share of malicious agents rises}
+\label{fig:malicious_accuracy}
+\end{figure*}
+
+H4 is not supported (Table~\ref{tab:robust}). The proposed system's accuracy did not degrade
+less than the baseline's as malicious agents rose from 10 to 40\%: the mean difference in
+degradation was $+0.039$ ($p=0.10$) in pharma and $-0.020$ ($p=0.068$) in energy
+(Figure~\ref{fig:malicious_accuracy}). The proposed system keeps clearly higher fidelity and
+evidence support than the baseline at every malicious share, but both fall roughly linearly
+as the share grows (Figure~\ref{fig:malicious_quality}): the audit scores what malicious agents
+report, and the mechanism cannot make them report differently. Under collusion, the mechanism
+takes the reward away from the colluders ($-0.458$ in pharma, $-0.501$ in energy) and the
+honest agents' payoff rises; collusion still raises manipulation success, but by less than
+under the baseline ($+0.126$ against $+0.380$ in pharma; $+0.047$ against $+0.155$ in energy).
+
+\subsection{Tamper detection}\label{sec:tamper}
+
+\input{tables/tab_provenance}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig7_tampering.pdf}
+\caption{Share of records flagged as tampered, by target and control group}
+\label{fig:tamper}
+\end{figure}
+
+The provenance layer recorded 30{,}000 agent-round records from the LLM main runs of both
+domains on a local Ethereum-compatible node. Of 1{,}000 records altered off chain, 200 in each
+of decision, explanation, evidence, reward and reputation, all were detected; no false
+positive occurred in 2{,}000 untouched or re-serialised controls or in the 27{,}800 other
+records (Table~\ref{tab:provenance}, Figure~\ref{fig:tamper}). Changes smaller than the
+$10^{-6}$ storage resolution of rewards and reputation are invisible by design. The contract
+refused all overwrites and writes from another account. In batches of 100, a record cost
+about 96{,}000 gas; local-node latency excludes consensus and network delay and will differ
+on a production network. H5 is supported in the sense of integrity: the layer shows that
+records were not changed, not that they were true.
+
+\subsection{Cross-domain comparison and sensitivity}\label{sec:cross}
+
+\input{tables/tab_cross}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig8_cross_domain.pdf}
+\caption{Relative improvement of the proposed system over the baseline in each domain;
+manipulation is plotted as a reduction; the grey band marks the 5\% threshold}
+\label{fig:cross}
+\end{figure*}
+
+With classical agents, both domains give the same verdict only for manipulation, so H6 holds
+for one of three outcomes (Table~\ref{tab:cross}, Figure~\ref{fig:cross}). The
+pharmaceutical verdicts are unchanged at every value of $\beta$, $\rho$ and $\omega$. In
+energy they are unchanged across $\beta$ and $\rho$, but fidelity and evidence support change
+from negligible to improved at $\omega=0.75$ ($+27.8\%$ and $+28.6\%$): when steering the
+decision is worth more, the baseline's explanations deteriorate and the mechanism's
+advantage appears. In pharma the fidelity gain persists at $\beta=0$ ($+74.7\%$), so it is
+produced by the evidence and manipulation terms together and should not be attributed to the
+fidelity weight alone.
+
+\subsection{LLM agents}\label{sec:llmresults}
+
+\input{tables/tab_llm}
+
+With LLM agents (Table~\ref{tab:cross}), manipulation fell in both domains ($-22.0\%$ and
+$-12.6\%$, Holm $p<0.0001$) while fidelity and evidence support were negligible; fidelity
+stayed between 0.45 and 0.46 in every system; sample replies show the model misreading the
+signs and levels in its own tool output. The fall in manipulation came mostly from lower
+stated confidence: the confidence-inflation component accounts for $-0.060$ of the $-0.065$
+change in pharma and $-0.029$ of $-0.035$ in energy. To find its
+cause we added, after the main analysis, a 2$\times$2 experiment that crosses the wording of
+the reward rules in the prompt with the payoff actually applied (Table~\ref{tab:llm}). The
+wording lowered confidence by 0.299 in pharma and 0.164 in energy, whereas no payoff effect was
+detected in either domain; the energy run, specified before it was carried out, reproduced the
+pharmaceutical pattern, with a small wording-by-payoff interaction ($+0.006$) in energy only.
+For these agents the behavioural change reflects what they are told, not what they are paid.
+
+%% ---------------------------------------------------------------------------------------
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{What the mechanism does.} Putting audited explanation quality into the utility
+reliably reduced manipulation: in both domains, with classical and LLM agents, in the ablation
+without reputation and across the sensitivity range. It also removed the advantage of false
+explanations: in the pharmaceutical case the agents that still deviate do so with truthful
+explanations. Whether explanation quality itself improves depends on how much the baseline
+leaves to gain. In pharma, where unilateral manipulation pays under a decision-only utility,
+the gains were large; in energy, where honesty was already a best response, they were
+significant but small, and they became large only when the private stake $\omega$ rose.
+
+\paragraph{What it does not do.} The mechanism did not make the collective decision more
+robust to a growing share of agents that always manipulate. It scores reports; it cannot
+change the votes of agents that ignore the payoff, and reputation reacts only after several
+rounds. Defences against persistent attackers need another instrument, such as exclusion
+thresholds or robust aggregation. With LLM agents the improvement cannot be credited to the
+payoff: a prompt that states the rules produces the same change. Designers of incentive
+mechanisms for LLM agents should therefore test whether agents respond to payoffs at all
+before attributing behaviour to them.
+
+\paragraph{Limitations.} Both reference decisions are constructed, and decision accuracy means
+agreement with them, not with real choices. The pharmaceutical data cover one programme's
+antiretroviral and HIV-test deliveries, and the candidate sets are inferred. The energy
+battery parameters are simulated. Fidelity is measured against SHAP of the agent's own model
+and therefore needs white-box access; it inherits the limits of SHAP and says nothing about
+whether the model itself is right. The terciles that define evidence levels and the incentive
+weights were set a priori; other choices would give other numbers. Reputation creates path
+dependence. Inference rests on ten seeds (five for LLM agents) on one dataset per domain. The
+LLM results come from one 7-billion-parameter model, and the factorial experiment was added
+after the main analysis. Overhead was measured on a local node and will differ on production
+networks.
+
+%% ---------------------------------------------------------------------------------------
+\section{Conclusion}\label{sec:conclusion}
+
+We proposed an explanation-aware incentive for multi-agent AI decisions, in which audited
+explanation fidelity, evidence support and manipulation enter each agent's utility,
+reputation weights votes and a blockchain records the artefacts, and evaluated it under a
+pre-registered protocol on real pharmaceutical and energy data. The incentive reduced
+strategic manipulation in both domains and removed the profit of false explanations; it
+improved explanation quality strongly only where the baseline left room; it did not increase
+robustness to malicious agents; and the provenance layer detected every tampered record. For
+LLM agents, the effect followed the wording of the rules rather than the payoff. Future work
+should test the mechanism with black-box fidelity estimates, real decision outcomes, larger
+and more diverse LLMs, and defences that act on persistent attackers.
+
+%% ---------------------------------------------------------------------------------------
+\backmatter
+
+\section*{Declarations}
+
+\bmhead{Funding} [To be completed on the title page.]
+
+\bmhead{Competing interests} [To be completed on the title page.]
+
+\bmhead{Data availability} The pharmaceutical data are the public USAID SCMS delivery history
+\citep{scmsdata2015}; the energy data are available from Mendeley Data
+\citep{optirecdata2025}. Processed scenarios are regenerated deterministically by the code.
+
+\bmhead{Code availability} The code, configuration files, frozen protocol with its amendments,
+per-experiment summaries and the scripts that generate every table and figure will be released
+in a public repository on acceptance; an anonymised copy is available to reviewers.
+
+\bmhead{Author contributions} [To be completed on the title page.]
+
+\bibliography{references}
+
+\end{document}

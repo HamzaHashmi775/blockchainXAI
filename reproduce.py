@@ -11,6 +11,7 @@ otherwise the committed summaries are used as they are. The provenance experimen
 local anvil node (configs/provenance.yaml) and is not rerun here either.
 """
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -43,12 +44,15 @@ ANALYSES = [
     (["final_summary.py"], []),
     (["make_tables.py"], []),
     (["make_figures.py"], []),
+    (["../paper/make_paper_tables.py"], []),
 ]
 
 
 def run(cmd):
     print("$", " ".join(cmd), flush=True)
+    # UTF-8 output: the analyses print symbols (Δ, ω) that a Windows console code page lacks
     subprocess.run([sys.executable, *cmd], cwd=ROOT, check=True,
+                   env={**os.environ, "PYTHONIOENCODING": "utf-8"},
                    stdout=subprocess.DEVNULL if cmd[0].startswith("statistics") else None)
 
 

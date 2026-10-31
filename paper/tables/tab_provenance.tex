@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{Tamper detection on the provenance layer (H5)}\label{tab:provenance}
+\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+Group & Flagged TAMPERED & Meaning \\
+\midrule
+decision & 200 / 200 & detected \\
+explanation & 200 / 200 & detected \\
+evidence & 200 / 200 & detected \\
+reward & 200 / 200 & detected \\
+reputation & 200 / 200 & detected \\
+untouched controls & 0 / 1,000 & false positives \\
+re-serialised controls & 0 / 1,000 & false positives \\
+all other records & 0 / 27,800 & false positives \\
+below $10^{-6}$ resolution & 0 / 200 & not detectable by design \\
+\bottomrule
+\end{tabular}
+\footnotetext{Local node, 30,000 records. Batches of 100: 95,912 gas per record, 8.5 ms verification per record; 128 bytes on-chain per record.}
+\end{table}

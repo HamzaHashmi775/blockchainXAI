@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\caption{Cross-domain comparison (H6: same verdict in both domains) and robustness of the classical verdicts across $\beta$, $\rho$ and $\omega$}\label{tab:cross}
+\footnotesize
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Agents & Outcome & Pharmaceutical & Energy & Same verdict \\
+\midrule
+Classical & Fidelity $F$ & +83.5\% (improved) & +3.6\% (negligible) & no \\
+ & Evidence support $E$ & +75.7\% (improved) & +4.3\% (negligible) & no \\
+ & Manipulation $M$ & -69.7\% (improved) & -44.4\% (improved) & yes \\
+LLM & Fidelity $F$ & -1.9\% (negligible) & +3.4\% (negligible) & yes \\
+ & Evidence support $E$ & -1.0\% (negligible) & -0.3\% (negligible) & yes \\
+ & Manipulation $M$ & -22.0\% (improved) & -12.6\% (improved) & yes \\
+\midrule
+Sensitivity (pharma) & verdicts changed & \multicolumn{3}{l}{none (all values of $\beta$, $\rho$, $\omega$)} \\
+Sensitivity (energy) & verdicts changed & \multicolumn{3}{l}{$\omega$: fidelity, evidence} \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\caption{Case studies, scenarios and preprocessing}\label{tab:data}
+\footnotesize
+\begin{tabular}{@{}lp{5.2cm}p{5.2cm}@{}}
+\toprule
+ & Pharmaceutical & Energy \\
+\midrule
+Source & USAID/PEPFAR SCMS delivery history \citep{scmsdata2015} & OptiREC energy community \citep{optirecdata2025} \\
+Scenario & one purchase order, three candidate sites & one hour of the community \\
+Scenarios & 1,648 (31 products, 49 sites) & 8,760 \\
+Train / val / test & 824 / 165 / 659 (by order date) & 5,400 / 1,680 / 1,680 (week blocks) \\
+Agents & cost, reliability, lead time, logistics, continuity & producer, consumer, market, grid, storage \\
+Reference decision & equal-weight multi-criteria score (constructed) & daily perfect-foresight LP (constructed) \\
+Simulated inputs & candidate set & battery: C-rate 0.5, efficiency 0.9 \\
+Derived variables & 27 & 12 \\
+\bottomrule
+\end{tabular}
+\end{table*}

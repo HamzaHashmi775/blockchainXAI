@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\caption{Baseline vs proposed, classical agents ($n=10$ paired seeds; mean $\pm$ SD). Verdicts: pre-registered rule (Holm $p<0.05$ in the hypothesised direction and $|\mathrm{rel.}|\geq 5\%$)}\label{tab:main}
+\footnotesize
+\begin{tabular}{@{}llllllll@{}}
+\toprule
+Domain & Metric & Baseline & Proposed & $\Delta$ [95\% CI] & Rel. & $p$ (Holm) & Verdict \\
+\midrule
+pharma & Fidelity $F$ & 0.510 $\pm$ 0.077 & 0.936 $\pm$ 0.020 & +0.426 [+0.370, +0.482] & +83.5\% & $<0.0001$ & improved \\
+ & Evidence support $E$ & 0.522 $\pm$ 0.070 & 0.917 $\pm$ 0.023 & +0.395 [+0.345, +0.444] & +75.7\% & $<0.0001$ & improved \\
+ & Manipulation $M$ & 0.392 $\pm$ 0.038 & 0.119 $\pm$ 0.015 & -0.273 [-0.302, -0.243] & -69.7\% & $<0.0001$ & improved \\
+ & Collective accuracy & 0.578 $\pm$ 0.045 & 0.606 $\pm$ 0.033 & +0.029 [-0.018, +0.076] & +5.0\% & 0.2021$^{a}$ & -- \\
+ & Manipulation success & 0.398 $\pm$ 0.057 & 0.263 $\pm$ 0.032 & -0.135 [-0.185, -0.085] & -33.9\% & 0.0002$^{a}$ & -- \\
+\midrule
+energy & Fidelity $F$ & 0.936 $\pm$ 0.024 & 0.970 $\pm$ 0.004 & +0.034 [+0.021, +0.050] & +3.6\% & 0.0039 & negligible \\
+ & Evidence support $E$ & 0.926 $\pm$ 0.031 & 0.966 $\pm$ 0.004 & +0.040 [+0.017, +0.063] & +4.3\% & 0.0039 & negligible \\
+ & Manipulation $M$ & 0.066 $\pm$ 0.017 & 0.036 $\pm$ 0.005 & -0.029 [-0.043, -0.016] & -44.4\% & 0.0026 & improved \\
+ & Collective accuracy & 0.744 $\pm$ 0.019 & 0.754 $\pm$ 0.013 & +0.009 [-0.000, +0.019] & +1.2\% & 0.0541$^{a}$ & -- \\
+ & Manipulation success & 0.050 $\pm$ 0.017 & 0.025 $\pm$ 0.012 & -0.025 [-0.037, -0.012] & -49.4\% & 0.0015$^{a}$ & -- \\
+\bottomrule
+\end{tabular}
+\footnotetext{$^{a}$Secondary outcome, unadjusted $p$, no verdict.}
+\end{table*}
