@@ -101,3 +101,16 @@ def test_stdlib_statistics_is_not_shadowed():
 
     assert hasattr(statistics, "mean")
     assert not (ROOT / "statistics" / "__init__.py").exists()
+
+
+def test_reproduce_lists_existing_scripts_and_configs():
+    import importlib.util
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("reproduce", root / "reproduce.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    for (script, *_), _needs in module.ANALYSES:
+        assert (root / "statistics" / script).exists(), script
+    for name in module.CLASSICAL + module.SENSITIVITY:
+        assert (root / "configs" / f"{name}.yaml").exists(), name

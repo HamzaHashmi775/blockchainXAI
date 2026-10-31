@@ -18,8 +18,8 @@ explanation was true.
 | 8 | Blockchain provenance: tamper detection and overhead | done |
 | 9 | Energy: the full pharma pipeline repeated | done |
 | — | Optional extension: LLM agents (qwen2.5:7b) in both domains, incl. a 2×2 wording × payoff experiment | done |
-| 10 | Cross-domain comparison (H6) and sensitivity analysis (β, ρ, ω) | done; final statistics summary (step 34) pending |
-| 11 | Numbered tables 1–7, figures, reproducibility check, paper | **not started** |
+| 10 | Cross-domain comparison (H6), sensitivity analysis (β, ρ, ω), final statistics | done |
+| 11 | Tables 1–7 and figures 1–8 (done); reproducibility package (in progress); claim–evidence map and paper (not started) | in progress |
 
 ## Pipeline
 
@@ -122,8 +122,9 @@ confidence intervals, tests and effect sizes, are there.
 | `blockchain/` | `ProvenanceRegistry.sol` and the web3 client |
 | `statistics/` | analysis scripts (run by path; see `statistics/README.md`) |
 | `kaggle/` | notebook for the GPU LLM runs |
-| `results/summaries/`, `tables/` | analysed results (committed); raw per-seed results in `results/raw/` (git-ignored) |
-| `tests/` | pytest suite (180 tests) |
+| `results/summaries/`, `tables/`, `figures/` | analysed results, paper tables 1–7 and figures 1–8 (committed); raw per-seed results in `results/raw/` (git-ignored) |
+| `reproduce.py` | one command to rebuild analyses, tables and figures |
+| `tests/` | pytest suite |
 | `docs/` | audit, literature matrix, research gap, protocol, threats to validity, log |
 
 ## Reproducing
@@ -136,31 +137,26 @@ python -m venv .venv
 python -m pytest -q
 ```
 
-Classical experiments (CPU; seeds 0–9 are set in each config):
+**One command** rebuilds every summary, table and figure from the raw results:
 
 ```bash
-python run_experiment.py --config configs/pharma_baseline.yaml   # also pharma_proposed, pharma_ablation
-python run_experiment.py --config configs/pharma_adversarial.yaml
-python run_experiment.py --config configs/energy_proposed.yaml   # also energy_baseline, energy_ablation, energy_adversarial
-python run_experiment.py --config configs/pharma_sensitivity_beta.yaml   # and _rho, _omega; same for energy
+python reproduce.py                  # analyses -> results/summaries/, tables/, figures/
+python reproduce.py --experiments    # first rerun the 14 classical experiments (CPU, ~1-2 h)
+python reproduce.py --compare <other checkout>   # per-seed results must be byte-identical
 ```
 
-Analyses (read `results/raw/`, write `results/summaries/` and `tables/`):
+`--experiments` runs, with seeds 0–9 fixed in each config:
+`{pharma,energy}_{baseline,ablation,proposed,adversarial}` and
+`{pharma,energy}_sensitivity_{beta,rho,omega}`. A single experiment is
+`python run_experiment.py --config configs/<name>.yaml` (`--resume` skips seeds already
+written). Each run writes per-seed results and a manifest (config, seeds, dataset hashes,
+status) to `results/raw/<config name>/`; raw results are git-ignored.
 
-```bash
-python statistics/analyze_main.py --domain pharma        # and --domain energy
-python statistics/analyze_adversarial.py --domain pharma # and energy
-python statistics/analyze_sensitivity.py --name pharma_sensitivity_beta
-python statistics/summarize_sensitivity.py
-python statistics/analyze_cross_domain.py
-python statistics/analyze_factorial.py --domain energy   # LLM 2x2; needs the Kaggle results
-```
-
-Each run writes per-seed results and a manifest (config, seeds, dataset hashes, status) to
-`results/raw/<config name>/`. The provenance experiment (`configs/provenance.yaml`) needs a
-local `anvil` node and `solc`. The LLM experiments need Ollama with `qwen2.5:7b` (digest
-`845dbda0…`) and a GPU; see `kaggle/`. A clean-rerun check of the whole package (Phase 11)
-has not been done yet.
+Not rerun by `reproduce.py`:
+- **LLM experiments** need Ollama with `qwen2.5:7b` (digest `845dbda0…`) and a GPU; they ran
+  on Kaggle (`kaggle/`). Their analyses run only when `results/raw/<run>/` is present;
+  otherwise the committed summaries are used.
+- **Provenance** (`configs/provenance.yaml`) needs a local `anvil` node and `solc`.
 
 ## Limitations (summary)
 
