@@ -45,7 +45,9 @@ def load(name):
 
 def save(fig, name):
     for ext in ("png", "pdf"):
-        fig.savefig(FIGURES / f"{name}.{ext}", dpi=200, bbox_inches="tight")
+        # no creation date in the PDF, so a rebuild is byte-identical
+        fig.savefig(FIGURES / f"{name}.{ext}", dpi=200, bbox_inches="tight",
+                    metadata={"CreationDate": None} if ext == "pdf" else None)
     plt.close(fig)
     print(f"wrote figures/{name}.png/.pdf")
 
