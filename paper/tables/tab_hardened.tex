@@ -1,0 +1,29 @@
+\begin{table}[t]
+\caption{Hardened provenance: agent signatures, model registration and anchoring (amendment 9, descriptive)}\label{tab:hardened}
+\footnotesize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Check & Result \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Forged or replayed writes (refused by the contract)}} \\
+content changed after signing & 0 / 100 accepted \\
+signed with another agent's key & 0 / 100 accepted \\
+signed with an unregistered key & 0 / 100 accepted \\
+replayed under another record id & 0 / 100 accepted \\
+replayed from another deployment & 0 / 100 accepted \\
+substituted model & 0 / 100 accepted \\
+sent by a non-owner account & 0 / 100 accepted \\
+correctly signed (control) & 100 / 100 accepted \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{History rebuilt by the operator}} \\
+altered records, amendment-5 check & 0 / 200 detected \\
+registrations against anchor & 10 / 10 differ \\
+altered records against anchor & 200 / 200 detected \\
+unaltered records against anchor & 0 / 29,800 flagged \\
+\midrule
+\multicolumn{2}{@{}l}{\emph{Honest run}} \\
+records, registrations, anchors & 0 tampered, 0 + 0 mismatches \\
+\bottomrule
+\end{tabular}
+\footnotetext{Local nodes, 30,000 records; the anchor chain is a second local node standing in for an external chain. Batches of 100: 126,005 gas per record (amendment 5: 95,912); anchoring 113 gas per record; inclusion proof 320 bytes.}
+\end{table}

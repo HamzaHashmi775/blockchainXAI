@@ -22,6 +22,7 @@ SOLC_VERSION = "0.8.28"
 SCALE = 10 ** 6
 UINT32_MAX = 2 ** 32 - 1
 VALID, TAMPERED, MISSING = "VALID", "TAMPERED", "MISSING"
+RECEIPT_TIMEOUT = 600   # seconds; web3's default of 120 s was once exceeded on a busy machine
 
 
 # --- hashing ---------------------------------------------------------------------------
@@ -118,21 +119,23 @@ def solc_path():
                      rf"D:\xai-incentive-env\tools\solcx\solc-v{SOLC_VERSION}\solc.exe")
 
 
-def compile_contract() -> dict:
+def compile_contract(source: Path = CONTRACT) -> dict:
     import solcx
     solc = solc_path()
     if solc is None:
         raise RuntimeError(f"solc {SOLC_VERSION} not found (set SOLC)")
-    out = solcx.compile_files([str(CONTRACT)], output_values=["abi", "bin"],
+    out = solcx.compile_files([str(source)], output_values=["abi", "bin"],
                               solc_binary=solc, optimize=True, optimize_runs=200)
     (name, compiled), = out.items()
-    return {"abi": compiled["abi"], "bytecode": compiled["bin"], "solc": SOLC_VERSION}
+    return {"abi": compiled["abi"], "bytecode": compiled["bin"], "solc": SOLC_VERSION,
+            "source": str(source)}
 
 
 def contract_fingerprint(compiled: dict) -> dict:
     """Identifies exactly which contract was deployed."""
-    return {"source": CONTRACT.name, "solc": compiled["solc"], "optimizer_runs": 200,
-            "source_sha256": hashlib.sha256(CONTRACT.read_bytes().replace(b"\r\n", b"\n"))
+    source = Path(compiled.get("source", CONTRACT))
+    return {"source": source.name, "solc": compiled["solc"], "optimizer_runs": 200,
+            "source_sha256": hashlib.sha256(source.read_bytes().replace(b"\r\n", b"\n"))
             .hexdigest(),
             "creation_bytecode_sha256": hashlib.sha256(
                 bytes.fromhex(compiled["bytecode"])).hexdigest()}
@@ -187,7 +190,7 @@ class Ledger:
         self.owner = w3.eth.accounts[0]
         factory = w3.eth.contract(abi=compiled["abi"], bytecode=compiled["bytecode"])
         receipt = w3.eth.wait_for_transaction_receipt(
-            factory.constructor().transact({"from": self.owner}))
+            factory.constructor().transact({"from": self.owner}), RECEIPT_TIMEOUT)
         self.deploy_gas = receipt["gasUsed"]
         self.contract = w3.eth.contract(address=receipt["contractAddress"],
                                         abi=compiled["abi"])
@@ -205,7 +208,7 @@ class Ledger:
             else:
                 call = self.contract.functions.recordBatch(rids, *map(list, zip(*values)))
             receipt = self.w3.eth.wait_for_transaction_receipt(
-                call.transact({"from": self.owner}))
+                call.transact({"from": self.owner}), RECEIPT_TIMEOUT)
             seconds = time.perf_counter() - begin
             if receipt["status"] != 1:
                 raise RuntimeError("record transaction failed")
@@ -237,4 +240,4 @@ class Ledger:
                 {"from": sender or self.owner})
         except ContractLogicError:
             return False
-        return self.w3.eth.wait_for_transaction_receipt(tx)["status"] == 1
+        return self.w3.eth.wait_for_transaction_receipt(tx, RECEIPT_TIMEOUT)["status"] == 1

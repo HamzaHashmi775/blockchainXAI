@@ -250,6 +250,18 @@ by the deploying account. Verification recomputes the hashes from the off-chain 
 reports each record as valid, tampered or missing. The chain establishes that a record has
 not changed since it was written; it does not establish that the explanation was truthful.
 
+This design trusts the operator who writes the records. A hardened variant, added after the
+main provenance results were known, removes part of that trust with three additions. First,
+\emph{model registration}: each agent is bound once to a signing key and to the hash of its
+model identity (model, digest, decoding settings and the agent's objective). Second,
+\emph{agent signatures}: the contract accepts a record only if the agent's registered key
+signed its identifier, artefact hashes and model hash for this chain and contract, so the
+operator cannot forge or replay an agent's output. Third, \emph{anchoring}: Merkle roots
+\citep{laurie2013} of the registrations and of every 1{,}000 records are written to
+a second chain that the operator is assumed unable to rewrite, so a rebuilt history no longer
+matches the anchors. Rewards and reputations are computed by the mechanism and are therefore
+covered by the anchors but not by the agents' signatures.
+
 \subsection{LLM agents}\label{sec:llm}
 
 As an extension, we replaced the five classical agents with an open LLM, Qwen2.5-7B
@@ -415,6 +427,21 @@ about 96{,}000 gas; local-node latency excludes consensus and network delay and 
 on a production network. H5 is supported in the sense of integrity: the layer shows that
 records were not changed, not that they were true.
 
+\input{tables/tab_hardened}
+
+The hardened variant was tested on the same 30{,}000 records, with the anchor chain simulated
+by a second local node (Table~\ref{tab:hardened}). The contract refused every forged or
+replayed write: content changed after signing, signatures by another agent's or an
+unregistered key, signatures replayed under another record identifier or from another
+deployment, and substituted models (100 attempts each), while all 100 correctly signed
+control records were accepted. When the operator rebuilt the entire history with 200 altered
+records, per-record verification found nothing, as expected when chain and off-chain store
+are both replaced; the registrations exposed the operator's keys for all ten agents, and the
+anchors identified exactly the 200 altered records, whichever field was changed, with no
+unaltered record flagged. The hardening raised the cost to about 126{,}000 gas per record in
+batches of 100 (from 96{,}000), plus 113 gas per record for anchoring. These results are
+descriptive and rest on the assumption that the anchor chain cannot be rewritten.
+
 \subsection{Cross-domain comparison and sensitivity}\label{sec:cross}
 
 \input{tables/tab_cross}
@@ -475,6 +502,15 @@ payoff: a prompt that states the rules produces the same change. Designers of in
 mechanisms for LLM agents should therefore test whether agents respond to payoffs at all
 before attributing behaviour to them.
 
+\paragraph{Security scope.} The evaluated threats are dishonest agents with valid identities
+(false attribution, inflated confidence, unsupported evidence, strategic voting, collusion of
+two), changes to recorded artefacts, and forged, replayed or rewritten records. Out of scope
+are attackers who adapt to the utility, Sybil identities and whitewashing (a new identity
+starts at reputation 0.5), poisoned source data, models built to mislead SHAP, a declared
+model that differs from the one actually run, stolen agent keys, and network-level attacks;
+all components ran in one process on one machine. The provenance layer is a research
+prototype, not a system hardened against infrastructure attacks.
+
 \paragraph{Limitations.} Both reference decisions are constructed, and decision accuracy means
 agreement with them, not with real choices. The pharmaceutical data cover one programme's
 antiretroviral and HIV-test deliveries, and the candidate sets are inferred. The energy
@@ -484,7 +520,8 @@ whether the model itself is right. The terciles that define evidence levels and 
 weights were set a priori; other choices would give other numbers. Reputation creates path
 dependence. Inference rests on ten seeds (five for LLM agents) on one dataset per domain. The
 LLM results come from one 7-billion-parameter model, and the factorial experiment was added
-after the main analysis. Overhead was measured on a local node and will differ on production
+after the main analysis, as was the hardened provenance layer, whose anchor chain was simulated
+by a second local node. Overhead was measured on local nodes and will differ on production
 networks.
 
 %% ---------------------------------------------------------------------------------------
@@ -496,7 +533,9 @@ reputation weights votes and a blockchain records the artefacts, and evaluated i
 pre-registered protocol on real pharmaceutical and energy data. The incentive reduced
 strategic manipulation in both domains and removed the profit of false explanations; it
 improved explanation quality strongly only where the baseline left room; it did not increase
-robustness to malicious agents; and the provenance layer detected every tampered record. For
+robustness to malicious agents; and the provenance layer detected every tampered record and,
+with agent signatures and anchoring, refused every forged write and exposed a history rebuilt
+by its operator. For
 LLM agents, the effect followed the wording of the rules rather than the payoff. Future work
 should test the mechanism with black-box fidelity estimates, real decision outcomes, larger
 and more diverse LLMs, and defences that act on persistent attackers.

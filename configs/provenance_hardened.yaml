@@ -1,0 +1,15 @@
+# Hardened provenance experiment — protocol amendment 9 (v1.9), frozen 2026-10-31 before the
+# run. Same records as amendment 5 (configs/provenance.yaml); no model is called.
+name: provenance_hardened
+runs: [pharma_llm_main, energy_llm_main]
+seeds: [0, 1, 2, 3, 4]
+batch_size: 100
+anchor_every: 1000         # records per Merkle anchor on the second chain
+rng_seed: 0
+forgery_attempts: 100      # per attack, and for the positive control
+model_substitutions: [digest, objective, temperature]
+rewrite:
+  per_target: 40           # decision, explanation, evidence, reward, reputation
+overhead:
+  records: 1000            # the first records of pharma seed 0, on a fresh deployment each
+  batch_sizes: [1, 10, 100]

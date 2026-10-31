@@ -157,6 +157,45 @@ def tab_provenance():
                  "Group & Flagged TAMPERED & Meaning", rows, note=note)
 
 
+def tab_hardened():
+    hr = load("provenance_hardened")
+    h, rw, f = hr["honest"], hr["rewrite_hardened"], hr["forgery"]
+    names = {"content_changed_after_signing": "content changed after signing",
+             "other_agents_key": "signed with another agent's key",
+             "unregistered_key": "signed with an unregistered key",
+             "replay_other_record_id": "replayed under another record id",
+             "replay_other_deployment": "replayed from another deployment",
+             "model_substituted": "substituted model",
+             "non_owner_sender": "sent by a non-owner account"}
+    rows = [["\\multicolumn{2}{@{}l}{\\emph{Forged or replayed writes (refused by the "
+             "contract)}}"]]
+    rows += [[label, f"{f[k]['accepted']} / {f[k]['attempts']} accepted"]
+             for k, label in names.items()]
+    rows.append(["correctly signed (control)", f"{f['valid_control']['accepted']} / "
+                 f"{f['valid_control']['attempts']} accepted"])
+    rows += ["MID", ["\\multicolumn{2}{@{}l}{\\emph{History rebuilt by the operator}}"],
+             ["altered records, amendment-5 check",
+              f"{hr['rewrite_amendment5']['TAMPERED']} / {rw['altered']} detected"],
+             ["registrations against anchor", f"{rw['registrations_mismatched']} / "
+              f"{rw['registrations']} differ"],
+             ["altered records against anchor", f"{rw['altered_detected_by_anchor']} / "
+              f"{rw['altered']} detected"],
+             ["unaltered records against anchor", f"{rw['unaltered_flagged']} / "
+              f"{rw['unaltered']:,} flagged"],
+             "MID", ["\\multicolumn{2}{@{}l}{\\emph{Honest run}}"],
+             ["records, registrations, anchors", f"{h['per_record']['TAMPERED']} tampered, "
+              f"{h['registrations_mismatched']} + {h['anchors_mismatched']} mismatches"]]
+    o, a = hr["overhead"]["batches"]["100"], hr["overhead"]["anchor"]
+    note = (f"Local nodes, {hr['records']:,} records; the anchor chain is a second local node "
+            f"standing in for an external chain. Batches of 100: {o['gas_per_record']:,.0f} gas "
+            f"per record (amendment 5: {load('provenance')['overhead']['100']['gas_per_record']:,.0f}); "
+            f"anchoring {a['anchor_gas'] / a['leaves']:,.0f} gas per record; inclusion proof "
+            f"{a['proof_bytes_median']:.0f} bytes.")
+    return table("tab:hardened", "Hardened provenance: agent signatures, model registration "
+                 "and anchoring (amendment 9, descriptive)", "@{}ll@{}", "Check & Result", rows,
+                 note=note)
+
+
 def tab_cross():
     cr = load("cross_domain")["arms"]
     rob = load("sensitivity_robustness")["runs"]
@@ -201,7 +240,8 @@ def tab_llm():
 
 def main():
     OUT.mkdir(exist_ok=True)
-    for build in (tab_datasets, tab_main, tab_ablation, tab_robust, tab_provenance, tab_cross,
+    for build in (tab_datasets, tab_main, tab_ablation, tab_robust, tab_provenance, tab_hardened,
+                  tab_cross,
                   tab_llm):
         name = build.__name__
         (OUT / f"{name}.tex").write_text(build(), encoding="utf-8")

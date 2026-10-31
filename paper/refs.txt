@@ -29,3 +29,4 @@ qwen2024 arxiv 2412.15115
 optirecdata2025 doi 10.17632/bvp4vrn9gc.1
 holm1979 manual Scand-J-Stat-6(2):65-70
 scmsdata2015 manual data/metadata/datasets.json
+laurie2013 doi 10.17487/RFC6962

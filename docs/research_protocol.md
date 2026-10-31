@@ -942,3 +942,96 @@ Post hoc; same model, code and prompts as pharma, so this tests whether the patt
 a second domain, not an independent replication. Energy's confidence effect in amendment 4
 was half of pharma's, so the absolute bound for D − A is tighter. n = 5; D from a separate
 session; the A7.3 limit on what a null payoff effect means applies unchanged.
+
+### Amendment 9 — 2026-10-31 (protocol v1.9): hardened provenance layer (added, post hoc)
+
+**Status: FROZEN 2026-10-31, before any part of it was run.** Direction from the user, after a
+discussion of the threat model: add the three provenance defences judged small enough to
+build now: agent signatures, anchoring outside the operator's control, and model
+registration. Known when this was written: all amendment-5 results (1,000/1,000 tampered
+records detected, 0/2,000 false positives, 100/100 overwrites and foreign writes refused),
+and the limit declared in A5.3/A5.4 that an attacker who controls the chain and the
+off-chain store is not covered. Amendment 5 and its results are unchanged; this amendment
+adds a second, separate experiment. Results are descriptive (as A5.2); none of H1–H6 is
+re-tested or re-labelled by it.
+
+#### A9.1 Implementation
+- Contract `blockchain/ProvenanceRegistryV2.sol` (Solidity 0.8.28, optimiser 200 runs, same
+  node and client as A5.1). Additions to the amendment-5 contract:
+  - **Model registration.** `registerAgent(agentId, key, modelHash)`, owner-only and once per
+    agent id. `agentId` = SHA-256 of {domain, agent}. `modelHash` = SHA-256 of the canonical
+    JSON of the agent's model identity: Ollama model name and digest, temperature, num_ctx,
+    num_predict, prompt style (from the run manifest) and the agent's private-objective
+    sentence (`agents/llm_agent.py::OBJECTIVES`). Each record must carry the registered
+    model hash; otherwise the write reverts ("model mismatch").
+  - **Agent signatures.** Each agent has its own secp256k1 key. The agent signs (EIP-191,
+    `personal_sign` of a 32-byte digest) keccak256(abi.encode(chain id, contract address,
+    record id, agent id, decision hash, explanation hash, evidence hash, model hash)). The
+    contract recovers the signer and reverts unless it is the agent's registered key; high-s
+    signatures are refused. Reward and reputation are computed by the mechanism, not the
+    agent, so they are not covered by the agent's signature (they remain owner-written).
+  - Unchanged: append-only, owner-only writes, SHA-256 artifact hashes, reward and
+    reputation ×10⁶.
+- **Test keys.** Agent keys are derived deterministically as SHA-256("amendment-9 test
+  key|domain|agent"). They are test keys for this experiment only, not secrets, and are not
+  the Anvil default accounts (the operator still uses Anvil account 0, as in A5.1).
+- **Anchoring.** Contract `blockchain/AnchorRegistry.sol`, append-only list of (label, Merkle
+  root, number of leaves, timestamp), deployed on a **second, independent Anvil node** that
+  stands in for an external chain (a public or multi-organisation chain). This is a
+  simulation: both nodes run on one machine under the experimenter's control, and the
+  property assumed of the external chain (the operator cannot rewrite it) is assumed, not
+  shown. Merkle tree as RFC 6962 (leaf = SHA-256(0x00 ‖ data), node = SHA-256(0x01 ‖ left ‖
+  right), split at the largest power of two). Anchors: one for the agent registrations
+  (leaf = agent id ‖ key address ‖ model hash, agents in fixed order), then one per
+  `anchor_every` = 1,000 records in write order (leaf = record id ‖ agent id ‖ decision,
+  explanation, evidence hashes ‖ reward ‖ reputation as 4-byte big-endian integers).
+  Inclusion proofs are kept off-chain.
+
+#### A9.2 Experiment (`experiments/provenance_hardened.py`, `configs/provenance_hardened.yaml`)
+Records: the same 30,000 as A5.2 (same runs, seeds, systems, rounds, agents), batches of
+100. RNG seed 0 for every random draw.
+1. **Honest run and audit.** Register the 10 agents, anchor the registration, sign and write
+   all records, anchor every 1,000. Audit: every record verifies against the off-chain store
+   (VALID/TAMPERED/MISSING as A5.1); the registrations and every anchor recomputed from the
+   chain match the anchored roots. Expected 0 mismatches (false-positive check).
+2. **Forgery and replay, enforced at write** (100 attempts each, records drawn at random,
+   each written under a fresh record id so that "record exists" cannot cause the refusal):
+   (a) content changed after signing (explanation hash replaced); (b) signed by another
+   registered agent's key; (c) signed by an unregistered key; (d) a valid signature for one
+   record id submitted under another; (e) a signature valid on a second deployment with the
+   same registrations submitted to the main one; (f) model substitution: signed and
+   submitted with a substituted model hash, cycling through three substitutions (digest
+   changed, another agent's objective, temperature changed); (g) valid signature, sent from a
+   non-owner account. Positive control: 100 correctly signed fresh records must be accepted.
+   Outcome: attempts accepted, and revert reasons.
+3. **History rewrite by the operator.** 200 records drawn at random (40 per target:
+   decision, explanation, evidence, reward, reputation, changed as in A5.2) are altered in the
+   off-chain store, and the operator rebuilds the whole chain consistently with the altered
+   store on a fresh node:
+   - amendment-5 contract: the operator records the altered store; per-record verification
+     (the A5 check) is reported for the 200 altered records;
+   - hardened contract: the operator, lacking the agents' keys, registers keys of its own
+     (true model hashes) and records the altered store. Reported: per-record verification;
+     the registration check against the anchored registration root (agents whose key or
+     model differs); anchors whose recomputed root differs; and, per record, whether its
+     leaf on the rebuilt chain verifies against the anchored root with the inclusion proof
+     kept at anchoring time (altered records detected; unaltered records wrongly flagged).
+4. **Overhead** (as A5.2): the first 1,000 records of pharma seed 0 on a fresh deployment
+   for batch sizes 1, 10, 100: gas and latency per record, signing time per record, gas per
+   anchor transaction, time to build a 1,000-leaf tree, proof size, proof verification time.
+   Compared descriptively with the amendment-5 overhead in `results/summaries/provenance.json`
+   (not rerun).
+- Outputs: `results/summaries/provenance_hardened.json`, `tables/provenance_hardened.md`.
+
+#### A9.3 Limits declared now
+- Post hoc, added after the amendment-5 results were known; descriptive only.
+- The external chain is simulated by a second local node; real anchoring would add the cost
+  and latency of that chain, and its security is that chain's.
+- Signatures show which registered key signed a record, not that the agent's output was
+  honest (integrity, not truth, as A5.3). A compromised agent key defeats them; key storage
+  and rotation are not part of this experiment.
+- Model registration binds a record to a declared model identity; it cannot show that the
+  declared model actually produced the output (that would need attested execution).
+- Anchoring detects a rewrite only up to the last anchor; records after it are protected only
+  by the signatures. An operator who withholds an anchor is not detected by this design.
+- Sybil identities and whitewashing (reputation layer) are out of scope.

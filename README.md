@@ -83,6 +83,13 @@ baseline)/|baseline|.
   reputation): all detected. 0 false positives in 2,000 controls and 27,800 untouched
   records. Changes below the 10⁻⁶ storage resolution are invisible by design. Local node
   (anvil); overhead ≈ 96k gas per record in batches of 100 (`tables/provenance.md`).
+- **Hardened provenance** (amendment 9, added post hoc, descriptive;
+  `tables/provenance_hardened.md`): with agent signatures, model registration and Merkle
+  anchors on a second (simulated external) chain, the contract refused all forged or
+  replayed writes and substituted models (0 of 100 accepted for each of 7 attacks; 100/100
+  valid controls accepted). When the operator rebuilt the whole history with 200 altered
+  records, the anchors found all 200 and flagged none of the other 29,800; the original
+  per-record check found none. Cost ≈ 126k gas per record (+113 gas for anchoring).
 - **Ceiling in energy:** the energy baseline already reaches F 0.94 / E 0.93, so there is
   little room for a 5 % gain. This is reported, not used to change any verdict.
 - **Sensitivity** (`tables/sensitivity_robustness.md`): pharma verdicts unchanged at every
@@ -119,7 +126,7 @@ confidence intervals, tests and effect sizes, are there.
 | `evaluation/` | fidelity, evidence support, consistency; statistical tests |
 | `experiments/` | game loop per domain, LLM runs, provenance experiment, experiment registry |
 | `utils/` | seeding and dataset loading |
-| `blockchain/` | `ProvenanceRegistry.sol` and the web3 client |
+| `blockchain/` | `ProvenanceRegistry.sol` and its web3 client; hardened `ProvenanceRegistryV2.sol` (agent signatures, model registration), `AnchorRegistry.sol` and `hardened.py` (Merkle anchoring) |
 | `statistics/` | analysis scripts (run by path; see `statistics/README.md`) |
 | `kaggle/` | notebook for the GPU LLM runs |
 | `results/summaries/`, `tables/`, `figures/` | analysed results, paper tables 1–7 and figures 1–8 (committed); raw per-seed results in `results/raw/` (git-ignored) |
@@ -161,7 +168,9 @@ Not rerun by `reproduce.py`:
 - **LLM experiments** need Ollama with `qwen2.5:7b` (digest `845dbda0…`) and a GPU; they ran
   on Kaggle (`kaggle/`). Their analyses run only when `results/raw/<run>/` is present;
   otherwise the committed summaries are used.
-- **Provenance** (`configs/provenance.yaml`) needs a local `anvil` node and `solc`.
+- **Provenance** (`configs/provenance.yaml`, `configs/provenance_hardened.yaml`) needs a
+  local `anvil` node and `solc`: `python experiments/provenance.py` and
+  `python experiments/provenance_hardened.py` (about 50 min).
 
 ## Limitations (summary)
 
@@ -169,5 +178,7 @@ Constructed reference decisions in both domains; simulated battery parameters in
 SHAP fidelity depends on the underlying models; results depend on the incentive weights;
 reputation can create path dependence; n = 10 seeds (classical) and 5 (LLM); the LLM 2×2
 was added post hoc; local-chain overhead differs from production networks; the chain shows
-integrity, not truth. No exact Nash equilibrium is claimed: unilateral-deviation payoffs are
+integrity, not truth; the anchor chain was simulated by a second local node, and the system
+was not evaluated against network attacks, stolen keys, Sybil identities or adaptive
+attackers (threat model in `docs/threats_to_validity.md`). No exact Nash equilibrium is claimed: unilateral-deviation payoffs are
 reported instead. Details in `docs/threats_to_validity.md`.

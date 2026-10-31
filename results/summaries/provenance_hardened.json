@@ -1,0 +1,367 @@
+{
+  "protocol": "amendment 9 (v1.9)",
+  "config": {
+    "name": "provenance_hardened",
+    "runs": [
+      "pharma_llm_main",
+      "energy_llm_main"
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "batch_size": 100,
+    "anchor_every": 1000,
+    "rng_seed": 0,
+    "forgery_attempts": 100,
+    "model_substitutions": [
+      "digest",
+      "objective",
+      "temperature"
+    ],
+    "rewrite": {
+      "per_target": 40
+    },
+    "overhead": {
+      "records": 1000,
+      "batch_sizes": [
+        1,
+        10,
+        100
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "solc": "0.8.28",
+    "node": "anvil (Foundry v1.8.5)",
+    "chain": {
+      "client": "anvil/v1.8.5",
+      "chain_id": 31337,
+      "hardfork": "Bpo1",
+      "block_gas_limit": 30000000,
+      "base_fee_wei": 1000000000,
+      "mining": "instant (a block per transaction)",
+      "accounts": "Anvil defaults"
+    },
+    "contracts": [
+      {
+        "source": "ProvenanceRegistryV2.sol",
+        "solc": "0.8.28",
+        "optimizer_runs": 200,
+        "source_sha256": "b6396a003118c78743ada3c5e6002d0187c44b28639ee7ee9e6761cc7b34763f",
+        "creation_bytecode_sha256": "01770fa7c82563048daa06c754f1e0f050722f7e17c4d4c43f556c74c5f48759"
+      },
+      {
+        "source": "AnchorRegistry.sol",
+        "solc": "0.8.28",
+        "optimizer_runs": 200,
+        "source_sha256": "92893164c3859cf9ae6b412620ed884c0489e00fd56be9df71939ff591ccb561",
+        "creation_bytecode_sha256": "b736208ec4d3f303aa634d23b20ba2d15373c40185a1ccc7d459f6bdd2f3ae7e"
+      }
+    ]
+  },
+  "records": 30000,
+  "agents": {
+    "pharma/cost": {
+      "agent_id": "d0beb7767a3827c2a810a0d7beba0df5a6bffcf939ac9ebf067a1a4fb0eaafae",
+      "key": "0x7de30b605F8610afC6D1fDC2439e8F4dED07bD9E",
+      "model_hash": "156b3c286e57a4cdf5045e4e944f7086633ed85a6f87728149b72b8d37f4d092",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the chosen supplier has a low expected unit price."
+      }
+    },
+    "pharma/reliability": {
+      "agent_id": "99d56048ed3a115e035177e0f3ffee261547414308713d1f8565038a94a444fe",
+      "key": "0xDd5f8a7df28072e6d6DDB65ddb44B4072a67B647",
+      "model_hash": "090ae4a359a1d07c13daad83820cf51a2d3ba18a3a086ac9b9a6bf470ce030c0",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the chosen supplier has a high past on-time delivery rate."
+      }
+    },
+    "pharma/lead_time": {
+      "agent_id": "db36cebcfc90728efe1dad3e78b71b2c4550f28cefa9c572063364d4a2a8fb0c",
+      "key": "0xcC4B27eBd6CE20B6085340b44e42c33e6c01D669",
+      "model_hash": "d3b5ab95a2d1be6f300af8d1450a5d6591619a37ef1fa67ed1dd317a590160f2",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the chosen supplier has short past lead times."
+      }
+    },
+    "pharma/logistics": {
+      "agent_id": "36b94bee7feefaaa9c8834751d8163d42b1427fb6af1e80f3f6c309e0495c1f2",
+      "key": "0xc6aFB35Eb60eD9fBE7b0DAEE100a43319927e2d9",
+      "model_hash": "f3de07c546bcf223aca4cc562d11981c8233706ed0cb637894e88a4f38885f30",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the chosen supplier has a low past freight cost per kilogram."
+      }
+    },
+    "pharma/continuity": {
+      "agent_id": "f443bbb8bcb05dd45a3e5bf8a3d4c1b922ddfdb778e0f546a6a81e0664b85e4f",
+      "key": "0x7F42dcCC67bd97650528B9101A7b208f0E55dd4F",
+      "model_hash": "08ddf2a005e1e6893c3ef052b821b2296c8269cf22880a06bdd2d1bdca068ad3",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the chosen supplier has delivered this product most often before."
+      }
+    },
+    "energy/producer": {
+      "agent_id": "9f41926eb9a186e7602c3ee161643a791022445a3b9e29cc47fab4b67b6c52dd",
+      "key": "0x7D73396102e338ee3D4Df9543625D74ED0c749dC",
+      "model_hash": "1c75575725ac5e6c96e76d6e5be17e114cf8d8c70037930f2d0d71d81e3f8b57",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when surplus energy is sold at an above-median feed-in price."
+      }
+    },
+    "energy/consumer": {
+      "agent_id": "56cb96905db978217d7cec58eac3f20b56f0a8ac523a7a6b9b2d965d948f3a24",
+      "key": "0x8F730F5c7d4C611c1146E5d495C7740033beEc84",
+      "model_hash": "6d1a8c52c7881d0de481d6c6501a0f9fd24e2e3bd0654204b9771f91a080eccd",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the community pays less for grid imports."
+      }
+    },
+    "energy/market": {
+      "agent_id": "f950368f4050d4d564f743b6b0aebe1b0f565dd4dbcbb6974714d6fa34b6a18f",
+      "key": "0xafF0095c9663d7cE22621a77dE4F28181cF3d8e6",
+      "model_hash": "861ac6bca7fb6af34852cebd8cc0fbc4b0dfc631a1627f968b776891d7bd6aba",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the battery trades against the day's median price."
+      }
+    },
+    "energy/grid": {
+      "agent_id": "6aaa291a1b9e3a92eb97a37b8fcd152a6860ed31f84278f257d06624362114ae",
+      "key": "0xdD051AE502c45dDe0DaAA85Ed3C14700c7574fab",
+      "model_hash": "a6c1acc37436c75f3a28ac108ed88b1ed350cc33d37962c6648ea5c72a60b2d2",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the exchange with the grid is small."
+      }
+    },
+    "energy/storage": {
+      "agent_id": "db64191427f8de9aa6ca46b6e73fb67e3817a8e7b768b089abcbb854c5ce3dc6",
+      "key": "0x0A5f48d5605241b0e6c6ACc24Fea9DBc776b2aC6",
+      "model_hash": "fbeaa94029020fafaa5caa5fe9fe0886a66f43076515245f2b948d931b414980",
+      "model": {
+        "model": "qwen2.5:7b",
+        "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+        "temperature": 0.0,
+        "num_ctx": 2048,
+        "num_predict": 120,
+        "prompt_style": "raw",
+        "objective": "You privately gain when the battery charges on surplus and otherwise stays idle."
+      }
+    }
+  },
+  "gas": {
+    "deploy": 814359,
+    "registration": 692574,
+    "records": 3779594810,
+    "transactions": 300,
+    "anchors": 31,
+    "anchor_gas_total": 3004293,
+    "sign_seconds": 526.7966914000135
+  },
+  "timing": {
+    "honest_write_seconds": 932.8748030999996
+  },
+  "honest": {
+    "per_record": {
+      "VALID": 30000,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "registrations_mismatched": 0,
+    "registrations": 10,
+    "anchors_mismatched": 0,
+    "anchors": 30,
+    "records_failing_anchor": 0
+  },
+  "records_on_chain": 30000,
+  "forgery": {
+    "valid_control": {
+      "attempts": 100,
+      "accepted": 100,
+      "outcomes": {
+        "accepted": 100
+      }
+    },
+    "content_changed_after_signing": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "bad signature": 100
+      }
+    },
+    "other_agents_key": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "bad signature": 100
+      }
+    },
+    "unregistered_key": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "bad signature": 100
+      }
+    },
+    "replay_other_record_id": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "bad signature": 100
+      }
+    },
+    "replay_other_deployment": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "bad signature": 100
+      }
+    },
+    "model_substituted": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "model mismatch": 100
+      }
+    },
+    "non_owner_sender": {
+      "attempts": 100,
+      "accepted": 0,
+      "outcomes": {
+        "not owner": 100
+      }
+    }
+  },
+  "rewrite_amendment5": {
+    "VALID": 200,
+    "TAMPERED": 0,
+    "MISSING": 0
+  },
+  "rewrite_hardened": {
+    "per_record": {
+      "VALID": 30000,
+      "TAMPERED": 0,
+      "MISSING": 0
+    },
+    "registrations_mismatched": 10,
+    "registrations": 10,
+    "anchors_mismatched": 30,
+    "anchors": 30,
+    "altered": 200,
+    "altered_detected_by_anchor": 200,
+    "altered_detected_by_target": {
+      "decision": 40,
+      "explanation": 40,
+      "evidence": 40,
+      "reward": 40,
+      "reputation": 40
+    },
+    "unaltered_flagged": 0,
+    "unaltered": 29800
+  },
+  "anchors_on_chain": 31,
+  "overhead": {
+    "batches": {
+      "1": {
+        "records": 1000,
+        "transactions": 1000,
+        "deploy_gas": 814359,
+        "gas_per_record": 155478.736,
+        "gas_per_transaction_median": 155461.0,
+        "write_seconds_per_record": 0.14228985869971802,
+        "write_seconds_per_transaction_median": 0.15928074999828823,
+        "sign_seconds_per_record": 0.01526500749999832,
+        "verify_seconds_per_record": 0.017833299100006115
+      },
+      "10": {
+        "records": 1000,
+        "transactions": 100,
+        "deploy_gas": 814359,
+        "gas_per_record": 130121.136,
+        "gas_per_transaction_median": 1301043.5,
+        "write_seconds_per_record": 0.021041393699953916,
+        "write_seconds_per_transaction_median": 0.215610100000049,
+        "sign_seconds_per_record": 0.020751781800005118,
+        "verify_seconds_per_record": 0.017674560700004803
+      },
+      "100": {
+        "records": 1000,
+        "transactions": 10,
+        "deploy_gas": 814359,
+        "gas_per_record": 126004.886,
+        "gas_per_transaction_median": 12598818.0,
+        "write_seconds_per_record": 0.010571626800010564,
+        "write_seconds_per_transaction_median": 1.05653909999819,
+        "sign_seconds_per_record": 0.02181304639999871,
+        "verify_seconds_per_record": 0.01916740609999397
+      }
+    },
+    "anchor": {
+      "leaves": 1000,
+      "anchor_deploy_gas": 292731,
+      "anchor_gas": 113463,
+      "tree_seconds": 0.007443099995725788,
+      "proof_bytes_median": 320.0,
+      "proof_bytes_max": 320,
+      "proof_verify_seconds": 6.125719999545254e-05
+    }
+  }
+}

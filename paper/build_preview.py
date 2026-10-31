@@ -155,7 +155,8 @@ class Converter:
         s = re.sub(r"\\ref\{([^}]*)\}", lambda m: self.labels.get(m.group(1), "??"), s)
         s = re.sub(r"\\label\{[^}]*\}", "", s)
         s = re.sub(r"\\url\{([^}]*)\}", r"<a href='\1'>\1</a>", s)
-        s = re.sub(r"\\multicolumn\{\d+\}\{\w\}\{(.*)\}", r"\1", s)
+        # column spec may hold one level of braces, e.g. {@{}l}
+        s = re.sub(r"\\multicolumn\{\d+\}\{(?:[^{}]|\{[^{}]*\})*\}\{(.*)\}", r"\1", s)
         for _ in range(2):
             s = re.sub(r"\\emph\{([^{}]*)\}", r"<em>\1</em>", s)
             s = re.sub(r"\\textbf\{([^{}]*)\}", r"<b>\1</b>", s)

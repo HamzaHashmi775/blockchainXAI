@@ -1150,3 +1150,32 @@ was restarted and its cause was not established.
   `results/summaries/`, `tables/`, `figures/` byte-identical** to the committed ones.
 - GATE 11 (tables/figures generated from saved results; package verified by a clean rerun):
   met. README status updated.
+
+## 2026-10-31 — Amendment 9: hardened provenance layer (post hoc, descriptive)
+
+- User direction, after a discussion of the threat model: add agent signatures, anchoring
+  outside the operator's control, and model registration. Protocol amendment 9 frozen before
+  any run (`docs/research_protocol.md`).
+- New: `blockchain/ProvenanceRegistryV2.sol` (registration once per agent; EIP-191
+  signatures over chain id, contract, record id, agent id, artefact hashes and model hash;
+  low-s only), `blockchain/AnchorRegistry.sol`, `blockchain/hardened.py` (RFC 6962 Merkle
+  tree, deterministic test keys, ledger and anchor clients), `experiments/provenance_hardened.py`,
+  `configs/provenance_hardened.yaml`, 30 tests (`tests/test_blockchain_hardened.py`).
+  `compile_contract` takes a source path (default unchanged; amendment-5 outputs unchanged).
+- First run failed after the honest and forgery stages: one transaction on the
+  amendment-5 rewrite node was not mined within web3's default 120 s (machine under memory
+  pressure earlier in the session). Nothing was saved or read. Receipt timeout raised to 600 s
+  and timestamped stage logging added (no change to the procedure); rerun from the start
+  completed in 51 min.
+- Results (`tables/provenance_hardened.md`): honest run 30,000 VALID, 0 registration or
+  anchor mismatches; each of 7 forgery/replay attacks 0 of 100 accepted (reasons: bad
+  signature, model mismatch, not owner as designed), 100/100 valid controls accepted. History
+  rewrite with 200 altered records: amendment-5 check 0/200; hardened per-record check 0 (store
+  and chain both replaced); registrations 10/10 differ; anchors 30/30 differ; altered records
+  failing their inclusion proof 200/200 (40/40 per target), unaltered 0/29,800. Overhead in
+  batches of 100: 126,005 gas per record (amendment 5: 95,912), anchoring 113 gas per record,
+  proof 320 bytes; signing ≈ 18 ms per record in Python.
+- Threat model added to `docs/threats_to_validity.md`; paper: Method §3.5 (hardened
+  variant), Results §5.4 (Table `tab:hardened`), Discussion (security scope), Conclusion;
+  RFC 6962 added to the bibliography by DOI (10.17487/RFC6962). Claim map P5–P7 and two
+  disallowed claims.

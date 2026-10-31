@@ -56,6 +56,9 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 | P2 | Changes below the 10⁻⁶ storage resolution are not detected (by design) | Table 6 | 0 of 200 |
 | P3 | Contract rules hold: no overwrite, no foreign write | Table 6 | 0 of 100 each |
 | P4 | Overhead on a local node | Table 6 | ≈ 96k gas per record in batches of 100; 128 bytes on-chain per record |
+| P5 | Hardened layer (amendment 9, post hoc, descriptive): the contract refuses forged and replayed writes and substituted models | `tables/provenance_hardened.md`, `paper/tables/tab_hardened.tex` | 0 of 100 accepted for each of 7 attacks; 100/100 correctly signed controls accepted |
+| P6 | Anchoring exposes a history rebuilt by the operator, record by record | same | registrations 10/10 differ; altered records 200/200 detected (40/40 per target); 0 of 29,800 unaltered flagged; the amendment-5 check alone detects 0/200 |
+| P7 | Overhead of hardening on a local node | same | ≈ 126k gas per record in batches of 100 (vs 96k); anchoring ≈ 113 gas per record; 320-byte proof |
 
 ## Cross-domain and sensitivity (Table 7, Figure 8)
 
@@ -82,7 +85,7 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 | # | Claim | Evidence |
 |---|---|---|
 | Q1 | All summaries, tables and figures are rebuilt from raw results by one command | `reproduce.py`; rebuild byte-identical (research log 2026-10-31) |
-| Q2 | Classical experiments are deterministic | clean rerun in a fresh clone (research log, Step 36) |
+| Q2 | Classical experiments are deterministic | clean rerun in a fresh clone: 140 per-seed files and 70 rebuilt outputs byte-identical (research log, 2026-10-31, GATE 11) |
 
 ## Claims the evidence does NOT allow
 
@@ -102,5 +105,11 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 - **Generalisation to pharmaceutical supply chains in general, to other LLMs or to production
   blockchains.** One USAID programme's ARV and HIV-test deliveries, one 7B model, one local
   node.
+- **"The system is secure against cyber attacks" / "decentralised".** All components ran on
+  one machine; the anchor chain was a second local node assumed unrewritable; network attacks,
+  stolen keys, Sybil identities, data poisoning and adaptive attackers were not evaluated
+  (`docs/threats_to_validity.md`, threat model).
+- **"Model registration proves which model produced an output."** It binds a record to a
+  declared model identity; without attested execution it cannot show the declared model ran.
 - **Combining the LLM 2×2 results with the confirmatory family.** They were added post hoc
   (amendments 6–8) and are reported separately.

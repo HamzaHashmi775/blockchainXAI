@@ -96,10 +96,34 @@ Started 2026-10-05 (Phase 2). Updated as phases complete.
   property of the EVM and transfers to other EVM chains; its price does not.
 - The design detects changes to off-chain artifacts after recording. It does not protect
   against an actor who controls the chain or who records false artifacts in the first place.
+  (Amendment 9 adds agent signatures and anchoring against the first; see the threat model
+  below.)
 - Reward and reputation are stored with six decimals; smaller changes are invisible by design.
 - Recorded artifacts are the saved LLM runs, recorded after the fact rather than during the
   game; the hashes and verification are the same either way, but recording latency was not
   part of the agents' decision loop.
+
+## Threat model and security scope (added 2026-10-31, with amendment 9)
+
+What the system is designed and evaluated against, and what it is not.
+
+| | Content |
+|---|---|
+| Assets | the collective decision; the integrity of explanations and evidence claims; rewards and reputation; the provenance records |
+| In scope (evaluated) | dishonest agents with valid identities: false attribution, confidence inflation, unsupported evidence, strategic voting (H1–H3); 10–40 % malicious agents with fixed attack policies (H4); collusion of two agents; changes to off-chain artifacts after recording (H5, amendment 5); forged and replayed records, model substitution and a history rewrite by the operator (amendment 9) |
+| Trusted | the source datasets; the TreeSHAP reference of each agent's model; the evidence criteria; the auditor's code; the agents' private keys (amendment 9); the anchor chain cannot be rewritten (assumed: simulated by a second local node) |
+| Out of scope (not evaluated) | adaptive attackers who optimise against the utility; Sybil identities and whitewashing (new identities start at reputation 0.5); on-off attacks on reputation; poisoned source data; models built to fool SHAP; a declared model differing from the one actually run (no attested execution); stolen agent keys and key rotation; network attacks (no networked deployment exists: all components run in one process); denial of service; prompt injection into LLM agents |
+
+Consequences for the claims:
+- Robustness to malicious agents (H4) was not supported. The malicious agents follow fixed
+  policies and do not respond to payoffs, so the incentive cannot deter them; only the
+  reputation-weighted vote can limit them, and with ρ = 0.8 and an initial reputation of 0.5
+  it does so slowly. A stronger vote defence is untested.
+- The provenance layer gives tamper evidence and, with amendment 9, attribution of records to
+  registered agent keys and detection of a rewritten history up to the last anchor. It is a
+  research prototype, not a system hardened against infrastructure attacks.
+- Amendment 9 was added after the amendment-5 results were known; its results are
+  descriptive.
 
 ## Literature
 
