@@ -1137,3 +1137,16 @@ was restarted and its cause was not established.
   one wrong DOI I had typed for it was caught and removed), LaTeX tables generated from the
   summaries. Checks: abstract 220 words, 6 keywords, all citations resolved, no identifying
   strings. No LaTeX on this machine: compile in the official Overleaf template.
+
+## 2026-10-31 — Phase 11: clean rerun verified (GATE 11)
+
+- Fresh clone on D: (commit 2d338b9), the 14 classical experiments rerun from scratch with
+  `run_experiment.py` in three parallel streams. Two background watchers were stopped by the
+  host (time limit, low memory); the experiment processes themselves ran to the end.
+- `python reproduce.py --compare D:/repro_check`: **140 per-seed result files in 14 runs, all
+  byte-identical**; configs and dataset hashes equal.
+- `python reproduce.py` in the clone (analyses only; the git-ignored LLM raw results are
+  absent there, so their committed summaries were used): **all 70 files under
+  `results/summaries/`, `tables/`, `figures/` byte-identical** to the committed ones.
+- GATE 11 (tables/figures generated from saved results; package verified by a clean rerun):
+  met. README status updated.

@@ -19,7 +19,7 @@ explanation was true.
 | 9 | Energy: the full pharma pipeline repeated | done |
 | — | Optional extension: LLM agents (qwen2.5:7b) in both domains, incl. a 2×2 wording × payoff experiment | done |
 | 10 | Cross-domain comparison (H6), sensitivity analysis (β, ρ, ω), final statistics | done |
-| 11 | Tables 1–7 and figures 1–8 (done); reproducibility package (in progress); claim–evidence map and paper (not started) | in progress |
+| 11 | Tables 1–7, figures 1–8, reproducibility package (verified by a clean rerun), claim–evidence map, manuscript draft (`paper/`) | done |
 
 ## Pipeline
 
@@ -144,6 +144,11 @@ python reproduce.py                  # analyses -> results/summaries/, tables/, 
 python reproduce.py --experiments    # first rerun the 14 classical experiments (CPU, ~1-2 h)
 python reproduce.py --compare <other checkout>   # per-seed results must be byte-identical
 ```
+
+**Verified (2026-10-31):** in a fresh clone, `reproduce.py --experiments` reran all 14
+classical experiments; all 140 per-seed result files were byte-identical to the originals,
+and the rebuilt summaries, tables and figures (70 files) were byte-identical to the
+committed ones.
 
 `--experiments` runs, with seeds 0–9 fixed in each config:
 `{pharma,energy}_{baseline,ablation,proposed,adversarial}` and
