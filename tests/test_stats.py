@@ -177,3 +177,31 @@ def test_final_summary_h4_rule():
     # runs on the committed summaries
     res = module.analyse()
     assert set(res["H1_H3"]) == {"classical", "llm"} and res["H5"]["records"] > 0
+
+
+def _script(name):
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "statistics" / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_paper_tables_build_from_saved_results(tmp_path, monkeypatch):
+    module = _script("make_tables")
+    monkeypatch.setattr(module, "TABLES", tmp_path)
+    module.main()
+    names = sorted(p.name for p in tmp_path.glob("table*.md"))
+    assert [n.split("_")[0] for n in names] == [f"table{i}" for i in range(1, 8)]
+    import re
+    text = "".join(p.read_text(encoding="utf-8") for p in tmp_path.iterdir())
+    assert not re.search(r"nan", text)
+
+
+def test_paper_figures_build_from_saved_results(tmp_path, monkeypatch):
+    module = _script("make_figures")
+    monkeypatch.setattr(module, "FIGURES", tmp_path)
+    module.main()
+    assert len(list(tmp_path.glob("fig*.png"))) == 8 and len(list(tmp_path.glob("fig*.pdf"))) == 8

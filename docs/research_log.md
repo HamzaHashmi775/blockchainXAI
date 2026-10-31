@@ -1099,3 +1099,19 @@ was restarted and its cause was not established.
   1 of 3, LLM 3 of 3; sensitivity robust except energy ω for F and E.
 - GATE 10 (cross-domain, sensitivity, final stats saved to `results/summaries/`): met.
 - Next: Phase 11 (tables 1–7, figures, reproducibility check, claim–evidence map, paper).
+
+## 2026-10-31 — Phase 11, Step 35: paper tables and figures
+
+- `statistics/make_tables.py` → `tables/table1_datasets.md` … `table7_cross_domain.md`
+  (Table 1 dataset characteristics is new; 2–7 assemble the saved summaries). Only raw-file
+  row counts are computed; everything else is read from `results/summaries/`,
+  `data/metadata/` and `data/processed/*/scenarios_meta.json`. Table 1 states the pharma
+  fallback rule (a site without lead-time or freight history gets the all-sites median).
+- `statistics/make_figures.py` → `figures/fig1`–`fig8` (PNG 200 dpi + PDF). Figs 1–2 are
+  method diagrams; 3–8 use the stored means and 95 % CIs. Colour follows the system in every
+  figure (proposed blue, baseline orange, ablation aqua: slots 1–3 of the reference palette,
+  documented as validated all-pairs on light; the validator script could not be run here
+  because Node.js is not installed). Each figure was rendered and inspected; label overlaps
+  and a double-inverted shared axis were fixed.
+- Smoke tests build all tables and figures into a temporary folder. Full suite: 183 passed.
+- Next: Step 36 (one command to rebuild everything, README, clean-rerun check).
