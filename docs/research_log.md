@@ -1179,3 +1179,5 @@ was restarted and its cause was not established.
   variant), Results §5.4 (Table `tab:hardened`), Discussion (security scope), Conclusion;
   RFC 6962 added to the bibliography by DOI (10.17487/RFC6962). Claim map P5–P7 and two
   disallowed claims.
+- Full test suite in one process (2026-11-01): 212 passed in 10 min 8 s. The earlier stall of a
+  single-process run did not recur; slowest steps are data-preparation fixtures (up to 121 s).
