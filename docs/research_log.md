@@ -1181,3 +1181,29 @@ was restarted and its cause was not established.
   disallowed claims.
 - Full test suite in one process (2026-11-01): 212 passed in 10 min 8 s. The earlier stall of a
   single-process run did not recur; slowest steps are data-preparation fixtures (up to 121 s).
+
+## 2026-11-01 — Manuscript restructured after an external review (user-supplied)
+
+- Review pasted by the user (author not stated): mechanism hard to follow, agents and data
+  under-specified, H4 handling, significance vs importance, scope of security claims.
+  Adopted: new title; abstract rewritten around the manipulation result; §3 "Proposed
+  framework" with a six-step round, explicit separation of mechanism and learning rule
+  (§3.6), the two channels of the mechanism (reward, voting weight), and a worked example;
+  §4 "Experimental design" with full data, scenario and reference descriptions per domain, a
+  generated agent table (`tab_agents`, objectives and feature views from the code), systems,
+  and the six pre-registered hypotheses listed explicitly; results: strategy shares explain the
+  domain difference, H4 presented as "Adversarial stress test: a boundary of the mechanism";
+  provenance framed as integrity / authenticity / truthfulness; Discussion "Implications".
+- **Not adopted:** removing H4 or replacing it by "reputation adds value". H4 was
+  pre-registered; it stays in the hypothesis list, reported as not supported. The
+  incentive-versus-reputation comparison stays a secondary analysis.
+- Worked example (`paper/worked_example.py`): replays pharma_proposed seed 0 (replay checked
+  against the saved metrics and the logged round). First selection rule ("manipulative and
+  preferred ≠ model vote") picked a round where the preferred site was the reference, i.e.
+  the untypical case in which the model was wrong; the rule was changed to also require
+  preferred ≠ reference (the conflict case the mechanism targets) and, to avoid a hand-picked
+  illustration, the honest-vs-manipulative comparison is reported over all 1,500 evaluation
+  agent-rounds: manipulation pays in 40.3 % under the baseline payoff, 18.5 % under the
+  proposed one (counterfactual: others' reports as played in the proposed run).
+- Preview converter: itemize lists with labels, literal braces. Main text 4,316 words,
+  abstract 230.

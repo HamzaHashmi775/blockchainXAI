@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\caption{The five agents of each case study: private objective and the features its model sees}\label{tab:agents}
+\footnotesize
+\begin{tabular}{@{}lp{4.6cm}p{7.2cm}@{}}
+\toprule
+Agent & Prefers the action with & Features \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Pharmaceutical supplier selection (action: one of three candidate sites)}} \\
+cost & lowest expected unit price & expected unit price, price relative to candidates, last price (relative), price variability, order size \\
+reliability & highest past on-time delivery rate & on-time rate, on-time rate (relative), mean days late, past deliveries, late share of last five \\
+lead time & shortest past median lead time & median lead time, lead time (relative), lead-time spread, lead-time records, requested lead time \\
+logistics & lowest past freight cost per kg & freight per kg, freight (relative), share shipped by air, share with freight included, past deliveries to the country \\
+continuity & most past deliveries of the product & past deliveries of the product, share of the product among candidates, days since last delivery, countries served, units of the product supplied \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Peer-to-peer energy (action: charge, idle or discharge the community battery)}} \\
+producer & export when the feed-in price is above its daily median & PV availability, temperature, hour of day, feed-in price, feed-in price rank in the day \\
+consumer & lowest cost of grid imports & community load, thermal demand, temperature, flexibility availability, import price, hour of day \\
+market & charge when the import price is below its daily median, discharge when above & import price, feed-in price, gas price, import price rank in the day, import minus feed-in price \\
+grid & smallest absolute exchange with the grid & net demand (load $-$ PV), community load, PV availability, hour of day \\
+storage & charge on community surplus, otherwise stay idle & net demand (load $-$ PV), EVs at home, hour of day, import price rank in the day, PV availability \\
+\bottomrule
+\end{tabular}
+\footnotetext{Each agent's private objective is normalised to $[0,1]$ over the actions of a scenario; its privately preferred action is the maximiser. Each agent has its own random forest (100 trees, depth 6) trained on its own features to predict the reference decision; its argmax is the agent's model vote, and SHAP of this model is the reference for its explanation. Pharmaceutical features describe the candidate site and are computed only from deliveries completed before the order date; feature views do not overlap.}
+\end{table*}

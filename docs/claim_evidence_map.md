@@ -31,6 +31,13 @@ pooled. Decision accuracy always means agreement with a *constructed* reference 
 | M9 | Energy baseline is already near-honest; in pharma the incentive removes the profit of false explanations without making all-honest an equilibrium | `tables/energy_main.md`, `tables/pharma_main.md` (unilateral deviation) | energy: honest best response for 5/5 agents in every system; pharma: 0/5 baseline, 2/5 proposed, the other three best off with *strategic* (truthful explanation) |
 | M8 | Explanation consistency rose (secondary) | Table 2, `tables/table3_*` | pharma +28.6 %; energy +8.6 %, unadjusted |
 
+## Worked example (paper Table `tab:example`, §3.4)
+
+| # | Claim | Evidence | Numbers |
+|---|---|---|---|
+| W1 | In one real round (pharma proposed, seed 0, round 354, chosen by a fixed rule), the honest report pays more than the manipulative one under the proposed mechanism, and less under the baseline payoff | `results/summaries/worked_example.json` (`paper/worked_example.py`) | proposed 0.388 vs 0.240; baseline 0.000 vs 0.500 |
+| W2 | Over all 1,500 evaluation agent-rounds of that run, a manipulative report would have paid more than the honest one less often under the proposed payoff | same, `all_rounds` | 40.3 % (baseline payoff) vs 18.5 % (proposed); mean difference +0.150 vs −0.164; others' reports as played in the proposed run |
+
 ## Ablation and reputation (Table 4, Figure 6)
 
 | # | Claim | Evidence | Numbers |

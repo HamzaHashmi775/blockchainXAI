@@ -157,6 +157,69 @@ def tab_provenance():
                  "Group & Flagged TAMPERED & Meaning", rows, note=note)
 
 
+PHARMA_LABEL = {
+    "exp_unit_price": "expected unit price", "price_rel": "price relative to candidates",
+    "last_price_rel": "last price (relative)", "price_cv": "price variability",
+    "log_order_units": "order size", "ontime_rate": "on-time rate",
+    "ontime_rel": "on-time rate (relative)", "mean_late_days": "mean days late",
+    "log_n_lines": "past deliveries", "late_last5": "late share of last five",
+    "median_lead_days": "median lead time", "lead_rel": "lead time (relative)",
+    "lead_iqr": "lead-time spread", "log_n_lead": "lead-time records",
+    "requested_lead_days": "requested lead time", "freight_per_kg": "freight per kg",
+    "freight_rel": "freight (relative)", "share_air": "share shipped by air",
+    "share_freight_included": "share with freight included",
+    "log_n_country_lines": "past deliveries to the country",
+    "log_n_product_lines": "past deliveries of the product",
+    "product_share": "share of the product among candidates",
+    "days_since_last": "days since last delivery", "n_countries": "countries served",
+    "log_units_supplied": "units of the product supplied"}
+ENERGY_LABEL = {
+    "PG_max": "PV availability", "Temperature": "temperature", "hour_of_day": "hour of day",
+    "Price_SG": "feed-in price", "sell_rank_day": "feed-in price rank in the day",
+    "load_mw": "community load", "thermal_total": "thermal demand",
+    "TL_Flex_Availability": "flexibility availability", "Price": "import price",
+    "Gas_Price": "gas price", "price_rank_day": "import price rank in the day",
+    "spread": "import minus feed-in price", "net_demand_mw": "net demand (load $-$ PV)",
+    "ev_home": "EVs at home"}
+OBJECTIVE = {
+    "pharma": {"cost": "lowest expected unit price",
+               "reliability": "highest past on-time delivery rate",
+               "lead_time": "shortest past median lead time",
+               "logistics": "lowest past freight cost per kg",
+               "continuity": "most past deliveries of the product"},
+    "energy": {"producer": "export when the feed-in price is above its daily median",
+               "consumer": "lowest cost of grid imports",
+               "market": "charge when the import price is below its daily median, "
+                         "discharge when above",
+               "grid": "smallest absolute exchange with the grid",
+               "storage": "charge on community surplus, otherwise stay idle"}}
+
+
+def tab_agents():
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from agents.energy_agents import AGENTS as EA, FEATURE_VIEWS as EV
+    from agents.pharma_agents import AGENTS as PA, FEATURE_VIEWS as PV
+    rows = [["\\multicolumn{3}{@{}l}{\\emph{Pharmaceutical supplier selection "
+             "(action: one of three candidate sites)}}"]]
+    rows += [[a.replace("_", " "), OBJECTIVE["pharma"][a],
+              ", ".join(PHARMA_LABEL[f] for f in PV[a])] for a in PA]
+    rows += ["MID", ["\\multicolumn{3}{@{}l}{\\emph{Peer-to-peer energy "
+                     "(action: charge, idle or discharge the community battery)}}"]]
+    rows += [[a, OBJECTIVE["energy"][a], ", ".join(ENERGY_LABEL[f] for f in EV[a])]
+             for a in EA]
+    note = ("Each agent's private objective is normalised to $[0,1]$ over the actions of a "
+            "scenario; its privately preferred action is the maximiser. Each agent has its own "
+            "random forest (100 trees, depth 6) trained on its own features to predict the "
+            "reference decision; its argmax is the agent's model vote, and SHAP of this model "
+            "is the reference for its explanation. Pharmaceutical features describe the "
+            "candidate site and are computed only from deliveries completed before the order "
+            "date; feature views do not overlap.")
+    return table("tab:agents", "The five agents of each case study: private objective and "
+                 "the features its model sees", "@{}lp{4.6cm}p{7.2cm}@{}",
+                 "Agent & Prefers the action with & Features", rows, note=note, wide=True)
+
+
 def tab_hardened():
     hr = load("provenance_hardened")
     h, rw, f = hr["honest"], hr["rewrite_hardened"], hr["forgery"]
@@ -240,7 +303,7 @@ def tab_llm():
 
 def main():
     OUT.mkdir(exist_ok=True)
-    for build in (tab_datasets, tab_main, tab_ablation, tab_robust, tab_provenance, tab_hardened,
+    for build in (tab_datasets, tab_agents, tab_main, tab_ablation, tab_robust, tab_provenance, tab_hardened,
                   tab_cross,
                   tab_llm):
         name = build.__name__

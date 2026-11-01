@@ -150,6 +150,7 @@ class Converter:
 
     def inline(self, s):
         s = re.sub(r"(?<!\\)%.*", "", s)
+        s = s.replace("\\{", "\x02").replace("\\}", "\x03")     # literal braces
         s = re.sub(r"\$([^$]+)\$", lambda m: "\x00" + math(m.group(1)) + "\x01", s)
         s = re.sub(r"\\cite(p|t)\{([^}]*)\}", lambda m: self.cite(m.group(2), m.group(1) == "t"), s)
         s = re.sub(r"\\ref\{([^}]*)\}", lambda m: self.labels.get(m.group(1), "??"), s)
@@ -167,7 +168,8 @@ class Converter:
         parts = re.split(r"(\x00.*?\x01)", s)
         parts = [p if p.startswith("\x00") else p.replace("{", "").replace("}", "")
                  for p in parts]
-        return "".join(parts).replace("\x00", "").replace("\x01", "")
+        return ("".join(parts).replace("\x00", "").replace("\x01", "")
+                .replace("\x02", "{").replace("\x03", "}"))
 
     def table(self, tex):
         cap = re.search(r"\\caption\{(.*)\}\\label\{([^}]*)\}", tex)
@@ -249,7 +251,8 @@ def convert(main_tex, conv):
            f"<h1>{conv.inline(title)}</h1>",
            f"<div class='abs'><p><b>Abstract</b> {conv.inline(abstract)}</p>"
            f"<p><b>Keywords</b> {conv.inline(keywords)}</p></div>"]
-    blocks = re.split(r"(\\begin\{(?:figure\*?|equation|enumerate)\}.*?\\end\{(?:figure\*?|equation|enumerate)\}"
+    blocks = re.split(r"(\\begin\{(?:figure\*?|equation|enumerate|itemize)\}.*?"
+                      r"\\end\{(?:figure\*?|equation|enumerate|itemize)\}"
                       r"|\\input\{tables/\w+\})", body, flags=re.S)
     sec = sub = 0
     for block in blocks:
@@ -266,6 +269,16 @@ def convert(main_tex, conv):
             items[-1] = items[-1].replace("\\end{enumerate}", "")
             out.append("<ol>" + "".join(f"<li>{conv.inline(i.strip())}</li>" for i in items)
                        + "</ol>")
+        elif block.startswith("\\begin{itemize}"):
+            items = block.split("\\item")[1:]
+            items[-1] = items[-1].replace("\\end{itemize}", "")
+            lis = []
+            for item in items:
+                m = re.match(r"\s*\[([^]]*)\]", item)
+                head = f"<b>{m.group(1)}</b> " if m else ""
+                lis.append(f"<li>{head}{conv.inline((item[m.end():] if m else item).strip())}"
+                           "</li>")
+            out.append("<ul>" + "".join(lis) + "</ul>")
         elif block.startswith("\\input{tables/"):
             name = re.search(r"tables/(\w+)", block).group(1)
             out.append(conv.table((HERE / "tables" / f"{name}.tex").read_text(encoding="utf-8")))

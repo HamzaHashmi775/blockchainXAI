@@ -1,0 +1,28 @@
+\begin{table*}[t]
+\caption{Worked example: the lead-time agent in one round of the pharmaceutical proposed run (seed 0, round 354). The same round is scored with the agent's honest and manipulative report, the other agents' reports fixed}\label{tab:example}
+\footnotesize
+\begin{tabular}{@{}p{0.24\textwidth}p{0.36\textwidth}p{0.36\textwidth}@{}}
+\toprule
+ & Honest report & Manipulative report \\
+\midrule
+Vote, confidence & site 2, 0.38 & site 1, 1.00 \\
+Explanation & lead-time records raises; lead time (relative) raises & lead-time records raises; median lead time lowers \\
+Evidence claims & lead-time records high (observed high); lead time (relative) high (observed high) & lead-time records high (observed low); median lead time high (observed low) \\
+Fidelity $F$ & 1.00 & 0.00 \\
+Evidence $E$ & 1.00 & 0.00 \\
+Manipulation $M$ & 0.00 & 0.75 \\
+Decision $D$ & 0.00 & 0.00 \\
+Contribution $C$ (proposed) & 0.50 & 0.50 \\
+Utility $U$ (proposed) & $+0.450$ & $-0.100$ \\
+Reward $R$ (proposed) & 0.296 & 0.000 \\
+Collective decision (proposed) & site 3 & site 3 \\
+Payoff $\pi$ (proposed) & 0.388 & 0.240 \\
+Contribution $C$ (baseline) & 0.00 & 0.00 \\
+Utility $U$ (baseline) & $+0.000$ & $+0.000$ \\
+Reward $R$ (baseline) & 0.000 & 0.000 \\
+Collective decision (baseline) & site 2 & site 1 \\
+Payoff $\pi$ (baseline) & 0.000 & 0.500 \\
+\bottomrule
+\end{tabular}
+\footnotetext{Model vote site 2 (probabilities 0.26, 0.38, 0.36); privately preferred site 1 (normalised private utility 1.00, 0.00, 0.48); reference site 3; reputation 0.217. Payoff $\pi=\omega\tilde u_i(a^\ast)+(1-\omega)R$ with $\omega=0.5$. Baseline rows: the same reports paid by the decision-only utility with equal votes.}
+\end{table*}

@@ -44,6 +44,7 @@ ANALYSES = [
     (["final_summary.py"], []),
     (["make_tables.py"], []),
     (["make_figures.py"], []),
+    (["../paper/worked_example.py"], ["pharma_proposed"]),   # replays one run (~25 min)
     (["../paper/make_paper_tables.py"], []),
 ]
 

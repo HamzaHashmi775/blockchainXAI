@@ -1,0 +1,219 @@
+{
+  "run": "pharma_proposed",
+  "seed": 0,
+  "round": 354,
+  "scenario_id": "1388",
+  "agent": "lead_time",
+  "omega": 0.5,
+  "strategies_played": [
+    "strategic",
+    "overclaiming",
+    "manipulative",
+    "misattributing",
+    "honest"
+  ],
+  "reference": 2,
+  "model_vote": 1,
+  "preferred": 0,
+  "private_utility": [
+    1.0,
+    0.0,
+    0.480225988700565
+  ],
+  "model_proba": [
+    0.2617419236410728,
+    0.3789749043039571,
+    0.3592831720549701
+  ],
+  "reputation": [
+    0.8869804381354084,
+    0.420902779746842,
+    0.21680284459016247,
+    0.3009096338764946,
+    0.5006109284544148
+  ],
+  "reports": {
+    "honest": {
+      "vote": 1,
+      "confidence": 0.3789749043039571,
+      "explanation": [
+        {
+          "feature": "log_n_lead",
+          "sign": 1,
+          "true_sign": 1,
+          "abs_shap": 0.1367106478897082
+        },
+        {
+          "feature": "lead_rel",
+          "sign": 1,
+          "true_sign": 1,
+          "abs_shap": 0.07740359223365513
+        }
+      ],
+      "true_top": [
+        {
+          "feature": "log_n_lead",
+          "sign": 1,
+          "abs_shap": 0.1367106478897082
+        },
+        {
+          "feature": "lead_rel",
+          "sign": 1,
+          "abs_shap": 0.07740359223365513
+        }
+      ],
+      "claims": [
+        {
+          "feature": "log_n_lead",
+          "claimed": "high",
+          "observed": "high"
+        },
+        {
+          "feature": "lead_rel",
+          "claimed": "high",
+          "observed": "high"
+        }
+      ],
+      "proposed": {
+        "F": 1.0,
+        "E": 1.0,
+        "D": 0.0,
+        "C": 0.5,
+        "M": 0.0,
+        "components": {
+          "false_attribution": 0.0,
+          "confidence_inflation": 0.0,
+          "unsupported_evidence": 0.0,
+          "strategic_voting": 0.0,
+          "collusion": 0.0
+        },
+        "U": 0.45,
+        "R": 0.29577464788732394,
+        "decision": 2,
+        "private": 0.480225988700565,
+        "payoff": 0.38800031829394444,
+        "reputation_next": 0.23259720524959476
+      },
+      "baseline": {
+        "F": 1.0,
+        "E": 1.0,
+        "D": 0.0,
+        "C": 0.0,
+        "M": 0.0,
+        "components": {
+          "false_attribution": 0.0,
+          "confidence_inflation": 0.0,
+          "unsupported_evidence": 0.0,
+          "strategic_voting": 0.0,
+          "collusion": 0.0
+        },
+        "U": 0.0,
+        "R": 0.0,
+        "decision": 1,
+        "private": 0.0,
+        "payoff": 0.0,
+        "reputation_next": 0.17344227567213
+      }
+    },
+    "manipulative": {
+      "vote": 0,
+      "confidence": 1.0,
+      "explanation": [
+        {
+          "feature": "log_n_lead",
+          "sign": 1,
+          "true_sign": -1,
+          "abs_shap": 0.013410857554112775
+        },
+        {
+          "feature": "median_lead_days",
+          "sign": -1,
+          "true_sign": 1,
+          "abs_shap": 0.018634355997569504
+        }
+      ],
+      "true_top": [
+        {
+          "feature": "lead_rel",
+          "sign": 1,
+          "abs_shap": 0.09483009832197306
+        },
+        {
+          "feature": "lead_iqr",
+          "sign": -1,
+          "abs_shap": 0.05245872610804957
+        }
+      ],
+      "claims": [
+        {
+          "feature": "log_n_lead",
+          "claimed": "high",
+          "observed": "low"
+        },
+        {
+          "feature": "median_lead_days",
+          "claimed": "high",
+          "observed": "low"
+        }
+      ],
+      "proposed": {
+        "F": 0.0,
+        "E": 0.0,
+        "D": 0.0,
+        "C": 0.5,
+        "M": 0.7476516152717855,
+        "components": {
+          "false_attribution": 1.0,
+          "confidence_inflation": 0.7382580763589273,
+          "unsupported_evidence": 1.0,
+          "strategic_voting": 1.0,
+          "collusion": 0.0
+        },
+        "U": -0.09953032305435709,
+        "R": 0.0,
+        "decision": 2,
+        "private": 0.480225988700565,
+        "payoff": 0.2401129943502825,
+        "reputation_next": 0.17344227567213
+      },
+      "baseline": {
+        "F": 0.0,
+        "E": 0.0,
+        "D": 0.0,
+        "C": 0.0,
+        "M": 0.7476516152717855,
+        "components": {
+          "false_attribution": 1.0,
+          "confidence_inflation": 0.7382580763589273,
+          "unsupported_evidence": 1.0,
+          "strategic_voting": 1.0,
+          "collusion": 0.0
+        },
+        "U": 0.0,
+        "R": 0.0,
+        "decision": 0,
+        "private": 1.0,
+        "payoff": 0.5,
+        "reputation_next": 0.17344227567213
+      }
+    }
+  },
+  "all_rounds": {
+    "proposed": {
+      "agent_rounds": 1500,
+      "manipulation_pays_share": 0.18533333333333332,
+      "mean_payoff_difference": -0.16367640299457648,
+      "conflict_agent_rounds": 559,
+      "conflict_manipulation_pays_share": 0.1413237924865832,
+      "conflict_mean_payoff_difference": -0.20104596830981059
+    },
+    "baseline": {
+      "agent_rounds": 1500,
+      "manipulation_pays_share": 0.4033333333333333,
+      "mean_payoff_difference": 0.14967319883585156,
+      "conflict_agent_rounds": 559,
+      "conflict_manipulation_pays_share": 0.21288014311270126,
+      "conflict_mean_payoff_difference": -0.10629058531071077
+    }
+  }
+}

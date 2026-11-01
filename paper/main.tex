@@ -14,32 +14,33 @@
 
 \begin{document}
 
-\title[Explanation-aware incentives for multi-agent AI]{Explanation-Aware Incentives for
-Trustworthy Multi-Agent AI with Blockchain Provenance: Evidence from Pharmaceutical Supplier
-Selection and Peer-to-Peer Energy}
+\title[Explanation-aware incentives against strategic manipulation]{Explanation-Aware
+Incentives for Reducing Strategic Manipulation in Multi-Agent AI: A Cross-Domain Evaluation
+with Blockchain Provenance}
 
 \author{Anonymous}
 \affil{Anonymised for double-anonymous review}
 
 \abstract{When several AI agents decide together, each with its own objective, an agent can
-steer the group by attaching a misleading explanation to its vote, and ordinary payoffs
-neither reward faithful explanations nor penalise false ones. We propose an
-explanation-aware incentive in which explanation fidelity, measured against SHAP
-attributions of the agent's own model, evidence support, measured against observed data,
-and an audited manipulation score enter each agent's utility; a reputation score weights
-votes; and hashes of decisions, explanations, evidence, rewards and reputation are recorded
-on a local blockchain. We tested the mechanism under a pre-registered protocol on two real
-datasets: USAID/PEPFAR pharmaceutical deliveries (supplier selection) and an energy
-community with peer-to-peer trading, with five learning agents per domain and ten paired
-seeds. Manipulation fell in both domains ($-69.7\%$ and $-44.4\%$). Explanation fidelity and
-evidence support improved strongly in the pharmaceutical case ($+83.5\%$, $+75.7\%$) but
-only negligibly in energy, where the baseline was already near its ceiling. The mechanism
-did not make the system more robust to a growing share of malicious agents. The provenance
-layer detected all 1{,}000 tampered records with no false positive in 29{,}800 unchanged
-ones. With open LLM agents, manipulation also fell, but a factorial experiment showed that
-their lower stated confidence followed the wording of the reward rules rather than the
-payoff applied. Explanation-aware incentives reduce strategic manipulation; their effect on
-explanation quality depends on the domain.}
+steer the group by voting for the option it privately prefers and attaching a misleading
+explanation, and ordinary payoffs neither reward faithful explanations nor penalise false
+ones. We propose an explanation-aware incentive: an auditor scores each agent's report for
+fidelity to the SHAP attributions of the agent's own model, for evidence supported by the
+observed data, and for manipulation, and these scores enter the agent's utility; rewards
+accumulate into a reputation that weights votes, and a blockchain records hashes of
+decisions, explanations, evidence, rewards and reputation. Under a pre-registered protocol,
+five learning agents per domain were evaluated on two real datasets, USAID/PEPFAR
+pharmaceutical deliveries (supplier selection) and an energy community with peer-to-peer
+trading, with ten paired seeds. The incentive reduced manipulation in both domains
+($-69.7\%$ and $-44.4\%$). It improved explanation fidelity and evidence support strongly
+where manipulation paid under the baseline (pharmaceutical: $+83.5\%$, $+75.7\%$) and only
+negligibly where agents were already largely honest (energy). It did not make collective
+decisions more robust to a growing share of agents that always manipulate. The provenance
+layer detected all 1{,}000 tampered records without false positives; a hardened variant with
+agent signatures and external anchoring refused every forged write and exposed a history
+rewritten by its operator, which establishes integrity and authenticity, not truthfulness.
+With open LLM agents, a factorial experiment traced the change in behaviour to the wording of
+the reward rules rather than to the payoff.}
 
 \keywords{Multi-agent systems, Explainable AI, Mechanism design, Explanation fidelity,
 Reputation, Blockchain provenance}
@@ -74,22 +75,27 @@ evidence support, measured against the agent's own model and the observed data, 
 the utility of strategic agents that jointly take a decision, and tests the result on real
 operational data in more than one domain.
 
-This paper does so. Our contributions are:
+This paper does so. The central question is whether making audited explanation quality part
+of each agent's payoff reduces strategic manipulation, and under which conditions it also
+improves the explanations themselves. Our contributions are:
 \begin{enumerate}
-\item An explanation-aware incentive for multi-agent decisions in which each agent's utility
-combines decision quality, explanation fidelity, evidence support, cooperation and an
-audited manipulation score; a reputation term turns past rewards into voting weight; and a
-provenance layer records hashes of decisions, explanations, evidence, rewards and reputation
-on a blockchain (Section~\ref{sec:method}).
-\item A pre-registered evaluation on two real datasets, pharmaceutical supplier selection and
-peer-to-peer energy, with a baseline, an ablation without reputation, malicious-agent and
-collusion experiments, a tampering experiment, cross-domain comparison and sensitivity
-analysis (Sections~\ref{sec:setup}--\ref{sec:results}).
-\item Evidence on what the mechanism does and does not achieve: it reduces manipulation in
-both domains; it improves explanation quality strongly in one domain and negligibly in the
-other; it does not improve robustness to malicious agents; and, with LLM agents, the
-behavioural change it produces is explained by the wording of the stated rules rather than by
-the payoff (Section~\ref{sec:discussion}).
+\item An explanation-aware incentive for multi-agent decisions. An auditor with access to each
+agent's model scores every report for fidelity, evidence support and manipulation; these
+scores enter the agent's utility next to decision quality and contribution; rewards
+accumulate into a reputation that weights votes; and a provenance layer records the
+artefacts with integrity and, in a hardened variant, authenticity guarantees
+(Section~\ref{sec:method}).
+\item A pre-registered evaluation on two real datasets with fully specified agents: five
+agents per domain with distinct private objectives and feature views, a decision-only
+baseline, an ablation without reputation, adversarial and collusion stress tests, tampering
+and forgery experiments, cross-domain comparison and sensitivity analysis
+(Sections~\ref{sec:setup}--\ref{sec:results}).
+\item Evidence on what the mechanism achieves and where it stops. It reduces manipulation in
+both domains; it improves explanation quality strongly where manipulation pays under the
+baseline and negligibly where agents are already largely honest; it does not protect the
+collective decision against agents that ignore the payoff; and with LLM agents the
+behavioural change follows the wording of the rules rather than the payoff
+(Section~\ref{sec:discussion}).
 \end{enumerate}
 
 %% ---------------------------------------------------------------------------------------
@@ -135,7 +141,7 @@ game-theoretic approaches; the Brooklyn Microgrid is a field case \citep{mengelk
 energy data come from the study of \citet{garciamunoz2025}.
 
 %% ---------------------------------------------------------------------------------------
-\section{Method}\label{sec:method}
+\section{Proposed framework}\label{sec:method}
 
 Figure~\ref{fig:architecture} shows the pipeline and Figure~\ref{fig:mechanism} the
 mechanism. All parameters below were fixed in a protocol frozen before the experiments; later
@@ -149,41 +155,58 @@ keeps the explanation-aware utility only). The provenance layer records integrit
 \label{fig:architecture}
 \end{figure*}
 
-\subsection{Agents, actions and the game}\label{sec:game}
+\subsection{One round, step by step}\label{sec:round}
+
+The framework separates three things that are easy to conflate: the \emph{agents}, which
+predict and report; the \emph{mechanism}, which audits the reports and pays rewards; and the
+agents' \emph{learning rule}, which decides how an agent reports next time. The mechanism does
+not choose anybody's report; it only changes what each report is worth. A round proceeds as
+follows.
+\begin{enumerate}
+\item \emph{Scenario.} All agents see the same real scenario: a purchase order with three
+candidate supplier sites, or one hour of an energy community with a battery decision.
+\item \emph{Prediction.} Each agent's own model predicts the reference decision from the
+agent's own features; its most probable action is the agent's \emph{model vote}.
+\item \emph{Report.} Each agent submits a vote, a confidence, an explanation (two features and
+the direction of their effect) and one evidence claim per feature. The report may differ from
+what its model says when the agent's private objective favours another action.
+\item \emph{Audit.} The auditor compares the explanation with the SHAP attributions of the
+agent's model and the evidence claims with the observed data, and computes fidelity,
+evidence support and a manipulation score (Section~\ref{sec:metrics}).
+\item \emph{Decision, utility and reward.} The votes are combined into the collective
+decision; each agent's utility combines its decision quality, fidelity, evidence support,
+contribution and manipulation; utilities are rescaled across agents into rewards; rewards
+update the reputations that weight the next votes (Section~\ref{sec:incentive}).
+\item \emph{Learning.} Each agent receives a payoff that mixes what it gains privately from
+the collective decision with its reward, and updates its estimate of how well its chosen
+reporting strategy pays (Section~\ref{sec:learning}).
+\end{enumerate}
+
+\subsection{Agents, actions and reports}\label{sec:game}
 
 Each domain has five agents $N=\{1,\dots,5\}$ and a finite action set per scenario: three
 candidate manufacturing sites in the pharmaceutical case and \{idle, charge, discharge\} for a
 community battery in the energy case. Agent $i$ has a private objective $u_i(a)$, a
-closed-form function of real or derived variables (for example, the cost agent prefers the
-lowest expected unit price and the grid agent the smallest absolute grid exchange), normalised
-to $\tilde u_i(a)\in[0,1]$ over the actions of the scenario. Each agent also has a model, a
-random forest \citep{breiman2001} with 100 trees of depth 6 trained on its own feature view
-to predict the reference decision (Section~\ref{sec:setup}); the model's argmax is the
-agent's \emph{model vote}.
+closed-form function of real or derived variables, normalised to $\tilde u_i(a)\in[0,1]$ over
+the actions of the scenario; its privately preferred action maximises $\tilde u_i$. Each agent
+also has a model, a random forest \citep{breiman2001} with 100 trees of depth 6 trained on its
+own feature view to predict the reference decision. The private objective and the model can
+disagree, and that disagreement is what creates an incentive to misreport. The objectives and
+features of all ten agents are listed in Table~\ref{tab:agents} (Section~\ref{sec:setup}).
 
-In every round an agent submits a report: a vote, a confidence, an explanation of $k=2$
-(feature, sign) pairs, and one evidence claim per explained feature stating its level
-(low, mid or high by training-set terciles). The strategy set has five elements.
-\emph{Honest} reports the model vote, the model's probability, the top-$k$ SHAP features with
-their true signs and true levels. \emph{Strategic} switches to its privately preferred action
-when that gains at least 0.25 in $\tilde u_i$ and then inflates its confidence by 0.3, but
-explains truthfully. \emph{Misattributing} and \emph{overclaiming} vote like strategic but
-replace one explained feature by an unimportant one with a flipped sign, or one evidence
-level by a false one. \emph{Manipulative} always votes for its preferred action with
-confidence 1 and reports the $k$ least important features with flipped signs and false
-levels. These attacks change reports only; the observations are never altered.
-
-The collective decision is a weighted confidence vote,
-$\arg\max_a \sum_i w_i\, c_i\, \mathbb{1}[v_i=a]$, with $w_i=1$ in the baseline and ablation
-and $w_i=\mathrm{Rep}_i$ in the proposed system. Agents choose strategies with a stateless
-$\varepsilon$-greedy bandit ($\varepsilon=0.1$, learning rate 0.1) on the payoff
-\begin{equation}
-\pi_i=\omega\,\tilde u_i(a^{\ast})+(1-\omega)\,R_i,\qquad \omega=0.5,\label{eq:payoff}
-\end{equation}
-where $a^{\ast}$ is the collective action and $R_i$ the mechanism's reward. The first term is
-what an agent gains privately by steering the decision; $\omega$ sets how much that matters.
-We do not claim that the learning dynamics reach a Nash equilibrium; instead we report, for
-the all-honest profile, the payoff of every unilateral deviation.
+A report is a vote, a confidence, an explanation of $k=2$ (feature, sign) pairs, and one
+evidence claim per explained feature stating its level (low, mid or high by training-set
+terciles). The strategy set has five elements. \emph{Honest} reports the model vote, the
+model's probability, the top-$k$ SHAP features with their true signs and true levels.
+\emph{Strategic} switches to its privately preferred action when that gains at least 0.25 in
+$\tilde u_i$ and then inflates its confidence by 0.3, but explains truthfully.
+\emph{Misattributing} and \emph{overclaiming} vote like strategic but replace one explained
+feature by an unimportant one with a flipped sign, or one evidence level by a false one.
+\emph{Manipulative} always votes for its preferred action with confidence 1 and reports the
+$k$ least important features with flipped signs and false levels. These strategies change
+reports only; the observations are never altered. The collective decision is a weighted
+confidence vote, $\arg\max_a \sum_i w_i\, c_i\, \mathbb{1}[v_i=a]$, with $w_i=1$ in the
+baseline and ablation and $w_i=\mathrm{Rep}_i$ in the proposed system.
 
 \subsection{Auditing explanations}\label{sec:metrics}
 
@@ -225,32 +248,67 @@ The utility of agent $i$ in a round is
 U_i=\alpha D_i+\beta F_i+\gamma E_i+\delta C_i-\lambda M_i,\label{eq:utility}
 \end{equation}
 with $D_i=\mathbb{1}[v_i$ equals the reference decision$]$ and $C_i\in\{0,0.5,1\}$ the
-agent's pivotal contribution (1 if removing it would turn a correct collective decision into
-a wrong one, 0 for the reverse, 0.5 otherwise). The weights $\alpha=0.30$, $\beta=0.25$,
-$\gamma=0.15$, $\delta=0.10$ and $\lambda=0.20$ were set a priori. The baseline uses
-$U_i=0.75D_i+0.25C_i$, the same ratio of decision to cooperation with no explanation terms.
-The reward rescales utilities across the agents of the round,
-$R_i=(U_i-U_{\min})/(U_{\max}-U_{\min})$, with $R_i=0.5$ when all utilities are equal.
-Reputation starts at 0.5 and is updated as
+agent's pivotal contribution (1 if removing its vote would turn a correct collective
+decision into a wrong one, 0 for the reverse, 0.5 otherwise). The weights $\alpha=0.30$,
+$\beta=0.25$, $\gamma=0.15$, $\delta=0.10$ and $\lambda=0.20$ were set a priori. The
+baseline uses $U_i=0.75D_i+0.25C_i$, the same ratio of decision to contribution with no
+explanation terms: under it, an explanation earns or costs nothing. The reward rescales
+utilities across the agents of the round, $R_i=(U_i-U_{\min})/(U_{\max}-U_{\min})$, with
+$R_i=0.5$ when all utilities are equal, so an agent is paid for doing better than the others
+in the same round. Reputation starts at 0.5 and is updated as
 $\mathrm{Rep}_i\leftarrow\rho\,\mathrm{Rep}_i+(1-\rho)R_i$ with $\rho=0.8$, an effective
-memory of about five rounds.
+memory of about five rounds. The mechanism therefore acts through two channels: a false
+report lowers the agent's reward in the round in which it is made and, through reputation,
+the weight of its vote in later rounds.
 
-We compare three systems on identical scenarios and seeds: the \emph{baseline} (game and
-explanations, decision-only utility, equal votes), the \emph{ablation} (explanation-aware
-utility, equal votes) and the \emph{proposed} system (explanation-aware utility and
-reputation-weighted votes).
+\input{tables/tab_example}
+
+\paragraph{Worked example.} Table~\ref{tab:example} shows one real round of the
+pharmaceutical proposed run, chosen by a fixed rule (the first evaluation round in which a
+learning agent played manipulative while its preferred site differed from both its model vote
+and the reference). The lead-time agent's model favours site~2, its private objective favours
+site~1, and the reference is site~3. An honest report explains the model correctly ($F=E=1$,
+$M=0$) and earns a reward of 0.296. The manipulative report votes for site~1 with confidence
+1 and attaches an explanation and evidence that the audit rejects ($F=E=0$, $M=0.75$); its
+utility becomes negative and its reward 0. Because the agent's reputation is low (0.217), its
+vote does not change the collective decision, so manipulation gains nothing privately and the
+honest report pays more (0.388 against 0.240). Paid by the decision-only baseline with equal
+votes, the same manipulative report would have moved the collective decision to the agent's
+preferred site and paid 0.500, against 0.000 for honesty. The round is an illustration; over
+all 1{,}500 agent-rounds of the evaluation window, replacing an agent's honest report by a
+manipulative one (the others' reports as played) paid more in 40.3\% of cases under the
+baseline payoff and in 18.5\% under the proposed one, with mean payoff differences of
+$+0.150$ and $-0.164$.
+
+\subsection{How agents learn}\label{sec:learning}
+
+Agents choose a strategy each round with a stateless $\varepsilon$-greedy bandit
+($\varepsilon=0.1$, learning rate 0.1) on the payoff
+\begin{equation}
+\pi_i=\omega\,\tilde u_i(a^{\ast})+(1-\omega)\,R_i,\qquad \omega=0.5,\label{eq:payoff}
+\end{equation}
+where $a^{\ast}$ is the collective action. The first term is what an agent gains privately by
+steering the decision; $\omega$ sets how much that matters relative to the mechanism's reward.
+The bandit is not part of the mechanism: it is a simple model of self-interested agents that
+repeat what has paid. The mechanism succeeds if, under it, the strategies that pay are the
+truthful ones. We do not claim that the learning dynamics reach a Nash equilibrium; instead
+we report, for the all-honest profile, the payoff of every unilateral deviation.
 
 \subsection{Provenance layer}\label{sec:provenance}
+
+We distinguish three properties a record of an agent's output can have. \emph{Integrity}: a
+change after recording is detectable. \emph{Authenticity}: the record was produced and signed
+by the registered agent. \emph{Truthfulness}: the record describes what the agent's model
+actually computed. A blockchain can provide the first two; only the audit of
+Section~\ref{sec:metrics} addresses the third.
 
 For every agent and round, the provenance layer stores on chain the SHA-256 hashes of the
 canonically serialised decision, explanation and evidence, together with the reward and
 reputation scaled to integers ($\times10^{6}$) and a block timestamp; the artefacts
 themselves stay off chain. A Solidity contract makes records append-only and writable only
 by the deploying account. Verification recomputes the hashes from the off-chain store and
-reports each record as valid, tampered or missing. The chain establishes that a record has
-not changed since it was written; it does not establish that the explanation was truthful.
-
-This design trusts the operator who writes the records. A hardened variant, added after the
+reports each record as valid, tampered or missing. This basic design provides integrity, but
+it trusts the operator who writes the records. A hardened variant, added after the
 main provenance results were known, removes part of that trust with three additions. First,
 \emph{model registration}: each agent is bound once to a signing key and to the hash of its
 model identity (model, digest, decoding settings and the agent's objective). Second,
@@ -260,7 +318,8 @@ operator cannot forge or replay an agent's output. Third, \emph{anchoring}: Merk
 \citep{laurie2013} of the registrations and of every 1{,}000 records are written to
 a second chain that the operator is assumed unable to rewrite, so a rebuilt history no longer
 matches the anchors. Rewards and reputations are computed by the mechanism and are therefore
-covered by the anchors but not by the agents' signatures.
+covered by the anchors but not by the agents' signatures. The hardened variant adds
+authenticity for the agent-produced artefacts; neither variant establishes truthfulness.
 
 \subsection{LLM agents}\label{sec:llm}
 
@@ -280,49 +339,121 @@ amendments and the text. Qwen2.5-7B served as the experimental subject in
 Section~\ref{sec:llm}, not as a writing aid.
 
 %% ---------------------------------------------------------------------------------------
-\section{Experimental setup}\label{sec:setup}
+\section{Experimental design}\label{sec:setup}
 
 \input{tables/tab_datasets}
 
-\paragraph{Pharmaceutical supplier selection.} We use the USAID/PEPFAR Supply Chain Management
-System delivery history \citep{scmsdata2015}, 10{,}324 shipment line items of antiretroviral
-drugs and HIV test kits delivered between 2006 and 2015 (Table~\ref{tab:data}). Only
-direct-from-supplier lines are used, so that delivery performance is the manufacturer's. A
-scenario is one purchase order for one product with three candidate manufacturing sites,
-the three that most recently delivered the product; the data contain no competing offers, so
-the candidate set is an experimental construction. Everything known about a site is computed
-from deliveries completed before the order date, and the split is chronological. The
-reference decision is the candidate with the highest equal-weight sum of five min--max
-normalised criteria (cost, delivery reliability, lead time, freight cost per kilogram, supply
-continuity), in the spirit of multi-criteria supplier selection \citep{forghani2018}. It is a
-constructed reference: where the site actually used is a candidate, the reference picks it in
-35\% of scenarios, close to chance (33\%). Agents correspond to the five criteria.
+Both case studies use real operational data. Agents, scenarios and reference decisions are
+built from the data by deterministic, documented rules; every derived variable is a function
+of recorded columns, and nothing in the observations is changed by the strategies or attacks.
+Table~\ref{tab:data} summarises the two datasets and Table~\ref{tab:agents} the ten agents.
 
-\paragraph{Peer-to-peer energy.} We use one year of hourly operational data of a 55-user energy
-community under peer-to-peer trading and flexibility markets
-\citep{optirecdata2025,garciamunoz2025}. A scenario is one hour; the action concerns a
-community battery whose capacity is taken from the data and whose C-rate (0.5), round-trip
-efficiency (0.9) and state-of-charge window (10--90\%) are simulated assumptions. The
-reference action is the solution of a daily perfect-foresight linear programme. Agents
-represent the producer, consumer, market, grid and storage perspectives. Splits use whole
-weeks in five-week cycles to avoid temporal leakage.
+\input{tables/tab_agents}
 
-\paragraph{Runs and statistics.} Each system is run with seeds 0--9 on identical scenarios
-(paired design): 600 rounds with evaluation on the last 300 in pharma, 1{,}000 and 500 in
-energy. The confirmatory family is fidelity (H1), evidence support (H2) and manipulation (H3),
-proposed versus baseline, tested per domain with a paired $t$-test or, when Shapiro--Wilk
-rejects normality, a Wilcoxon signed-rank test, with Holm correction \citep{holm1979} across the
-three. The pre-registered decision rule calls an outcome \emph{improved} if the Holm-adjusted
-$p<0.05$ in the hypothesised direction and the relative change
-$(\text{proposed}-\text{baseline})/|\text{baseline}|$ is at least 5\%, \emph{worse} if
-significant in the opposite direction, and \emph{negligible} otherwise. Robustness (H4) uses
-malicious shares of 0--40\% (malicious agents always play manipulative) and compares the mean
-accuracy degradation over 10--40\% between systems; collusion uses two colluding agents and
-three honest ones. Tamper detection (H5) is descriptive. Cross-domain generalisation (H6)
-holds for an outcome when both domains give the same verdict; domains are never pooled. The
+\subsection{Pharmaceutical supplier selection}\label{sec:pharma}
+
+\paragraph{Data.} The USAID/PEPFAR Supply Chain Management System delivery history
+\citep{scmsdata2015} contains 10{,}324 shipment line items of antiretroviral drugs and HIV
+test kits delivered between 2006 and 2015. A line records, among other fields, the purchase
+order, product, manufacturing site, destination country, shipment mode, scheduled and actual
+delivery dates, pack price, units, weight and freight cost. We use only the 4{,}920
+direct-from-supplier lines, because on warehouse lines the delivery performance is not the
+manufacturer's. A supplier is a manufacturing site; a product is a molecule or test type
+with its dosage and form.
+
+\paragraph{Scenarios.} A scenario is one purchase order for one product with three candidate
+sites: the three sites that most recently delivered that product before the order date, among
+sites with a recorded price. The data contain no competing offers, so the candidate set is an
+experimental construction; the site actually used is among the three in 83\% of scenarios.
+Everything known about a candidate is computed only from deliveries completed before the
+order date, which prevents leakage from the order's own outcome: expected unit price (median
+of its five most recent prices), on-time delivery rate, median lead time, freight cost per
+kilogram, past deliveries of the product and related variables (27 derived variables in all).
+A site without lead-time or freight history receives the all-sites median (2.7\% of candidate
+rows for lead time). The result is 1{,}648 scenarios over 31 products and 49 sites, split by
+order date into 824 training, 165 validation and 659 test scenarios.
+
+\paragraph{Reference decision.} Each of five criteria (cost, delivery reliability, lead time,
+freight cost per kilogram, supply continuity) is min--max normalised over the three
+candidates, and the reference is the candidate with the highest equal-weight sum, in the
+spirit of multi-criteria supplier selection \citep{forghani2018}. Equal weights are used
+because the source gives none. This is a constructed reference, not a record of good
+decisions: where the site actually used is a candidate, the reference picks it in 35\% of
+scenarios, close to chance (33\%). Dropping one criterion leaves the reference unchanged in
+68--74\% of scenarios and doubling one in 72--82\%.
+
+\paragraph{Agents.} Each agent represents one criterion and prefers the candidate that is
+best on it (Table~\ref{tab:agents}); its model sees five features of that criterion only. Each
+agent's preferred site coincides with the reference in 46--52\% of scenarios, so every agent
+often has a private reason to vote against the reference. This conflict is what makes
+manipulation profitable under a decision-only payoff.
+
+\subsection{Peer-to-peer energy}\label{sec:energy}
+
+\paragraph{Data.} The OptiREC dataset \citep{optirecdata2025,garciamunoz2025} contains one
+year of hourly operational data of a 55-user energy community under peer-to-peer trading and
+flexibility markets: per-user load profiles and generation capacities, PV availability, import and
+feed-in prices, gas price, temperature, thermal demand, flexibility availability, electric
+vehicle presence and battery capacity. It has no missing values; no outlier was removed.
+Derived variables (12) are deterministic functions of the recorded columns, for example
+community load, PV output, net demand (load minus PV), and the rank of the hour's price within
+its day.
+
+\paragraph{Scenarios and reference decision.} A scenario is one hour (8{,}760 in all), and the
+decision is the action of an aggregate community battery: charge, idle or discharge. The data
+record no storage dispatch, so the reference is the solution of a daily perfect-foresight
+linear programme that minimises import cost minus feed-in revenue subject to the battery's
+energy balance. The battery capacity is taken from the data; its C-rate (0.5), round-trip
+efficiency (0.9), state-of-charge window (10--90\%) and daily start and end state (50\%) are
+simulated assumptions, because the dataset does not provide them. The reference is therefore
+constructed as well, and decision accuracy means agreement with this programme, not with
+observed behaviour. Splits use whole weeks in five-week cycles (three for training, one for
+validation, one for testing; 5{,}400, 1{,}680 and 1{,}680 hours), which prevents temporal
+leakage.
+
+\paragraph{Agents.} The producer, consumer, market, grid and storage agents represent the
+perspectives of a P2P community (Table~\ref{tab:agents}). Their objectives are driven by
+prices and surplus, as is the reference programme, so they conflict with the reference less
+often than the pharmaceutical criteria do; the results in Section~\ref{sec:main} show what
+this implies.
+
+\subsection{Systems compared}\label{sec:systems}
+
+Three systems are run on identical scenarios and seeds (paired design): the \emph{baseline}
+(game and explanations, decision-only utility, equal votes), the \emph{ablation}
+(explanation-aware utility, equal votes) and the \emph{proposed} system (explanation-aware
+utility and reputation-weighted votes). Each system is run with seeds 0--9: 600 rounds with
+evaluation on the last 300 in pharma, 1{,}000 rounds and the last 500 in energy.
+
+\subsection{Hypotheses and statistical analysis}\label{sec:hypotheses}
+
+The protocol pre-registered six hypotheses, each comparing the proposed system with the
+baseline:
+\begin{itemize}
+\item[H1] the proposed system improves explanation fidelity;
+\item[H2] it improves evidence support;
+\item[H3] it reduces manipulation;
+\item[H4] it is more robust to an increasing share of malicious agents;
+\item[H5] the provenance layer detects modification of recorded artefacts;
+\item[H6] H1--H3 give the same verdict in both domains.
+\end{itemize}
+H1--H3 form the confirmatory family, tested per domain with a paired $t$-test or, when
+Shapiro--Wilk rejects normality, a Wilcoxon signed-rank test, with Holm correction
+\citep{holm1979} across the three. The pre-registered decision rule calls an outcome
+\emph{improved} if the Holm-adjusted $p<0.05$ in the hypothesised direction and the relative
+change $(\text{proposed}-\text{baseline})/|\text{baseline}|$ is at least 5\%, \emph{worse} if
+significant in the opposite direction, and \emph{negligible} otherwise. The 5\% threshold
+separates practical from merely statistical significance: a significant change smaller than
+5\% is reported as negligible. H4 is tested as a stress test: malicious shares of 0--40\%
+(malicious agents always play manipulative, whatever the payoff), comparing the mean accuracy
+degradation over 10--40\% between systems with a paired test; collusion uses two colluding
+agents and three honest ones. H5 is descriptive. H6 holds for an outcome when both domains
+give the same verdict; domains are never pooled. The comparison of the proposed system with
+the ablation, which isolates the contribution of reputation, is a secondary analysis. The
 sensitivity analysis varies one parameter at a time: $\beta\in\{0,0.1,0.25,0.4\}$,
-$\rho\in\{0.5,0.8,0.95\}$ and $\omega\in\{0.25,0.5,0.75\}$. LLM agents were run for 200
-rounds with seeds 0--4.
+$\rho\in\{0.5,0.8,0.95\}$ and $\omega\in\{0.25,0.5,0.75\}$. The LLM agents (Section~\ref{sec:llm})
+answer a separate question, whether such agents respond to the payoff at all; they were run
+for 200 rounds with seeds 0--4 and are reported apart from the confirmatory family.
 
 %% ---------------------------------------------------------------------------------------
 \section{Results}\label{sec:results}
@@ -350,6 +481,16 @@ to improve; we report this as context and do not change the verdict. Collective 
 not change detectably in either domain, while manipulation success fell by a third in pharma
 and by half in energy (secondary outcomes). Explanation consistency rose by 28.6\% and 8.6\%.
 
+Why the two domains differ is visible in what the agents learned. Under the baseline, the
+pharmaceutical agents played honest in only 9.5\% of evaluation rounds and manipulative in
+41.1\%; under the proposed system, 41.4\% and 3.0\%. The energy agents were honest in 77.5\% of
+rounds already under the baseline (87.6\% under the proposed system), because their
+objectives rarely pay them to steer the battery away from the reference. Where there is
+little manipulation to remove, there is little explanation quality to gain. The relative
+changes should be read with this in mind: a relative change measures improvement over the
+baseline's level, so the same mechanism produces a large relative gain where the baseline
+is poor and a small one where it is already near its ceiling.
+
 The unilateral-deviation analysis qualifies these results. In energy, honesty is the best
 response for all five agents in every system, so the baseline is already close to honest. In
 the pharmaceutical case, honesty is the best response for no agent under the baseline and for
@@ -375,7 +516,7 @@ both domains, with relative changes in pharma of $+74.9\%$ (fidelity), $+70.9\%$
 and $-61.0\%$ (manipulation). Reputation-weighted voting adds a small further gain in pharma
 (fidelity $+0.044$, manipulation $-0.034$) and none in energy; this comparison is descriptive.
 
-\subsection{Robustness to malicious agents and collusion}\label{sec:robust}
+\subsection{Adversarial stress test: a boundary of the mechanism (H4)}\label{sec:robust}
 
 \input{tables/tab_robust}
 
@@ -394,7 +535,10 @@ confidence bands)}
 \label{fig:malicious_accuracy}
 \end{figure*}
 
-H4 is not supported (Table~\ref{tab:robust}). The proposed system's accuracy did not degrade
+This experiment asks a different question from H1--H3. There, agents choose their reports
+and the mechanism changes what pays; here, a growing share of agents manipulates every round
+regardless of the payoff. H4 is not supported (Table~\ref{tab:robust}). The proposed system's
+accuracy did not degrade
 less than the baseline's as malicious agents rose from 10 to 40\%: the mean difference in
 degradation was $+0.039$ ($p=0.10$) in pharma and $-0.020$ ($p=0.068$) in energy
 (Figure~\ref{fig:malicious_accuracy}). The proposed system keeps clearly higher fidelity and
@@ -405,7 +549,7 @@ takes the reward away from the colluders ($-0.458$ in pharma, $-0.501$ in energy
 honest agents' payoff rises; collusion still raises manipulation success, but by less than
 under the baseline ($+0.126$ against $+0.380$ in pharma; $+0.047$ against $+0.155$ in energy).
 
-\subsection{Tamper detection}\label{sec:tamper}
+\subsection{Provenance: integrity and authenticity (H5)}\label{sec:tamper}
 
 \input{tables/tab_provenance}
 
@@ -501,6 +645,15 @@ thresholds or robust aggregation. With LLM agents the improvement cannot be cred
 payoff: a prompt that states the rules produces the same change. Designers of incentive
 mechanisms for LLM agents should therefore test whether agents respond to payoffs at all
 before attributing behaviour to them.
+
+\paragraph{Implications.} The results indicate when an explanation-aware incentive is worth
+deploying: where agents' private objectives conflict with the collective goal, so that
+manipulation pays under a decision-only payoff. There it removes the profit of false
+explanations and shifts agents towards truthful reports; where agents are already aligned,
+it adds little. It requires an auditor with access to the agents' models, and it has to be
+combined with a separate defence for agents that do not respond to incentives at all. For
+provenance, designers should state which of integrity, authenticity and truthfulness a
+ledger provides; ours provides the first two, and only the audit speaks to the third.
 
 \paragraph{Security scope.} The evaluated threats are dishonest agents with valid identities
 (false attribution, inflated confidence, unsupported evidence, strategic voting, collusion of
